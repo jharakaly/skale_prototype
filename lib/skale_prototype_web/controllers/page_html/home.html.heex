@@ -1,847 +1,293 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Skale Prototype</title>
-  <script defer src="https://cdn.tailwindcss.com"></script>
-  <style>
-    body, html {
-      margin: 0;
-      padding: 0;
-      overflow-x: hidden;
-      width: 100%;
-    }
-    .container {
-      width: 100%;
-      max-width: 1200px;
-      margin: 0 auto;
-      padding: 0 1rem;
-    }
-    .header-content {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 0 0.5rem;
-    }
-    .icon-container {
-      display: flex;
-      gap: 1rem;
-    }
-    .icon-wrapper {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      width: 2.5rem;
-      height: 2.5rem;
-      background-color: rgba(255, 255, 255, 0.3);
-      border-radius: 8px;
-      transition: background-color 0.2s;
-      cursor: pointer;
-    }
-    .icon-wrapper:hover {
-      background-color: rgba(255, 255, 255, 0.5);
-    }
-    .icon {
-      font-size: 1.3rem;
-      line-height: 1;
-    }
-    .mobile-menu {
-      display: flex; /* Changed to flex - visible on mobile */
-      flex-direction: column;
-      cursor: pointer;
-      padding: 0.5rem;
-    }
-    .mobile-menu span {
-      width: 25px;
-      height: 3px;
-      background-color: #000;
-      margin: 2px 0;
-      transition: 0.3s;
-    }
-    .mobile-nav {
-      display: none;
-      position: absolute;
-      top: 100%;
-      right: 0;
-      background-color: #DDE5DD;
-      width: 100%;
-      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-      z-index: 1000;
-    }
-    .mobile-nav.active {
-      display: block;
-    }
-    .mobile-nav .icon-container {
-      flex-direction: column;
-      padding: 1rem;
-      gap: 0.5rem;
-    }
-    .mobile-nav .icon-wrapper {
-      width: 100%;
-      justify-content: flex-start;
-      padding: 0.75rem 1rem;
-    }
-    .main-content {
-      display: flex;
-      flex-direction: column;
-      width: 100%;
-      padding: 0;
-    }
-    @media (min-width: 768px) {
-      .main-content {
-        flex-direction: row;
-      }
-    }
-    .left-column {
-      width: 100%;
-      padding-right: 0;
-    }
-    @media (min-width: 768px) {
-      .left-column {
-        flex: 0 0 70%;
-        padding-right: 1rem;
-      }
-    }
-    .right-column {
-      width: 100%;
-      padding-left: 0;
-      margin-top: 2rem;
-    }
-    @media (min-width: 768px) {
-      .right-column {
-        flex: 0 0 30%;
-        padding-left: 1rem;
-        margin-top: 0;
-      }
-    }
-    .search-row {
-      display: flex;
-      flex-direction: column;
-      gap: 1rem;
-      padding: 1rem 0;
-      width: 100%;
-    }
-    @media (min-width: 768px) {
-      .search-row {
-        flex-direction: row;
-      }
-    }
-    .left-search-container {
-      width: 100%;
-      position: relative;
-    }
-    @media (min-width: 768px) {
-      .left-search-container {
-        flex: 0 0 calc(70% - 0.5rem);
-      }
-    }
-    .right-search-container {
-      width: 100%;
-      position: relative;
-    }
-    @media (min-width: 768px) {
-      .right-search-container {
-        flex: 0 0 calc(30% - 0.5rem);
-      }
-    }
-    .search-icon {
-      position: absolute;
-      left: 1rem;
-      top: 50%;
-      transform: translateY(-50%);
-      font-size: 1.2rem;
-      color: #6b7280;
-    }
-    .search-input {
-      padding-left: 3rem;
-      width: 100%;
-      background-color: white;
-      border: 1px solid #e5e7eb;
-      border-radius: 8px;
-      box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
-      font-size: 1rem;
-    }
-    @media (max-width: 480px) {
-      .search-input {
-        font-size: 16px; /* Prevents zoom on iOS */
-      }
-    }
-    .collection-container {
-      aspect-ratio: 1 / 1;
-      display: flex;
-      flex-direction: column;
-      background-color: white;
-      border: 1px solid #e5e7eb;
-      border-radius: 12px;
-      padding: 1.5rem;
-      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-      margin-bottom: 1.5rem;
-    }
-    @media (max-width: 480px) {
-      .collection-container {
-        padding: 1rem;
-        margin-bottom: 1rem;
-      }
-    }
-    .collection-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 0.5rem;
-    }
-    .gray-square {
-      width: 100%;
-      flex-grow: 1;
-      background-color: #9ca3af;
-      border-radius: 8px;
-    }
-    .group-card {
-      background-color: white;
-      border: 1px solid #e5e7eb;
-      border-radius: 12px;
-      padding: 1.5rem;
-      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-      margin-bottom: 1.5rem;
-    }
-    @media (max-width: 480px) {
-      .group-card {
-        padding: 1rem;
-        margin-bottom: 1rem;
-      }
-    }
-    .group-header {
-      display: flex;
-      align-items: flex-start;
-      gap: 1rem;
-      margin-bottom: 1rem;
-    }
-    @media (max-width: 480px) {
-      .group-header {
-        flex-direction: row; /* Changed from column to row */
-        justify-content: space-between; /* This will push avatar to right */
-        gap: 0.75rem;
-      }
-    }
-    .group-avatar {
-      width: 4rem;
-      height: 4rem;
-      background-color: #9ca3af;
-      border-radius: 8px;
-      flex-shrink: 0;
-      order: 2;
-    }
-    @media (max-width: 480px) {
-      .group-avatar {
-        width: 3rem;
-        height: 3rem;
-        order: 2; /* Keep it as 2 to stay on right */
-        align-self: flex-start;
-      }
-    }
-    .group-info {
-      flex-grow: 1;
-      order: 1;
-    }
-    @media (max-width: 480px) {
-      .group-info {
-        order: 1; /* Keep it as 1 to stay on left */
-        width: auto; /* Changed from 100% to auto */
-      }
-    }
-    .post-container {
-      border-top: 1px solid #d1d5db;
-      padding-top: 1rem;
-      margin-left: 0;
-    }
-    @media (min-width: 481px) {
-      .post-container {
-        margin-left: 0.75rem;
-      }
-    }
-    .post {
-      display: flex;
-      align-items: flex-start;
-      gap: 0.75rem;
-    }
-    .post-avatar {
-      width: 2.5rem;
-      height: 2.5rem;
-      background-color: #a3b18a;
-      border-radius: 50%;
-      flex-shrink: 0;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: white;
-      font-weight: bold;
-      font-size: 0.9rem;
-    }
-    @media (max-width: 480px) {
-      .post-avatar {
-        width: 2rem;
-        height: 2rem;
-        font-size: 0.8rem;
-      }
-    }
-    .post-content {
-      flex-grow: 1;
-    }
-    .post-meta {
-      display: flex;
-      align-items: center;
-      margin-bottom: 0.25rem;
-    }
-    .post-author {
-      font-weight: 600;
-      margin-right: 0.5rem;
-      font-size: 0.9rem;
-    }
-    .post-time {
-      color: #6b7280;
-      font-size: 0.8rem;
-    }
-    .logo {
-      width: 40px;
-      height: 40px;
-      margin-right: 1rem;
-    }
-    @media (max-width: 480px) {
-      .logo {
-        width: 32px;
-        height: 32px;
-        margin-right: 0.75rem;
-      }
-    }
-    .desktop-icons {
-      display: none;
-    }
-    @media (min-width: 768px) {
-      .desktop-icons {
-        display: flex;
-      }
-      .mobile-menu {
-        display: none; /* Hide hamburger on desktop */
-      }
-    }
-    .button-group {
-      display: flex;
-      gap: 0.5rem;
-      margin-bottom: 1rem;
-    }
-    @media (max-width: 480px) {
-      .button-group {
-        gap: 0.25rem;
-      }
-    }
-    .nav-button {
-      padding: 0.5rem 1rem;
-      border-radius: 6px;
-      font-size: 0.9rem;
-      text-decoration: none;
-      display: inline-block;
-      text-align: center;
-    }
-    @media (max-width: 480px) {
-      .nav-button {
-        padding: 0.5rem 0.75rem;
-        font-size: 0.8rem;
-        flex: 1;
-      }
-    }
-    
-    /* Modal Styles */
-    .modal-overlay {
-      display: none;
-      position: fixed;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      background-color: rgba(0, 0, 0, 0.5);
-      z-index: 2000;
-      align-items: center;
-      justify-content: center;
-    }
-    .modal-overlay.active {
-      display: flex;
-    }
-    .modal-content {
-      background-color: white;
-      border-radius: 12px;
-      width: 90%;
-      max-width: 500px;
-      max-height: 90vh;
-      overflow-y: auto;
-      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
-    }
-    .modal-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 1.25rem 1.5rem;
-      border-bottom: 1px solid #e5e7eb;
-    }
-    .modal-title {
-      font-size: 1.25rem;
-      font-weight: 600;
-      color: #1f2937;
-    }
-    .modal-close {
-      background: none;
-      border: none;
-      font-size: 1.5rem;
-      cursor: pointer;
-      color: #6b7280;
-      padding: 0;
-      width: 30px;
-      height: 30px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      border-radius: 6px;
-    }
-    .modal-close:hover {
-      background-color: #f3f4f6;
-    }
-    .modal-body {
-      padding: 1.25rem 1.5rem;
-    }
-    .form-group {
-      margin-bottom: 1rem;
-    }
-    .form-select, .form-input, .form-textarea {
-      width: 100%;
-      padding: 0.75rem;
-      border: 1px solid #d1d5db;
-      border-radius: 8px;
-      font-size: 1rem;
-      background-color: white;
-      box-sizing: border-box;
-    }
-    .form-select:focus, .form-input:focus, .form-textarea:focus {
-      outline: none;
-      border-color: #a3b18a;
-      box-shadow: 0 0 0 3px rgba(163, 177, 138, 0.2);
-    }
-    .form-textarea {
-      min-height: 120px;
-      resize: vertical;
-    }
-    .form-actions {
-      display: flex;
-      justify-content: flex-end;
-      gap: 0.75rem;
-      margin-top: 1.25rem;
-    }
-    .btn {
-      padding: 0.75rem 1.5rem;
-      border-radius: 8px;
-      font-weight: 500;
-      cursor: pointer;
-      transition: all 0.2s;
-    }
-    .btn-cancel {
-      background-color: #f3f4f6;
-      color: #374151;
-      border: 1px solid #d1d5db;
-    }
-    .btn-cancel:hover {
-      background-color: #e5e7eb;
-    }
-    .btn-submit {
-      background-color: #a3b18a;
-      color: white;
-      border: none;
-    }
-    .btn-submit:hover {
-      background-color: #8a9a6e;
-    }
-    .btn-warning {
-      background-color: #ef4444;
-      color: white;
-      border: none;
-    }
-    .btn-warning:hover {
-      background-color: #dc2626;
-    }
-    .placeholder-text {
-      color: #9ca3af;
-    }
-    
-    /* Confirmation Modal Styles */
-    .confirmation-modal {
-      background-color: white;
-      border-radius: 12px;
-      width: 90%;
-      max-width: 400px;
-      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
-    }
-    .confirmation-header {
-      padding: 1.5rem;
-      border-bottom: 1px solid #e5e7eb;
-    }
-    .confirmation-title {
-      font-size: 1.25rem;
-      font-weight: 600;
-      color: #1f2937;
-    }
-    .confirmation-body {
-      padding: 1.5rem;
-    }
-    .confirmation-message {
-      margin-bottom: 1.5rem;
-      color: #374151;
-    }
-    .confirmation-actions {
-      display: flex;
-      justify-content: flex-end;
-      gap: 0.75rem;
-    }
-  </style>
-</head>
-<body class="bg-gray-100 font-sans min-h-screen">
-  <div class="container">
-    <header class="bg-[#DDE5DD] p-4 relative">
-      <div class="header-content">
-        <div class="header-left flex items-center">
-          <!-- Logo - update the src path to your actual logo file -->
-          <img src="/images/logo.png" alt="Skale" class="logo">
-          <h1 class="text-black text-lg sm:text-xl">Welcome, Christine!</h1>
-        </div>
-        <div class="header-right">
-          <!-- Desktop Icons -->
-          <div class="desktop-icons icon-container">
-            <div class="icon-wrapper add-post-button">
-              <span class="icon">➕</span>
-            </div>
-            <a href="/discussions" class="icon-wrapper">
-              <span class="icon">💬</span>
-            </a>
-            <div class="icon-wrapper">
-              <span class="icon">💲</span>
-            </div>
-            <div class="icon-wrapper">
-              <span class="icon">🔔</span>
-            </div>
-            <!-- Profile icon with link -->
-            <a href="/profile" class="icon-wrapper">
-              <span class="icon">👤</span>
-            </a>
-            <div class="icon-wrapper">
-              <span class="icon">⚙️</span>
-            </div>
-          </div>
-          
-          <!-- Mobile Menu Button -->
-          <div class="mobile-menu" id="mobileMenuButton">
-            <span></span>
-            <span></span>
-            <span></span>
-          </div>
-        </div>
-      </div>
-      
-      <!-- Mobile Navigation -->
-      <div class="mobile-nav" id="mobileNav">
-        <div class="icon-container">
-          <div class="icon-wrapper add-post-button">
-            <span class="icon">➕</span>
-            <span class="ml-2">Add</span>
-          </div>
-          <a href="/discussions" class="icon-wrapper">
-            <span class="icon">💬</span>
-            <span class="ml-2">Discussions</span>
-          </a>
-          <div class="icon-wrapper">
-            <span class="icon">💲</span>
-            <span class="ml-2">Money</span>
-          </div>
-          <div class="icon-wrapper">
-            <span class="icon">🔔</span>
-            <span class="ml-2">Notifications</span>
-          </div>
-          <a href="/profile" class="icon-wrapper">
-            <span class="icon">👤</span>
-            <span class="ml-2">Profile</span>
-          </a>
-          <div class="icon-wrapper">
-            <span class="icon">⚙️</span>
-            <span class="ml-2">Settings</span>
-          </div>
-        </div>
-      </div>
-    </header>
-    
-    <!-- Search bars row -->
-    <div class="search-row">
-      <div class="left-search-container">
-        <span class="search-icon">🔍</span>
-        <input type="text" placeholder="Ask a question, share an idea..." class="p-2 rounded text-base search-input">
-      </div>
-      <div class="right-search-container">
-        <span class="search-icon">🔍</span>
-        <input type="text" placeholder="Search..." class="p-2 rounded text-base search-input">
-      </div>
+<div class="container mx-auto px-4">
+  <!-- Search bars row -->
+  <div class="search-row">
+    <div class="left-search-container">
+      <span class="search-icon">🔍</span>
+      <input type="text" placeholder="Ask a question, share an idea..." class="p-2 rounded text-base search-input">
     </div>
-    
-    <div class="main-content">
-      <div class="left-column">
-        <div class="button-group">
-          <button class="nav-button bg-[#A3B18A] text-white">
-            Groups
-          </button>
-          <a href="/activity" class="nav-button bg-gray-200 text-gray-700">
-            Activity
-          </a>
-        </div>
-        <div class="space-y-4">
-          <!-- Vegan Cookbook Club Card -->
-          <div class="group-card">
-            <div class="group-header">
-              <div class="group-info">
-                <h2 class="text-black text-base font-semibold">Vegan Cookbook Club</h2>
-                <p class="text-black text-sm">700 members · 5 new topics · 44 replies</p>
-              </div>
-              <div class="group-avatar"></div>
+    <div class="right-search-container">
+      <span class="search-icon">🔍</span>
+      <input type="text" placeholder="Search..." class="p-2 rounded text-base search-input">
+    </div>
+  </div>
+  
+  <div class="main-content">
+    <div class="left-column">
+      <div class="button-group">
+        <button class="nav-button bg-[#A3B18A] text-white">
+          Groups
+        </button>
+        <a href="/activity" class="nav-button bg-gray-200 text-gray-700">
+          Activity
+        </a>
+      </div>
+      <div class="space-y-4">
+        <!-- Vegan Cookbook Club Card -->
+        <div class="group-card">
+          <div class="group-header">
+            <div class="group-info">
+              <h2 class="text-black text-base font-semibold">Vegan Cookbook Club</h2>
+              <p class="text-black text-sm">700 members · 5 new topics · 44 replies</p>
             </div>
-            <div class="post-container">
-              <div class="post">
-                <div class="post-avatar">C</div>
-                <div class="post-content">
-                  <div class="post-meta">
-                    <span class="post-author">cabot</span>
-                    <span class="post-time">5m</span>
-                  </div>
-                  <p class="text-black text-sm">We successfully made our first baked vegan mac and cheese from the cookbook and it was absolutely delicious! The cashew-based sauce was surprisingly creamy.</p>
+            <div class="group-avatar"></div>
+          </div>
+          <div class="post-container">
+            <div class="post">
+              <div class="post-avatar">C</div>
+              <div class="post-content">
+                <div class="post-meta">
+                  <span class="post-author">cabot</span>
+                  <span class="post-time">5m</span>
                 </div>
+                <p class="text-black text-sm">We successfully made our first baked vegan mac and cheese from the cookbook and it was absolutely delicious! The cashew-based sauce was surprisingly creamy.</p>
               </div>
             </div>
           </div>
-          
-          <!-- South Shore Eats Card -->
-          <div class="group-card">
-            <div class="group-header">
-              <div class="group-info">
-                <h2 class="text-black text-base font-semibold">South Shore Eats</h2>
-                <p class="text-black text-sm">1k members · 7 new topics · 56 replies</p>
-              </div>
-              <div class="group-avatar"></div>
+        </div>
+        
+        <!-- South Shore Eats Card -->
+        <div class="group-card">
+          <div class="group-header">
+            <div class="group-info">
+              <h2 class="text-black text-base font-semibold">South Shore Eats</h2>
+              <p class="text-black text-sm">1k members · 7 new topics · 56 replies</p>
             </div>
-            <div class="post-container">
-              <div class="post">
-                <div class="post-avatar">C</div>
-                <div class="post-content">
-                  <div class="post-meta">
-                    <span class="post-author">Christina</span>
-                    <span class="post-time">1hr</span>
-                  </div>
-                  <p class="text-black text-sm">The farmers market in Cohasset will feature a new raw bar on Saturday with fresh oysters from local farms. They're also hosting a cooking demonstration!</p>
+            <div class="group-avatar"></div>
+          </div>
+          <div class="post-container">
+            <div class="post">
+              <div class="post-avatar">C</div>
+              <div class="post-content">
+                <div class="post-meta">
+                  <span class="post-author">Christina</span>
+                  <span class="post-time">1hr</span>
                 </div>
+                <p class="text-black text-sm">The farmers market in Cohasset will feature a new raw bar on Saturday with fresh oysters from local farms. They're also hosting a cooking demonstration!</p>
               </div>
             </div>
           </div>
         </div>
       </div>
-      
-      <div class="right-column">
-        <div class="space-y-4">
-          <div class="collection-container">
-            <div class="collection-header">
-              <h2 class="text-black text-base font-semibold">My Collection</h2>
-              <a href="#" class="text-[#A3B18A] text-sm">See All</a>
-            </div>
-            <div class="gray-square"></div>
-            <div class="text-left mt-2">
-              <p class="text-black text-sm">Title</p>
-              <p class="text-black text-xs">Subtitle</p>
-            </div>
+    </div>
+    
+    <div class="right-column">
+      <div class="space-y-4">
+        <div class="collection-container">
+          <div class="collection-header">
+            <h2 class="text-black text-base font-semibold">My Collection</h2>
+            <a href="#" class="text-[#A3B18A] text-sm">See All</a>
           </div>
-          <div class="collection-container">
-            <div class="collection-header">
-              <h2 class="text-black text-base font-semibold">Events</h2>
-              <a href="#" class="text-[#A3B18A] text-sm">See All</a>
-            </div>
-            <div class="gray-square"></div>
-            <div class="text-left mt-2">
-              <p class="text-black text-xs">Date</p>
-              <p class="text-black text-xs">Title</p>
-            </div>
+          <div class="gray-square"></div>
+          <div class="text-left mt-2">
+            <p class="text-black text-sm">Title</p>
+            <p class="text-black text-xs">Subtitle</p>
           </div>
-          <div class="collection-container">
-            <div class="collection-header">
-              <h2 class="text-black text-base font-semibold">Featured</h2>
-              <a href="#" class="text-[#A3B18A] text-sm">See All</a>
-            </div>
-            <div class="gray-square"></div>
+        </div>
+        <div class="collection-container">
+          <div class="collection-header">
+            <h2 class="text-black text-base font-semibold">Events</h2>
+            <a href="#" class="text-[#A3B18A] text-sm">See All</a>
           </div>
+          <div class="gray-square"></div>
+          <div class="text-left mt-2">
+            <p class="text-black text-xs">Date</p>
+            <p class="text-black text-xs">Title</p>
+          </div>
+        </div>
+        <div class="collection-container">
+          <div class="collection-header">
+            <h2 class="text-black text-base font-semibold">Featured</h2>
+            <a href="#" class="text-[#A3B18A] text-sm">See All</a>
+          </div>
+          <div class="gray-square"></div>
         </div>
       </div>
     </div>
   </div>
+</div>
 
-  <!-- New Post Modal -->
-  <div class="modal-overlay" id="newPostModal">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h2 class="modal-title">Create New Post</h2>
-        <button class="modal-close" id="closeModal">&times;</button>
-      </div>
-      <div class="modal-body">
-        <form id="newPostForm">
-          <div class="form-group">
-            <select class="form-select" id="groupSelect">
-              <option value="" disabled selected>Select a group</option>
-              <option value="vegan-cookbook">Vegan Cookbook Club</option>
-              <option value="south-shore-eats">South Shore Eats</option>
-              <option value="fitness-group">Fitness Group</option>
-              <option value="book-club">Book Club</option>
-              <option value="tech-talk">Tech Talk</option>
-            </select>
-          </div>
-          
-          <div class="form-group">
-            <select class="form-select" id="subgroupSelect">
-              <option value="" disabled selected>Select a subgroup</option>
-              <option value="recipes">Recipes</option>
-              <option value="reviews">Reviews</option>
-              <option value="questions">Questions</option>
-              <option value="events">Events</option>
-              <option value="general">General</option>
-            </select>
-          </div>
-          
-          <div class="form-group">
-            <input type="text" class="form-input" id="postTitle" placeholder="Title">
-          </div>
-          
-          <div class="form-group">
-            <textarea class="form-textarea" id="postContent" placeholder="Type your content here"></textarea>
-          </div>
-          
-          <div class="form-actions">
-            <button type="button" class="btn btn-cancel" id="cancelPost">Cancel</button>
-            <button type="submit" class="btn btn-submit">Create Post</button>
-          </div>
-        </form>
-      </div>
-    </div>
-  </div>
-
-  <!-- Confirmation Modal -->
-  <div class="modal-overlay" id="confirmationModal">
-    <div class="confirmation-modal">
-      <div class="confirmation-header">
-        <h2 class="confirmation-title">Discard Changes?</h2>
-      </div>
-      <div class="confirmation-body">
-        <p class="confirmation-message">You have unsaved changes. If you continue, all your progress will be lost.</p>
-        <div class="confirmation-actions">
-          <button type="button" class="btn btn-cancel" id="confirmCancel">Cancel</button>
-          <button type="button" class="btn btn-warning" id="confirmDiscard">Discard</button>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <script>
-    document.addEventListener('DOMContentLoaded', function() {
-      // Mobile menu functionality
-      const mobileMenuButton = document.getElementById('mobileMenuButton');
-      const mobileNav = document.getElementById('mobileNav');
-      
-      mobileMenuButton.addEventListener('click', function() {
-        mobileNav.classList.toggle('active');
-      });
-      
-      // Close mobile menu when clicking outside
-      document.addEventListener('click', function(event) {
-        if (!event.target.closest('.header-right') && mobileNav.classList.contains('active')) {
-          mobileNav.classList.remove('active');
-        }
-      });
-      
-      // Modal functionality
-      const newPostModal = document.getElementById('newPostModal');
-      const confirmationModal = document.getElementById('confirmationModal');
-      const newPostForm = document.getElementById('newPostForm');
-      const postTitle = document.getElementById('postTitle');
-      const postContent = document.getElementById('postContent');
-      
-      // Function to check if form has content
-      function formHasContent() {
-        return postTitle.value.trim() !== '' || postContent.value.trim() !== '';
-      }
-      
-      // Function to reset form and close modal
-      function resetAndCloseModal() {
-        newPostForm.reset();
-        newPostModal.classList.remove('active');
-        document.body.style.overflow = '';
-      }
-      
-      // Add click handlers to all + icons
-      document.querySelectorAll('.add-post-button').forEach(button => {
-        button.addEventListener('click', function() {
-          newPostModal.classList.add('active');
-          document.body.style.overflow = 'hidden';
-        });
-      });
-      
-      // Close modal functions
-      document.getElementById('closeModal').addEventListener('click', function() {
-        if (formHasContent()) {
-          // Show confirmation modal
-          confirmationModal.classList.add('active');
-        } else {
-          resetAndCloseModal();
-        }
-      });
-      
-      document.getElementById('cancelPost').addEventListener('click', function() {
-        if (formHasContent()) {
-          // Show confirmation modal
-          confirmationModal.classList.add('active');
-        } else {
-          resetAndCloseModal();
-        }
-      });
-      
-      // Confirmation modal actions
-      document.getElementById('confirmCancel').addEventListener('click', function() {
-        confirmationModal.classList.remove('active');
-      });
-      
-      document.getElementById('confirmDiscard').addEventListener('click', function() {
-        confirmationModal.classList.remove('active');
-        resetAndCloseModal();
-      });
-      
-      // Close modal when clicking outside
-      newPostModal.addEventListener('click', function(event) {
-        if (event.target === newPostModal) {
-          if (formHasContent()) {
-            confirmationModal.classList.add('active');
-          } else {
-            resetAndCloseModal();
-          }
-        }
-      });
-      
-      // Close confirmation modal when clicking outside
-      confirmationModal.addEventListener('click', function(event) {
-        if (event.target === confirmationModal) {
-          confirmationModal.classList.remove('active');
-        }
-      });
-      
-      // Form submission
-      newPostForm.addEventListener('submit', function(event) {
-        event.preventDefault();
-        alert('Post created successfully!');
-        resetAndCloseModal();
-      });
-    });
-  </script>
-</body>
-</html>
+<style>
+/* Only page-specific CSS styles - NO HEADER/MODAL CSS */
+.container {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 1rem;
+}
+.search-row {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  padding: 1rem 0;
+  width: 100%;
+}
+@media (min-width: 768px) {
+  .search-row {
+    flex-direction: row;
+  }
+}
+.left-search-container, .right-search-container {
+  width: 100%;
+  position: relative;
+}
+@media (min-width: 768px) {
+  .left-search-container {
+    flex: 0 0 calc(70% - 0.5rem);
+  }
+  .right-search-container {
+    flex: 0 0 calc(30% - 0.5rem);
+  }
+}
+.search-icon {
+  position: absolute;
+  left: 1rem;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 1.2rem;
+  color: #6b7280;
+}
+.search-input {
+  padding-left: 3rem;
+  width: 100%;
+  background-color: white;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+  font-size: 1rem;
+}
+.main-content {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  padding: 0;
+}
+@media (min-width: 768px) {
+  .main-content {
+    flex-direction: row;
+  }
+}
+.left-column {
+  width: 100%;
+  padding-right: 0;
+}
+@media (min-width: 768px) {
+  .left-column {
+    flex: 0 0 70%;
+    padding-right: 1rem;
+  }
+}
+.right-column {
+  width: 100%;
+  padding-left: 0;
+  margin-top: 2rem;
+}
+@media (min-width: 768px) {
+  .right-column {
+    flex: 0 0 30%;
+    padding-left: 1rem;
+    margin-top: 0;
+  }
+}
+.button-group {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+.nav-button {
+  padding: 0.5rem 1rem;
+  border-radius: 6px;
+  font-size: 0.9rem;
+  text-decoration: none;
+  display: inline-block;
+  text-align: center;
+}
+.group-card {
+  background-color: white;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  padding: 1.5rem;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  margin-bottom: 1.5rem;
+}
+.group-header {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+.group-avatar {
+  width: 4rem;
+  height: 4rem;
+  background-color: #9ca3af;
+  border-radius: 8px;
+  flex-shrink: 0;
+  order: 2;
+}
+.group-info {
+  flex-grow: 1;
+  order: 1;
+}
+.post-container {
+  border-top: 1px solid #d1d5db;
+  padding-top: 1rem;
+  margin-left: 0;
+}
+.post {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+}
+.post-avatar {
+  width: 2.5rem;
+  height: 2.5rem;
+  background-color: #a3b18a;
+  border-radius: 50%;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-weight: bold;
+  font-size: 0.9rem;
+}
+.post-content {
+  flex-grow: 1;
+}
+.post-meta {
+  display: flex;
+  align-items: center;
+  margin-bottom: 0.25rem;
+}
+.post-author {
+  font-weight: 600;
+  margin-right: 0.5rem;
+  font-size: 0.9rem;
+}
+.post-time {
+  color: #6b7280;
+  font-size: 0.8rem;
+}
+.collection-container {
+  aspect-ratio: 1 / 1;
+  display: flex;
+  flex-direction: column;
+  background-color: white;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  padding: 1.5rem;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  margin-bottom: 1.5rem;
+}
+.collection-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.5rem;
+}
+.gray-square {
+  width: 100%;
+  flex-grow: 1;
+  background-color: #9ca3af;
+  border-radius: 8px;
+}
+</style>

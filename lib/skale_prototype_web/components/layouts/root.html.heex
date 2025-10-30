@@ -9,6 +9,142 @@
     <script defer phx-track-static type="text/javascript" src={~p"/assets/app.js"}></script>
   </head>
   <body class="bg-gray-100 font-sans min-h-screen">
+    <!-- Single Header - No Duplication -->
+    <header class="bg-[#DDE5DD] p-4">
+      <div class="flex items-center justify-between">
+        <div class="flex items-center">
+          <a href="/">
+            <img src="/images/logo.png" alt="Skale" class="w-10 h-10">
+          </a>
+          <h1 class="text-black text-lg sm:text-xl ml-3">Welcome, Christina!</h1>
+        </div>
+        
+        <!-- Desktop Icons - Hidden on Mobile -->
+        <div class="hidden md:flex gap-2">
+          <button phx-click="open_modal" class="icon-wrapper">
+            <span>➕</span>
+          </button>
+          <a href="/discussions" class="icon-wrapper">
+            <span>💬</span>
+          </a>
+          <button class="icon-wrapper">
+            <span>💲</span>
+          </button>
+          <button class="icon-wrapper">
+            <span>🔔</span>
+          </button>
+          <a href="/profile" class="icon-wrapper">
+            <span>👤</span>
+          </a>
+          <button class="icon-wrapper">
+            <span>⚙️</span>
+          </button>
+        </div>
+        
+        <!-- Mobile Menu Button - Hidden on Desktop -->
+        <button class="md:hidden" phx-click="toggle_mobile_menu">
+          <div class="flex flex-col gap-1">
+            <span class="w-6 h-0.5 bg-black"></span>
+            <span class="w-6 h-0.5 bg-black"></span>
+            <span class="w-6 h-0.5 bg-black"></span>
+          </div>
+        </button>
+      </div>
+      
+      <!-- Mobile Menu - Hidden by Default -->
+      <div class="hidden md:hidden mt-4 space-y-2" id="mobile-menu">
+        <button phx-click="open_modal" class="flex items-center gap-3 p-3 w-full text-left bg-white/30 rounded-lg">
+          <span>➕</span>
+          <span>Add</span>
+        </button>
+        <a href="/discussions" class="flex items-center gap-3 p-3 w-full text-left bg-white/30 rounded-lg">
+          <span>💬</span>
+          <span>Discussions</span>
+        </a>
+        <button class="flex items-center gap-3 p-3 w-full text-left bg-white/30 rounded-lg">
+          <span>💲</span>
+          <span>Money</span>
+        </button>
+        <button class="flex items-center gap-3 p-3 w-full text-left bg-white/30 rounded-lg">
+          <span>🔔</span>
+          <span>Notifications</span>
+        </button>
+        <a href="/profile" class="flex items-center gap-3 p-3 w-full text-left bg-white/30 rounded-lg">
+          <span>👤</span>
+          <span>Profile</span>
+        </a>
+        <button class="flex items-center gap-3 p-3 w-full text-left bg-white/30 rounded-lg">
+          <span>⚙️</span>
+          <span>Settings</span>
+        </button>
+      </div>
+    </header>
+
     <%= @inner_content %>
+
+    <!-- Modal - Using LiveView Pattern -->
+    <div id="post-modal" class="hidden fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
+      <div class="bg-white rounded-lg max-w-md w-full p-6">
+        <div class="flex justify-between items-center mb-4">
+          <h2 class="text-xl font-semibold">Create New Post</h2>
+          <button phx-click="close_modal" class="text-gray-500 hover:text-gray-700">
+            &times;
+          </button>
+        </div>
+        
+        <form phx-submit="create_post">
+          <div class="space-y-4">
+            <div>
+              <select class="w-full p-2 border border-gray-300 rounded" name="group">
+                <option value="" disabled selected>Select a group</option>
+                <option value="vegan-cookbook">Vegan Cookbook Club</option>
+                <option value="south-shore-eats">South Shore Eats</option>
+              </select>
+            </div>
+            
+            <div>
+              <select class="w-full p-2 border border-gray-300 rounded" name="subgroup">
+                <option value="" disabled selected>Select a subgroup</option>
+                <option value="recipes">Recipes</option>
+                <option value="reviews">Reviews</option>
+              </select>
+            </div>
+            
+            <div>
+              <input type="text" name="title" placeholder="Title" class="w-full p-2 border border-gray-300 rounded">
+            </div>
+            
+            <div>
+              <textarea name="content" placeholder="Type your content here" class="w-full p-2 border border-gray-300 rounded h-32"></textarea>
+            </div>
+            
+            <div class="flex justify-end gap-2">
+              <button type="button" phx-click="close_modal" class="px-4 py-2 bg-gray-200 rounded">
+                Cancel
+              </button>
+              <button type="submit" class="px-4 py-2 bg-[#A3B18A] text-white rounded">
+                Create Post
+              </button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <script>
+    // Simple mobile menu toggle
+    document.addEventListener('click', function(event) {
+      if (event.target.closest('[phx-click="toggle_mobile_menu"]')) {
+        const menu = document.getElementById('mobile-menu');
+        menu.classList.toggle('hidden');
+      }
+      
+      // Close mobile menu when clicking outside
+      if (!event.target.closest('#mobile-menu') && !event.target.closest('[phx-click="toggle_mobile_menu"]')) {
+        const menu = document.getElementById('mobile-menu');
+        menu.classList.add('hidden');
+      }
+    });
+    </script>
   </body>
 </html>

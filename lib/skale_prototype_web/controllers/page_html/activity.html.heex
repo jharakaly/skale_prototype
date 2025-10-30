@@ -1,0 +1,555 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Skale Prototype - Activity</title>
+  <script defer src="https://cdn.tailwindcss.com"></script>
+  <style>
+    body, html {
+      margin: 0;
+      padding: 0;
+      overflow-x: hidden;
+      width: 100%;
+    }
+    .container {
+      width: 100%;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 1rem;
+    }
+    .header-content {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0 0.5rem;
+    }
+    .icon-container {
+      display: flex;
+      gap: 1rem;
+    }
+    .icon-wrapper {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 2.5rem;
+      height: 2.5rem;
+      background-color: rgba(255, 255, 255, 0.3);
+      border-radius: 8px;
+      transition: background-color 0.2s;
+    }
+    .icon-wrapper:hover {
+      background-color: rgba(255, 255, 255, 0.5);
+    }
+    .icon {
+      font-size: 1.3rem;
+      line-height: 1;
+    }
+    .mobile-menu {
+      display: flex;
+      flex-direction: column;
+      cursor: pointer;
+      padding: 0.5rem;
+    }
+    .mobile-menu span {
+      width: 25px;
+      height: 3px;
+      background-color: #000;
+      margin: 2px 0;
+      transition: 0.3s;
+    }
+    .mobile-nav {
+      display: none;
+      position: absolute;
+      top: 100%;
+      right: 0;
+      background-color: #DDE5DD;
+      width: 100%;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      z-index: 1000;
+    }
+    .mobile-nav.active {
+      display: block;
+    }
+    .mobile-nav .icon-container {
+      flex-direction: column;
+      padding: 1rem;
+      gap: 0.5rem;
+    }
+    .mobile-nav .icon-wrapper {
+      width: 100%;
+      justify-content: flex-start;
+      padding: 0.75rem 1rem;
+    }
+    .main-content {
+      display: flex;
+      flex-direction: column;
+      width: 100%;
+      padding: 0;
+    }
+    @media (min-width: 768px) {
+      .main-content {
+        flex-direction: row;
+      }
+    }
+    .left-column {
+      width: 100%;
+      padding-right: 0;
+    }
+    @media (min-width: 768px) {
+      .left-column {
+        flex: 0 0 70%;
+        padding-right: 1rem;
+      }
+    }
+    .right-column {
+      width: 100%;
+      padding-left: 0;
+      margin-top: 2rem;
+    }
+    @media (min-width: 768px) {
+      .right-column {
+        flex: 0 0 30%;
+        padding-left: 1rem;
+        margin-top: 0;
+      }
+    }
+    .search-row {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+      padding: 1rem 0;
+      width: 100%;
+    }
+    @media (min-width: 768px) {
+      .search-row {
+        flex-direction: row;
+      }
+    }
+    .left-search-container {
+      width: 100%;
+      position: relative;
+    }
+    @media (min-width: 768px) {
+      .left-search-container {
+        flex: 0 0 calc(70% - 0.5rem);
+      }
+    }
+    .right-search-container {
+      width: 100%;
+      position: relative;
+    }
+    @media (min-width: 768px) {
+      .right-search-container {
+        flex: 0 0 calc(30% - 0.5rem);
+      }
+    }
+    .search-icon {
+      position: absolute;
+      left: 1rem;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 1.2rem;
+      color: #6b7280;
+    }
+    .search-input {
+      padding-left: 3rem;
+      width: 100%;
+      background-color: white;
+      border: 1px solid #e5e7eb;
+      border-radius: 8px;
+      box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+      font-size: 1rem;
+    }
+    @media (max-width: 480px) {
+      .search-input {
+        font-size: 16px;
+      }
+    }
+    .activity-card {
+      background-color: white;
+      border: 1px solid #e5e7eb;
+      border-radius: 12px;
+      padding: 1.5rem;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+      margin-bottom: 1.5rem;
+    }
+    @media (max-width: 480px) {
+      .activity-card {
+        padding: 1rem;
+        margin-bottom: 1rem;
+      }
+    }
+    .post {
+      display: flex;
+      align-items: flex-start;
+      gap: 1rem;
+    }
+    @media (max-width: 480px) {
+      .post {
+        gap: 0.75rem;
+      }
+    }
+    .post-avatar {
+      width: 2.5rem;
+      height: 2.5rem;
+      background-color: #a3b18a;
+      border-radius: 50%;
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-weight: bold;
+      font-size: 0.9rem;
+    }
+    @media (max-width: 480px) {
+      .post-avatar {
+        width: 2rem;
+        height: 2rem;
+        font-size: 0.8rem;
+      }
+    }
+    .post-content {
+      flex-grow: 1;
+    }
+    .post-meta {
+      display: flex;
+      align-items: center;
+      margin-bottom: 0.5rem;
+      flex-wrap: wrap;
+    }
+    .post-author {
+      font-weight: 600;
+      margin-right: 0.5rem;
+      color: #374151;
+      font-size: 0.9rem;
+    }
+    .post-time {
+      color: #6b7280;
+      font-size: 0.85rem;
+    }
+    .post-text {
+      color: #374151;
+      line-height: 1.5;
+      margin-bottom: 0.5rem;
+      font-size: 0.9rem;
+    }
+    @media (max-width: 480px) {
+      .post-text {
+        font-size: 0.85rem;
+      }
+    }
+    .group-name {
+      color: #A3B18A;
+      font-weight: 600;
+      font-size: 0.9rem;
+      margin-bottom: 0.25rem;
+    }
+    @media (max-width: 480px) {
+      .group-name {
+        font-size: 0.85rem;
+      }
+    }
+    .logo {
+      width: 40px;
+      height: 40px;
+      margin-right: 1rem;
+    }
+    @media (max-width: 480px) {
+      .logo {
+        width: 32px;
+        height: 32px;
+        margin-right: 0.75rem;
+      }
+    }
+    .collection-container {
+      aspect-ratio: 1 / 1;
+      display: flex;
+      flex-direction: column;
+      background-color: white;
+      border: 1px solid #e5e7eb;
+      border-radius: 12px;
+      padding: 1.5rem;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+      margin-bottom: 1.5rem;
+    }
+    @media (max-width: 480px) {
+      .collection-container {
+        padding: 1rem;
+        margin-bottom: 1rem;
+      }
+    }
+    .collection-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 0.5rem;
+    }
+    .gray-square {
+      width: 100%;
+      flex-grow: 1;
+      background-color: #9ca3af;
+      border-radius: 8px;
+    }
+    .desktop-icons {
+      display: none;
+    }
+    @media (min-width: 768px) {
+      .desktop-icons {
+        display: flex;
+      }
+      .mobile-menu {
+        display: none;
+      }
+    }
+    .button-group {
+      display: flex;
+      gap: 0.5rem;
+      margin-bottom: 1rem;
+    }
+    @media (max-width: 480px) {
+      .button-group {
+        gap: 0.25rem;
+      }
+    }
+    .nav-button {
+      padding: 0.5rem 1rem;
+      border-radius: 6px;
+      font-size: 0.9rem;
+      text-decoration: none;
+      display: inline-block;
+      text-align: center;
+    }
+    @media (max-width: 480px) {
+      .nav-button {
+        padding: 0.5rem 0.75rem;
+        font-size: 0.8rem;
+        flex: 1;
+      }
+    }
+  </style>
+</head>
+<body class="bg-gray-100 font-sans min-h-screen">
+  <div class="container">
+    <header class="bg-[#DDE5DD] p-4 relative">
+      <div class="header-content">
+        <div class="header-left flex items-center">
+          <!-- Logo - update the src path to your actual logo file -->
+          <img src="/images/logo.png" alt="Skale" class="logo">
+          <h1 class="text-black text-lg sm:text-xl">Welcome, Christina!</h1>
+        </div>
+        <div class="header-right">
+          <!-- Desktop Icons -->
+          <div class="desktop-icons icon-container">
+            <div class="icon-wrapper">
+              <span class="icon">➕</span>
+            </div>
+            <a href="/discussions" class="icon-wrapper">
+              <span class="icon">💬</span>
+            </a>
+            <div class="icon-wrapper">
+              <span class="icon">💲</span>
+            </div>
+            <div class="icon-wrapper">
+              <span class="icon">🔔</span>
+            </div>
+            <!-- Profile icon with link -->
+            <a href="/profile" class="icon-wrapper">
+              <span class="icon">👤</span>
+            </a>
+            <!-- Settings icon (cog) -->
+            <div class="icon-wrapper">
+              <span class="icon">⚙️</span>
+            </div>
+          </div>
+          
+          <!-- Mobile Menu Button -->
+          <div class="mobile-menu" id="mobileMenuButton">
+            <span></span>
+            <span></span>
+            <span></span>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Mobile Navigation -->
+      <div class="mobile-nav" id="mobileNav">
+        <div class="icon-container">
+          <div class="icon-wrapper">
+            <span class="icon">➕</span>
+            <span class="ml-2">Add</span>
+          </div>
+          <a href="/discussions" class="icon-wrapper">
+            <span class="icon">💬</span>
+            <span class="ml-2">Discussions</span>
+          </a>
+          <div class="icon-wrapper">
+            <span class="icon">💲</span>
+            <span class="ml-2">Money</span>
+          </div>
+          <div class="icon-wrapper">
+            <span class="icon">🔔</span>
+            <span class="ml-2">Notifications</span>
+          </div>
+          <a href="/profile" class="icon-wrapper">
+            <span class="icon">👤</span>
+            <span class="ml-2">Profile</span>
+          </a>
+          <div class="icon-wrapper">
+            <span class="icon">⚙️</span>
+            <span class="ml-2">Settings</span>
+          </div>
+        </div>
+      </div>
+    </header>
+    
+    <!-- Search bars row -->
+    <div class="search-row">
+      <div class="left-search-container">
+        <span class="search-icon">🔍</span>
+        <input type="text" placeholder="Ask a question, share an idea..." class="p-2 rounded text-base search-input">
+      </div>
+      <div class="right-search-container">
+        <span class="search-icon">🔍</span>
+        <input type="text" placeholder="Search..." class="p-2 rounded text-base search-input">
+      </div>
+    </div>
+    
+    <div class="main-content">
+      <div class="left-column">
+        <div class="button-group">
+          <a href="/" class="nav-button bg-gray-200 text-gray-700">
+            Groups
+          </a>
+          <button class="nav-button bg-[#A3B18A] text-white">
+            Activity
+          </button>
+        </div>
+
+        <!-- Activity Feed Content -->
+        <div class="space-y-4">
+          <!-- Activity Item 1: New Post -->
+          <div class="activity-card">
+            <div class="post">
+              <div class="post-avatar">M</div>
+              <div class="post-content">
+                <div class="group-name">Vegan Cookbook Club</div>
+                <div class="post-meta">
+                  <span class="post-author">michael</span>
+                  <span class="post-time">2m</span>
+                </div>
+                <p class="post-text">Just tried the vegan lasagna recipe from chapter 3 - absolutely incredible! The cashew ricotta is a game changer.</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Activity Item 2: Reply to Your Post -->
+          <div class="activity-card">
+            <div class="post">
+              <div class="post-avatar">S</div>
+              <div class="post-content">
+                <div class="group-name">South Shore Eats</div>
+                <div class="post-meta">
+                  <span class="post-author">sarah</span>
+                  <span class="post-time">15m</span>
+                </div>
+                <p class="post-text">I went to that raw bar last weekend! The oysters were fantastic and the owner is super knowledgeable about local seafood.</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Activity Item 3: New Topic -->
+          <div class="activity-card">
+            <div class="post">
+              <div class="post-avatar">A</div>
+              <div class="post-content">
+                <div class="group-name">Local Foodies</div>
+                <div class="post-meta">
+                  <span class="post-author">alex</span>
+                  <span class="post-time">1hr</span>
+                </div>
+                <p class="post-text">Has anyone tried the new farm-to-table restaurant that opened downtown? Looking for recommendations before making reservations.</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Activity Item 4: Reply in Followed Topic -->
+          <div class="activity-card">
+            <div class="post">
+              <div class="post-avatar">J</div>
+              <div class="post-content">
+                <div class="group-name">Vegan Cookbook Club</div>
+                <div class="post-meta">
+                  <span class="post-author">jennifer</span>
+                  <span class="post-time">3hr</span>
+                </div>
+                <p class="post-text">For anyone struggling with the vegan cheese sauce, I found that adding a tablespoon of white miso paste really enhances the flavor!</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <div class="right-column">
+        <div class="space-y-4">
+          <div class="collection-container">
+            <div class="collection-header">
+              <h2 class="text-black text-base font-semibold">My Collection</h2>
+              <a href="#" class="text-[#A3B18A] text-sm">See All</a>
+            </div>
+            <div class="gray-square"></div>
+            <div class="text-left mt-2">
+              <p class="text-black text-sm">Title</p>
+              <p class="text-black text-xs">Subtitle</p>
+            </div>
+          </div>
+          <div class="collection-container">
+            <div class="collection-header">
+              <h2 class="text-black text-base font-semibold">Events</h2>
+              <a href="#" class="text-[#A3B18A] text-sm">See All</a>
+            </div>
+            <div class="gray-square"></div>
+            <div class="text-left mt-2">
+              <p class="text-black text-xs">Date</p>
+              <p class="text-black text-xs">Title</p>
+            </div>
+          </div>
+          <div class="collection-container">
+            <div class="collection-header">
+              <h2 class="text-black text-base font-semibold">Featured</h2>
+              <a href="#" class="text-[#A3B18A] text-sm">See All</a>
+            </div>
+            <div class="gray-square"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      const mobileMenuButton = document.getElementById('mobileMenuButton');
+      const mobileNav = document.getElementById('mobileNav');
+      
+      mobileMenuButton.addEventListener('click', function() {
+        mobileNav.classList.toggle('active');
+      });
+      
+      // Close mobile menu when clicking outside
+      document.addEventListener('click', function(event) {
+        if (!event.target.closest('.header-right') && mobileNav.classList.contains('active')) {
+          mobileNav.classList.remove('active');
+        }
+      });
+      
+      // Close mobile menu on window resize if it becomes desktop
+      window.addEventListener('resize', function() {
+        if (window.innerWidth >= 768) {
+          mobileNav.classList.remove('active');
+        }
+      });
+    });
+  </script>
+</body>
+</html>

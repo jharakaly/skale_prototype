@@ -1,0 +1,772 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Skale Prototype - Vegan Recipe Tips</title>
+  <script defer src="https://cdn.tailwindcss.com"></script>
+  <style>
+    body, html {
+      margin: 0;
+      padding: 0;
+      overflow-x: hidden;
+      width: 100%;
+    }
+    .container {
+      width: 100%;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 1rem;
+    }
+    .header-content {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0 0.5rem;
+    }
+    .icon-container {
+      display: flex;
+      gap: 1rem;
+    }
+    .icon-wrapper {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 2.5rem;
+      height: 2.5rem;
+      background-color: rgba(255, 255, 255, 0.3);
+      border-radius: 8px;
+      transition: background-color 0.2s;
+    }
+    .icon-wrapper:hover {
+      background-color: rgba(255, 255, 255, 0.5);
+    }
+    .icon {
+      font-size: 1.3rem;
+      line-height: 1;
+    }
+    .mobile-menu {
+      display: flex;
+      flex-direction: column;
+      cursor: pointer;
+      padding: 0.5rem;
+    }
+    .mobile-menu span {
+      width: 25px;
+      height: 3px;
+      background-color: #000;
+      margin: 2px 0;
+      transition: 0.3s;
+    }
+    .mobile-nav {
+      display: none;
+      position: absolute;
+      top: 100%;
+      right: 0;
+      background-color: #DDE5DD;
+      width: 100%;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      z-index: 1000;
+    }
+    .mobile-nav.active {
+      display: block;
+    }
+    .mobile-nav .icon-container {
+      flex-direction: column;
+      padding: 1rem;
+      gap: 0.5rem;
+    }
+    .mobile-nav .icon-wrapper {
+      width: 100%;
+      justify-content: flex-start;
+      padding: 0.75rem 1rem;
+    }
+    .main-content {
+      display: flex;
+      flex-direction: column;
+      width: 100%;
+      padding: 0;
+    }
+    @media (min-width: 768px) {
+      .main-content {
+        flex-direction: row;
+      }
+    }
+    .left-column {
+      width: 100%;
+      padding-right: 0;
+    }
+    @media (min-width: 768px) {
+      .left-column {
+        flex: 0 0 70%;
+        padding-right: 1rem;
+      }
+    }
+    .right-column {
+      width: 100%;
+      padding-left: 0;
+      margin-top: 2rem;
+    }
+    @media (min-width: 768px) {
+      .right-column {
+        flex: 0 0 30%;
+        padding-left: 1rem;
+        margin-top: 0;
+      }
+    }
+    .search-container {
+      position: relative;
+      margin-bottom: 1.5rem;
+      padding-top: 0.75rem;
+    }
+    .search-icon {
+      position: absolute;
+      left: 1rem;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 1.2rem;
+      color: #6b7280;
+    }
+    .search-input {
+      padding-left: 3rem;
+      width: 100%;
+      background-color: white;
+      border: 1px solid #e5e7eb;
+      border-radius: 8px;
+      box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+      font-size: 1rem;
+    }
+    @media (max-width: 480px) {
+      .search-input {
+        font-size: 16px;
+      }
+    }
+    .breadcrumb {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 1rem 0;
+      font-size: 0.9rem;
+      color: #6b7280;
+      flex-wrap: wrap;
+    }
+    @media (max-width: 480px) {
+      .breadcrumb {
+        font-size: 0.8rem;
+        padding: 0.75rem 0;
+      }
+    }
+    .breadcrumb-item {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .breadcrumb-link {
+      color: #6b7280;
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+    .breadcrumb-link:hover {
+      color: #374151;
+    }
+    .breadcrumb-active {
+      color: #A3B18A;
+      font-weight: 500;
+    }
+    .breadcrumb-separator {
+      color: #d1d5db;
+    }
+    .group-header-container {
+      background-color: white;
+      border: 1px solid #e5e7eb;
+      border-radius: 12px;
+      padding: 1.5rem;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+      margin-bottom: 2rem;
+      min-height: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+      position: relative;
+      transition: min-height 0.3s ease;
+      margin-top: 1rem;
+    }
+    @media (min-width: 768px) {
+      .group-header-container {
+        flex-direction: row;
+        padding: 2rem;
+        min-height: 300px;
+      }
+    }
+    .group-header-container.expanded {
+      min-height: auto;
+    }
+    @media (min-width: 768px) {
+      .group-header-container.expanded {
+        min-height: 400px;
+      }
+    }
+    .group-content {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      min-height: auto;
+    }
+    @media (min-width: 768px) {
+      .group-content {
+        min-height: 256px;
+      }
+    }
+    .group-title {
+      font-size: 1.25rem;
+      font-weight: bold;
+      color: #374151;
+      margin-bottom: 0.5rem;
+    }
+    @media (min-width: 768px) {
+      .group-title {
+        font-size: 1.5rem;
+      }
+    }
+    .group-subtitle {
+      font-size: 1rem;
+      color: #6b7280;
+      margin-bottom: 1rem;
+    }
+    @media (min-width: 768px) {
+      .group-subtitle {
+        font-size: 1.1rem;
+      }
+    }
+    .overview-container {
+      margin-bottom: 1.5rem;
+      flex-grow: 1;
+    }
+    .group-overview {
+      color: #374151;
+      line-height: 1.6;
+      overflow: hidden;
+      transition: all 0.3s ease;
+    }
+    .group-overview.collapsed {
+      display: -webkit-box;
+      -webkit-line-clamp: 3;
+      -webkit-box-orient: vertical;
+      max-height: 4.8em;
+    }
+    .group-overview.expanded {
+      display: block;
+      max-height: none;
+    }
+    .read-more-btn {
+      background: none;
+      border: none;
+      color: #A3B18A;
+      font-size: 0.9rem;
+      cursor: pointer;
+      padding: 0.25rem 0;
+      margin-top: 0.5rem;
+      font-weight: 500;
+    }
+    .read-more-btn:hover {
+      text-decoration: underline;
+    }
+    .moderator-info {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin-top: auto;
+      padding-top: 1rem;
+    }
+    .moderator-avatar {
+      width: 2.5rem;
+      height: 2.5rem;
+      background-color: #a3b18a;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-weight: bold;
+      font-size: 0.9rem;
+      flex-shrink: 0;
+    }
+    @media (min-width: 768px) {
+      .moderator-avatar {
+        width: 3rem;
+        height: 3rem;
+        font-size: 1rem;
+      }
+    }
+    .moderator-details {
+      font-size: 0.9rem;
+    }
+    .moderator-name {
+      font-weight: 600;
+      color: #374151;
+    }
+    .moderator-role {
+      color: #6b7280;
+    }
+    .group-image {
+      width: 100%;
+      height: 200px;
+      background-color: #9ca3af;
+      border-radius: 8px;
+      flex-shrink: 0;
+    }
+    @media (min-width: 768px) {
+      .group-image {
+        width: 25%;
+        height: 256px;
+      }
+    }
+    .subgroups-container {
+      background-color: white;
+      border: 1px solid #e5e7eb;
+      border-radius: 12px;
+      padding: 1.5rem;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+      margin-bottom: 2rem;
+    }
+    @media (max-width: 480px) {
+      .subgroups-container {
+        padding: 1rem;
+      }
+    }
+    .subgroups-title {
+      font-size: 1.2rem;
+      font-weight: bold;
+      color: #374151;
+      margin-bottom: 1rem;
+    }
+    .subgroups-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 1rem;
+    }
+    @media (min-width: 480px) {
+      .subgroups-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+    @media (min-width: 768px) {
+      .subgroups-grid {
+        grid-template-columns: repeat(3, 1fr);
+      }
+    }
+    .subgroup-link {
+      text-decoration: none;
+      color: inherit;
+    }
+    .subgroup-card {
+      aspect-ratio: 1 / 1;
+      display: flex;
+      flex-direction: column;
+      background-color: #f8f9fa;
+      border: 1px solid #e5e7eb;
+      border-radius: 8px;
+      padding: 0.75rem;
+      transition: transform 0.2s, box-shadow 0.2s;
+      cursor: pointer;
+      height: 100%;
+    }
+    .subgroup-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+    .subgroup-image {
+      width: 100%;
+      height: 60%;
+      background-color: #9ca3af;
+      border-radius: 6px;
+      margin-bottom: 0.5rem;
+    }
+    .subgroup-info {
+      flex-grow: 1;
+      display: flex;
+      flex-direction: column;
+      padding-bottom: 0.25rem;
+    }
+    .subgroup-name {
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: #374151;
+      margin-bottom: 0.05rem;
+    }
+    .subgroup-members {
+      font-size: 0.75rem;
+      color: #6b7280;
+    }
+    .collection-container {
+      aspect-ratio: 1 / 1;
+      display: flex;
+      flex-direction: column;
+      background-color: white;
+      border: 1px solid #e5e7eb;
+      border-radius: 12px;
+      padding: 1.5rem;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+      margin-bottom: 1.5rem;
+    }
+    @media (max-width: 480px) {
+      .collection-container {
+        padding: 1rem;
+        margin-bottom: 1rem;
+      }
+    }
+    .collection-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 0.5rem;
+    }
+    .gray-square {
+      width: 100%;
+      flex-grow: 1;
+      background-color: #9ca3af;
+      border-radius: 8px;
+    }
+    .logo {
+      width: 40px;
+      height: 40px;
+      margin-right: 1rem;
+    }
+    @media (max-width: 480px) {
+      .logo {
+        width: 32px;
+        height: 32px;
+        margin-right: 0.75rem;
+      }
+    }
+    .desktop-icons {
+      display: none;
+    }
+    @media (min-width: 768px) {
+      .desktop-icons {
+        display: flex;
+      }
+      .mobile-menu {
+        display: none;
+      }
+    }
+  </style>
+</head>
+<body class="bg-gray-100 font-sans min-h-screen">
+  <div class="container">
+    <header class="bg-[#DDE5DD] p-4 relative">
+      <div class="header-content">
+        <div class="header-left flex items-center">
+          <!-- Logo linked to homepage -->
+          <a href="/">
+            <img src="/images/logo.png" alt="Skale" class="logo">
+          </a>
+          <h1 class="text-black text-lg sm:text-xl">Welcome, Christina!</h1>
+        </div>
+        <div class="header-right">
+          <!-- Desktop Icons -->
+          <div class="desktop-icons icon-container">
+            <div class="icon-wrapper">
+              <span class="icon">➕</span>
+            </div>
+            <a href="/discussions" class="icon-wrapper">
+              <span class="icon">💬</span>
+            </a>
+            <div class="icon-wrapper">
+              <span class="icon">💲</span>
+            </div>
+            <div class="icon-wrapper">
+              <span class="icon">🔔</span>
+            </div>
+            <!-- Profile icon with link -->
+            <a href="/profile" class="icon-wrapper">
+              <span class="icon">👤</span>
+            </a>
+            <div class="icon-wrapper">
+              <span class="icon">⚙️</span>
+            </div>
+          </div>
+          
+          <!-- Mobile Menu Button -->
+          <div class="mobile-menu" id="mobileMenuButton">
+            <span></span>
+            <span></span>
+            <span></span>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Mobile Navigation -->
+      <div class="mobile-nav" id="mobileNav">
+        <div class="icon-container">
+          <div class="icon-wrapper">
+            <span class="icon">➕</span>
+            <span class="ml-2">Add</span>
+          </div>
+          <a href="/discussions" class="icon-wrapper">
+            <span class="icon">💬</span>
+            <span class="ml-2">Discussions</span>
+          </a>
+          <div class="icon-wrapper">
+            <span class="icon">💲</span>
+            <span class="ml-2">Money</span>
+          </div>
+          <div class="icon-wrapper">
+            <span class="icon">🔔</span>
+            <span class="ml-2">Notifications</span>
+          </div>
+          <a href="/profile" class="icon-wrapper">
+            <span class="icon">👤</span>
+            <span class="ml-2">Profile</span>
+          </a>
+          <div class="icon-wrapper">
+            <span class="icon">⚙️</span>
+            <span class="ml-2">Settings</span>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <div class="main-content">
+      <div class="left-column">
+        <!-- Breadcrumb only in left column -->
+        <div class="breadcrumb">
+          <div class="breadcrumb-item">
+            <a href="/" class="breadcrumb-link">Home</a>
+          </div>
+          <span class="breadcrumb-separator">/</span>
+          <div class="breadcrumb-item">
+            <a href="/discussions" class="breadcrumb-link">Discussions</a>
+          </div>
+          <span class="breadcrumb-separator">/</span>
+          <div class="breadcrumb-item">
+            <span class="breadcrumb-active">Vegan Recipe Tips</span>
+          </div>
+        </div>
+
+        <!-- Group Header Container -->
+        <div class="group-header-container" id="groupHeader">
+          <div class="group-content">
+            <h1 class="group-title">Vegan Recipe Tips</h1>
+            <h2 class="group-subtitle">Mastering Plant-Based Cooking</h2>
+            <div class="overview-container">
+              <div class="group-overview collapsed" id="overviewText">
+                Join our community of passionate vegan cooks sharing innovative recipes, 
+                ingredient substitutions, and cooking techniques. Whether you're new to 
+                plant-based eating or a seasoned vegan chef, you'll find inspiration and 
+                practical advice to elevate your culinary skills. Share your discoveries 
+                and learn from others in this supportive environment. Our members range 
+                from beginners looking for simple meal ideas to professional chefs 
+                exploring advanced techniques. We cover everything from basic ingredient 
+                swaps to complex flavor balancing.
+              </div>
+              <button class="read-more-btn" id="readMoreBtn">Read more...</button>
+            </div>
+            <div class="moderator-info">
+              <div class="moderator-avatar">MJ</div>
+              <div class="moderator-details">
+                <div class="moderator-name">Maria Johnson</div>
+                <div class="moderator-role">Group Moderator</div>
+              </div>
+            </div>
+          </div>
+          <div class="group-image"></div>
+        </div>
+
+        <!-- Subgroups Container -->
+        <div class="subgroups-container">
+          <h2 class="subgroups-title">Subgroups</h2>
+          <div class="subgroups-grid">
+            <!-- Subgroup 1 - Linked to Beginner Vegan page -->
+            <a href="subgroup_topics" class="subgroup-link">
+              <div class="subgroup-card">
+                <div class="subgroup-image"></div>
+                <div class="subgroup-info">
+                  <div class="subgroup-name">Beginner Vegan</div>
+                  <div class="subgroup-members">245 members</div>
+                </div>
+              </div>
+            </a>
+            
+            <!-- Subgroup 2 -->
+            <a href="#" class="subgroup-link">
+              <div class="subgroup-card">
+                <div class="subgroup-image"></div>
+                <div class="subgroup-info">
+                  <div class="subgroup-name">Vegan Baking</div>
+                  <div class="subgroup-members">189 members</div>
+                </div>
+              </div>
+            </a>
+            
+            <!-- Subgroup 3 -->
+            <a href="#" class="subgroup-link">
+              <div class="subgroup-card">
+                <div class="subgroup-image"></div>
+                <div class="subgroup-info">
+                  <div class="subgroup-name">Meal Prep</div>
+                  <div class="subgroup-members">312 members</div>
+                </div>
+              </div>
+            </a>
+            
+            <!-- Subgroup 4 -->
+            <a href="#" class="subgroup-link">
+              <div class="subgroup-card">
+                <div class="subgroup-image"></div>
+                <div class="subgroup-info">
+                  <div class="subgroup-name">International Vegan</div>
+                  <div class="subgroup-members">278 members</div>
+                </div>
+              </div>
+            </a>
+            
+            <!-- Subgroup 5 -->
+            <a href="#" class="subgroup-link">
+              <div class="subgroup-card">
+                <div class="subgroup-image"></div>
+                <div class="subgroup-info">
+                  <div class="subgroup-name">Quick & Easy</div>
+                  <div class="subgroup-members">421 members</div>
+                </div>
+              </div>
+            </a>
+            
+            <!-- Subgroup 6 -->
+            <a href="#" class="subgroup-link">
+              <div class="subgroup-card">
+                <div class="subgroup-image"></div>
+                <div class="subgroup-info">
+                  <div class="subgroup-name">Budget Vegan</div>
+                  <div class="subgroup-members">196 members</div>
+                </div>
+              </div>
+            </a>
+            
+            <!-- Subgroup 7 -->
+            <a href="#" class="subgroup-link">
+              <div class="subgroup-card">
+                <div class="subgroup-image"></div>
+                <div class="subgroup-info">
+                  <div class="subgroup-name">Vegan Desserts</div>
+                  <div class="subgroup-members">334 members</div>
+                </div>
+              </div>
+            </a>
+            
+            <!-- Subgroup 8 -->
+            <a href="#" class="subgroup-link">
+              <div class="subgroup-card">
+                <div class="subgroup-image"></div>
+                <div class="subgroup-info">
+                  <div class="subgroup-name">Gluten-Free Vegan</div>
+                  <div class="subgroup-members">157 members</div>
+                </div>
+              </div>
+            </a>
+            
+            <!-- Subgroup 9 -->
+            <a href="#" class="subgroup-link">
+              <div class="subgroup-card">
+                <div class="subgroup-image"></div>
+                <div class="subgroup-info">
+                  <div class="subgroup-name">Vegan for Athletes</div>
+                  <div class="subgroup-members">289 members</div>
+                </div>
+              </div>
+            </a>
+          </div>
+        </div>
+      </div>
+      
+      <div class="right-column">
+        <!-- Search bar moved to right column -->
+        <div class="search-container">
+          <span class="search-icon">🔍</span>
+          <input type="text" placeholder="Search..." class="p-2 rounded text-base search-input">
+        </div>
+
+        <div class="space-y-4">
+          <div class="collection-container">
+            <div class="collection-header">
+              <h2 class="text-black text-base font-semibold">My Collection</h2>
+              <a href="#" class="text-[#A3B18A] text-sm">See All</a>
+            </div>
+            <div class="gray-square"></div>
+            <div class="text-left mt-2">
+              <p class="text-black text-sm">Vegan Recipe Book</p>
+              <p class="text-black text-xs">Personal favorites</p>
+            </div>
+          </div>
+          <div class="collection-container">
+            <div class="collection-header">
+              <h2 class="text-black text-base font-semibold">Recent Events</h2>
+              <a href="#" class="text-[#A3B18A] text-sm">See All</a>
+            </div>
+            <div class="gray-square"></div>
+            <div class="text-left mt-2">
+              <p class="text-black text-xs">Nov 15</p>
+              <p class="text-black text-xs">Vegan Cooking Demo</p>
+            </div>
+          </div>
+          <div class="collection-container">
+            <div class="collection-header">
+              <h2 class="text-black text-base font-semibold">Featured</h2>
+              <a href="#" class="text-[#A3B18A] text-sm">See All</a>
+            </div>
+            <div class="gray-square"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      const overviewText = document.getElementById('overviewText');
+      const readMoreBtn = document.getElementById('readMoreBtn');
+      const groupHeader = document.getElementById('groupHeader');
+      const mobileMenuButton = document.getElementById('mobileMenuButton');
+      const mobileNav = document.getElementById('mobileNav');
+      
+      let isExpanded = false;
+
+      readMoreBtn.addEventListener('click', function() {
+        if (isExpanded) {
+          // Collapse
+          overviewText.classList.remove('expanded');
+          overviewText.classList.add('collapsed');
+          readMoreBtn.textContent = 'Read more...';
+          groupHeader.classList.remove('expanded');
+        } else {
+          // Expand
+          overviewText.classList.remove('collapsed');
+          overviewText.classList.add('expanded');
+          readMoreBtn.textContent = 'Read less';
+          groupHeader.classList.add('expanded');
+        }
+        isExpanded = !isExpanded;
+      });
+      
+      // Mobile menu functionality
+      mobileMenuButton.addEventListener('click', function() {
+        mobileNav.classList.toggle('active');
+      });
+      
+      // Close mobile menu when clicking outside
+      document.addEventListener('click', function(event) {
+        if (!event.target.closest('.header-right') && mobileNav.classList.contains('active')) {
+          mobileNav.classList.remove('active');
+        }
+      });
+      
+      // Close mobile menu on window resize if it becomes desktop
+      window.addEventListener('resize', function() {
+        if (window.innerWidth >= 768) {
+          mobileNav.classList.remove('active');
+        }
+      });
+    });
+  </script>
+</body>
+</html>

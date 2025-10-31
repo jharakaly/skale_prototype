@@ -337,80 +337,6 @@
 </head>
 <body class="bg-gray-100 font-sans min-h-screen">
   <div class="container">
-    <header class="bg-[#DDE5DD] p-4 relative">
-      <div class="header-content">
-        <div class="header-left flex items-center">
-          <!-- Logo linked to homepage -->
-          <a href="/">
-            <img src="/images/logo.png" alt="Skale" class="logo">
-          </a>
-          <h1 class="text-black text-lg sm:text-xl">Welcome, Christina!</h1>
-        </div>
-        <div class="header-right">
-          <!-- Desktop Icons -->
-          <div class="desktop-icons icon-container">
-            <div class="icon-wrapper">
-              <span class="icon">➕</span>
-            </div>
-            <a href="/discussions" class="icon-wrapper">
-              <span class="icon">💬</span>
-            </a>
-            <div class="icon-wrapper">
-              <span class="icon">💲</span>
-            </div>
-            <div class="icon-wrapper">
-              <span class="icon">🔔</span>
-            </div>
-            <!-- Profile icon with link -->
-            <a href="/profile" class="icon-wrapper">
-              <span class="icon">👤</span>
-            </a>
-            <!-- Settings icon (cog) -->
-            <div class="icon-wrapper">
-              <span class="icon">⚙️</span>
-            </div>
-          </div>
-          
-          <!-- Mobile Menu Button -->
-          <div class="mobile-menu" id="mobileMenuButton">
-            <span></span>
-            <span></span>
-            <span></span>
-          </div>
-        </div>
-      </div>
-      
-      <!-- Mobile Navigation -->
-      <div class="mobile-nav" id="mobileNav">
-        <div class="icon-container">
-          <div class="icon-wrapper">
-            <span class="icon">➕</span>
-            <span class="ml-2">Add</span>
-          </div>
-          <a href="/discussions" class="icon-wrapper">
-            <span class="icon">💬</span>
-            <span class="ml-2">Discussions</span>
-          </a>
-          <div class="icon-wrapper">
-            <span class="icon">💲</span>
-            <span class="ml-2">Money</span>
-          </div>
-          <div class="icon-wrapper">
-            <span class="icon">🔔</span>
-            <span class="ml-2">Notifications</span>
-          </div>
-          <a href="/profile" class="icon-wrapper">
-            <span class="icon">👤</span>
-            <span class="ml-2">Profile</span>
-          </a>
-          <div class="icon-wrapper">
-            <span class="icon">⚙️</span>
-            <span class="ml-2">Settings</span>
-          </div>
-        </div>
-      </div>
-    </header>
-
     <!-- Search bar -->
     <div class="search-container">
       <span class="search-icon">🔍</span>
@@ -475,26 +401,7 @@
 
   <script>
     document.addEventListener('DOMContentLoaded', function() {
-      const mobileMenuButton = document.getElementById('mobileMenuButton');
-      const mobileNav = document.getElementById('mobileNav');
-      
-      mobileMenuButton.addEventListener('click', function() {
-        mobileNav.classList.toggle('active');
-      });
-      
-      // Close mobile menu when clicking outside
-      document.addEventListener('click', function(event) {
-        if (!event.target.closest('.header-right') && mobileNav.classList.contains('active')) {
-          mobileNav.classList.remove('active');
-        }
-      });
-      
-      // Close mobile menu on window resize if it becomes desktop
-      window.addEventListener('resize', function() {
-        if (window.innerWidth >= 768) {
-          mobileNav.classList.remove('active');
-        }
-      });
+      // Mobile menu functionality removed since header is no longer present
     });
   </script>
 </body>

@@ -3,3 +3,575 @@
 @import "tailwindcss/utilities";
 
 /* This file is for your main application CSS */
+
+/* Breadcrumb */
+.breadcrumb {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.9rem;
+  flex-wrap: wrap;
+  margin-bottom: 1.5rem;
+}
+
+.breadcrumb-item {
+  color: #6b7280;
+  text-decoration: none;
+}
+
+.breadcrumb-item:hover {
+  color: #374151;
+}
+
+.breadcrumb-separator {
+  color: #9ca3af;
+}
+
+.breadcrumb-active {
+  color: #a3b18a;
+  font-weight: 500;
+}
+
+/* Search Row - FORCED TO LEFT */
+.search-row {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  padding: 1rem 0;
+  width: 100%;
+}
+@media (min-width: 768px) {
+  .search-row {
+    flex-direction: row;
+    justify-content: flex-start !important;
+  }
+}
+
+.left-search-container, .right-search-container {
+  width: 100%;
+  position: relative;
+}
+@media (min-width: 768px) {
+  .left-search-container {
+    flex: 0 0 calc(70% - 0.5rem);
+  }
+  .right-search-container {
+    flex: 0 0 calc(30% - 0.5rem);
+  }
+}
+
+/* === FIXED: NO DUPLICATE "Search" TEXT === */
+.search-icon {
+  position: absolute;
+  left: 1rem;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 1.2rem;
+  color: #6b7280;
+  pointer-events: none;
+  user-select: none;
+  width: 0;
+  height: 0;
+  overflow: hidden;
+}
+
+.search-input {
+  padding-left: 3rem;
+  width: 100%;
+  background-color: white;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+  font-size: 1rem;
+}
+
+/* Modal Styles */
+.modal-overlay {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 1000;
+}
+
+.modal-overlay.active {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.modal-content {
+  background: white;
+  padding: 20px;
+  border-radius: 8px;
+  width: 90%;
+  max-width: 500px;
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.modal-title {
+  font-size: 1.25rem;
+  font-weight: bold;
+}
+
+.modal-close {
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  cursor: pointer;
+}
+
+.form-group {
+  margin-bottom: 15px;
+}
+
+.form-select, .form-input, .form-textarea {
+  width: 100%;
+  padding: 8px 12px;
+  border: 1px solid #d1d5db;
+  border-radius: 4px;
+}
+
+.form-textarea {
+  min-height: 100px;
+  resize: vertical;
+}
+
+.form-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+.btn {
+  padding: 8px 16px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.btn-cancel {
+  background: #6b7280;
+  color: white;
+}
+
+.btn-submit {
+  background: #3b82f6;
+  color: white;
+}
+
+/* Container spacing */
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 2rem;
+}
+
+/* Topic Card Styles */
+.topic-card {
+  background-color: white;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  padding: 1.25rem;
+  margin-bottom: 1rem;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  transition: transform 0.2s, box-shadow 0.2s;
+  cursor: pointer;
+  position: relative;
+  min-height: 140px;
+}
+@media (max-width: 480px) {
+  .topic-card {
+    padding: 1rem;
+    margin-bottom: 0.75rem;
+  }
+}
+.topic-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+.topic-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 0.75rem;
+}
+@media (max-width: 480px) {
+  .topic-header {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+}
+.topic-content {
+  flex-grow: 1;
+}
+.topic-title {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #1f2937;
+  margin-bottom: 0.25rem;
+  line-height: 1.3;
+}
+@media (max-width: 480px) {
+  .topic-title {
+    font-size: 1rem;
+  }
+}
+.topic-excerpt {
+  color: #6b7280;
+  font-size: 0.9rem;
+  line-height: 1.4;
+}
+.topic-meta {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  color: #6b7280;
+  font-size: 0.8rem;
+  white-space: nowrap;
+}
+@media (max-width: 480px) {
+  .topic-meta {
+    align-self: flex-start;
+  }
+}
+.topic-stats {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+.topic-avatars {
+  display: flex;
+  align-items: center;
+}
+
+/* Reduced avatar sizes by 30% */
+.topic-avatar {
+  width: 1.225rem;
+  height: 1.225rem;
+  border-radius: 50%;
+  border: 2px solid white;
+  margin-left: -0.4rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-weight: bold;
+  font-size: 0.455rem;
+}
+.topic-avatar:first-child {
+  margin-left: 0;
+}
+.avatar-count {
+  margin-left: 0.5rem;
+  color: #6b7280;
+  font-size: 0.75rem;
+}
+
+/* View replies button */
+.topic-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 0.75rem;
+}
+
+.view-replies-btn {
+  background-color: #f3f4f6;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  padding: 0.4rem 0.8rem;
+  font-size: 0.8rem;
+  color: #374151;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.view-replies-btn:hover {
+  background-color: #e5e7eb;
+  border-color: #9ca3af;
+}
+
+/* Avatar colors for variety */
+.avatar-1 { background-color: #a3b18a; }
+.avatar-2 { background-color: #588157; }
+.avatar-3 { background-color: #3a5a40; }
+.avatar-4 { background-color: #344e41; }
+.avatar-5 { background-color: #dad7cd; color: #1f2937; }
+
+/* Expanded Topic Styles */
+.topic-detail {
+  background-color: white;
+  border-radius: 12px;
+  padding: 2rem;
+  margin-bottom: 1.5rem;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.topic-header.expanded .topic-title {
+  font-size: 1.75rem;
+  margin-bottom: 0.5rem;
+}
+
+.topic-header.expanded .topic-excerpt {
+  font-size: 1.1rem;
+  margin-bottom: 1rem;
+}
+
+/* Reduced reply avatar sizes by 30% */
+.reply-avatar {
+  width: 1.75rem;
+  height: 1.75rem;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-weight: bold;
+  font-size: 0.63rem;
+  flex-shrink: 0;
+}
+
+/* REPLY STYLES - UPDATED FOR CASCADING TOGGLE */
+.reply {
+  position: relative;
+  padding: 1.5rem;
+  margin-bottom: 1rem;
+  background-color: white;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+/* Reply action buttons */
+.reply-actions {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+  margin-top: 0.75rem;
+}
+
+.reply-action-btn {
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+  padding: 0.4rem 0.6rem;
+  border-radius: 6px;
+  font-size: 0.8rem;
+  transition: all 0.2s;
+  border: 1px solid #e5e7eb;
+  background-color: white;
+  color: #6b7280;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.reply-action-btn:hover {
+  background-color: #f3f4f6;
+  border-color: #d1d5db;
+}
+
+/* Comment button specific styling */
+.comment-btn {
+  color: #6b7280;
+}
+
+.comment-btn:hover {
+  color: #3b82f6;
+}
+
+/* Nested replies styling - UPDATED FOR TOGGLE */
+.nested-replies {
+  margin-left: 2rem;
+  padding-left: 1.5rem;
+  margin-top: 1rem;
+  border-left: 2px solid #e5e7eb;
+  transition: all 0.3s ease;
+}
+
+/* Toggle functionality styles */
+.hidden {
+  display: none;
+}
+
+/* Smooth transitions for nested replies */
+.nested-replies-transition {
+  transition: all 0.3s ease-in-out;
+}
+
+/* Rotate animation for toggle icon */
+.rotate-90 {
+  transform: rotate(90deg);
+  transition: transform 0.2s ease;
+}
+
+/* Make sure level 1 replies are always visible */
+.reply:not(.nested-replies .reply) {
+  display: block !important;
+}
+
+/* Expand/collapse transitions */
+.expand-nested-btn svg {
+  transition: transform 0.2s ease;
+}
+
+.nested-replies-container {
+  transition: all 0.3s ease-in-out;
+}
+
+/* Group Header Container Styles */
+.group-header-container {
+  background-color: white;
+  border-radius: 12px;
+  padding: 2rem;
+  margin-bottom: 1.5rem;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  border: 1px solid #e5e7eb;
+  display: flex;
+  gap: 2rem;
+  align-items: flex-start;
+}
+
+.group-content {
+  flex: 1;
+}
+
+.group-title {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #1f2937;
+  margin-bottom: 0.5rem;
+}
+
+.group-subtitle {
+  font-size: 1.25rem;
+  color: #6b7280;
+  margin-bottom: 1.5rem;
+  font-weight: 500;
+}
+
+.overview-container {
+  margin-bottom: 1.5rem;
+}
+
+.group-overview {
+  color: #6b7280;
+  line-height: 1.6;
+  margin-bottom: 1rem;
+}
+
+.group-overview.collapsed {
+  max-height: 4.8em;
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+}
+
+.read-more-btn {
+  background: none;
+  border: none;
+  color: #a3b18a;
+  cursor: pointer;
+  font-weight: 500;
+  padding: 0;
+}
+
+.read-more-btn:hover {
+  color: #588157;
+}
+
+.moderator-info {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.moderator-avatar {
+  width: 2.5rem;
+  height: 2.5rem;
+  background-color: #a3b18a;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-weight: bold;
+  font-size: 0.9rem;
+}
+
+.moderator-details {
+  display: flex;
+  flex-direction: column;
+}
+
+.moderator-name {
+  font-weight: 600;
+  color: #1f2937;
+}
+
+.moderator-role {
+  font-size: 0.875rem;
+  color: #6b7280;
+}
+
+.group-image {
+  width: 8rem;
+  height: 8rem;
+  background-color: #9ca3af;
+  border-radius: 8px;
+  flex-shrink: 0;
+}
+
+/* === REMOVE ALL REPLY CARD VISUAL BORDERS & SHADOWS === */
+.reply {
+  all: unset !important;
+  display: block;
+  padding: 0 !important;
+  margin: 0 0 0.5rem 0 !important;
+  background: transparent !important;
+  border: none !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+  position: static !important;
+}
+
+/* Optional: Add subtle spacing between replies */
+.reply + .reply {
+  margin-top: 0.75rem;
+}
+
+/* Remove any nested reply container borders */
+.nested-replies,
+.nested-replies * {
+  border: none !important;
+  box-shadow: none !important;
+  background: transparent !important;
+}
+
+/* === REMOVE TOPIC DETAIL CARD VISUAL NOISE === */
+.topic-detail {
+  all: unset !important;
+  display: block;
+  padding: 0 !important;
+  margin: 0 0 1.5rem 0 !important;
+  background: transparent !important;
+  border: none !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+}

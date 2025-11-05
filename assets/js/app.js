@@ -33,6 +33,45 @@ topbar.config({barColors: {0: "#29d"}, shadowColor: "rgba(0, 0, 0, .3)"})
 window.addEventListener("phx:page-loading-start", _info => topbar.show(300))
 window.addEventListener("phx:page-loading-stop", _info => topbar.hide())
 
+// Toggle nested replies functionality for ALL levels
+document.addEventListener('click', function(e) {
+  // Handle expand/collapse of nested replies
+  if (e.target.closest('.expand-nested-btn')) {
+    e.preventDefault();
+    const button = e.target.closest('.expand-nested-btn');
+    const replyId = button.getAttribute('phx-value-reply-id');
+    const nestedReplies = document.getElementById(`nested-replies-${replyId}`);
+    
+    if (nestedReplies) {
+      // Toggle visibility
+      nestedReplies.classList.toggle('hidden');
+      
+      // Update button text and icon
+      const icon = button.querySelector('svg');
+      const textSpan = button.querySelector('span');
+      
+      if (nestedReplies.classList.contains('hidden')) {
+        // Collapsed state
+        if (icon) {
+          icon.style.transform = 'rotate(0deg)';
+        }
+        if (textSpan) {
+          const replyCount = button.getAttribute('data-reply-count');
+          textSpan.textContent = `Show ${replyCount} replies`;
+        }
+      } else {
+        // Expanded state  
+        if (icon) {
+          icon.style.transform = 'rotate(180deg)';
+        }
+        if (textSpan) {
+          textSpan.textContent = 'Hide replies';
+        }
+      }
+    }
+  }
+});
+
 // connect if there are any LiveViews on the page
 liveSocket.connect()
 
@@ -41,4 +80,3 @@ liveSocket.connect()
 // >> liveSocket.enableLatencySim(1000)  // enabled for duration of browser session
 // >> liveSocket.disableLatencySim()
 window.liveSocket = liveSocket
-

@@ -9,140 +9,190 @@
     <script defer phx-track-static type="text/javascript" src={~p"/assets/app.js"}></script>
   </head>
   <body class="bg-gray-100 font-sans min-h-screen">
-    <!-- Single Header - No Duplication -->
-    <header class="bg-[#DDE5DD] p-4">
-      <div class="flex items-center justify-between">
-        <div class="flex items-center">
-          <a href="/">
-            <img src="/images/logo.png" alt="Skale" class="w-10 h-10">
-          </a>
-          <h1 class="text-black text-lg sm:text-xl ml-3">Welcome, Christina!</h1>
-        </div>
-        
-        <!-- Desktop Icons - Hidden on Mobile -->
-        <div class="hidden md:flex gap-2">
-          <button phx-click="open_modal" class="icon-wrapper">
-            <span>➕</span>
-          </button>
-          <a href="/discussions" class="icon-wrapper">
-            <span>💬</span>
-          </a>
-          <button class="icon-wrapper">
-            <span>💲</span>
-          </button>
-          <button class="icon-wrapper">
-            <span>🔔</span>
-          </button>
-          <a href="/profile" class="icon-wrapper">
-            <span>👤</span>
-          </a>
-          <button class="icon-wrapper">
-            <span>⚙️</span>
-          </button>
-        </div>
-        
-        <!-- Mobile Menu Button - Hidden on Desktop -->
-        <button class="md:hidden" phx-click="toggle_mobile_menu">
-          <div class="flex flex-col gap-1">
-            <span class="w-6 h-0.5 bg-black"></span>
-            <span class="w-6 h-0.5 bg-black"></span>
-            <span class="w-6 h-0.5 bg-black"></span>
-          </div>
-        </button>
-      </div>
-      
-      <!-- Mobile Menu - Hidden by Default -->
-      <div class="hidden md:hidden mt-4 space-y-2" id="mobile-menu">
-        <button phx-click="open_modal" class="flex items-center gap-3 p-3 w-full text-left bg-white/30 rounded-lg">
-          <span>➕</span>
-          <span>Add</span>
-        </button>
-        <a href="/discussions" class="flex items-center gap-3 p-3 w-full text-left bg-white/30 rounded-lg">
-          <span>💬</span>
-          <span>Discussions</span>
-        </a>
-        <button class="flex items-center gap-3 p-3 w-full text-left bg-white/30 rounded-lg">
-          <span>💲</span>
-          <span>Money</span>
-        </button>
-        <button class="flex items-center gap-3 p-3 w-full text-left bg-white/30 rounded-lg">
-          <span>🔔</span>
-          <span>Notifications</span>
-        </button>
-        <a href="/profile" class="flex items-center gap-3 p-3 w-full text-left bg-white/30 rounded-lg">
-          <span>👤</span>
-          <span>Profile</span>
-        </a>
-        <button class="flex items-center gap-3 p-3 w-full text-left bg-white/30 rounded-lg">
-          <span>⚙️</span>
-          <span>Settings</span>
-        </button>
-      </div>
-    </header>
+    <._header />
 
     <%= @inner_content %>
 
-    <!-- Modal - Using LiveView Pattern -->
-    <div id="post-modal" class="hidden fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
-      <div class="bg-white rounded-lg max-w-md w-full p-6">
-        <div class="flex justify-between items-center mb-4">
-          <h2 class="text-xl font-semibold">Create New Post</h2>
-          <button phx-click="close_modal" class="text-gray-500 hover:text-gray-700">
-            &times;
-          </button>
-        </div>
-        
-        <form phx-submit="create_post">
-          <div class="space-y-4">
-            <div>
-              <select class="w-full p-2 border border-gray-300 rounded" name="group">
-                <option value="" disabled selected>Select a group</option>
-                <option value="vegan-cookbook">Vegan Cookbook Club</option>
-                <option value="south-shore-eats">South Shore Eats</option>
-              </select>
-            </div>
-            
-            <div>
-              <select class="w-full p-2 border border-gray-300 rounded" name="subgroup">
-                <option value="" disabled selected>Select a subgroup</option>
-                <option value="recipes">Recipes</option>
-                <option value="reviews">Reviews</option>
-              </select>
-            </div>
-            
-            <div>
-              <input type="text" name="title" placeholder="Title" class="w-full p-2 border border-gray-300 rounded">
-            </div>
-            
-            <div>
-              <textarea name="content" placeholder="Type your content here" class="w-full p-2 border border-gray-300 rounded h-32"></textarea>
-            </div>
-            
-            <div class="flex justify-end gap-2">
-              <button type="button" phx-click="close_modal" class="px-4 py-2 bg-gray-200 rounded">
-                Cancel
-              </button>
-              <button type="submit" class="px-4 py-2 bg-[#A3B18A] text-white rounded">
-                Create Post
-              </button>
-            </div>
+    <!-- New Post Modal -->
+    <div id="new-post-modal" class="hidden fixed inset-0 z-50 overflow-y-auto">
+      <div class="flex items-center justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
+        <!-- Background overlay -->
+        <div class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity"></div>
+
+        <!-- Modal panel -->
+        <div class="inline-block align-bottom bg-white rounded-lg px-4 pt-5 pb-4 text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full sm:p-6">
+          <div class="flex justify-between items-center mb-4">
+            <h2 class="text-lg font-semibold">Create New Post</h2>
+            <button id="close-modal" class="text-gray-500 hover:text-gray-700 text-2xl">&times;</button>
           </div>
-        </form>
+          
+          <form id="new-post-form">
+            <div class="space-y-4">
+              <div>
+                <select class="w-full border border-gray-300 rounded-md px-3 py-2" id="group-select">
+                  <option value="" disabled selected>Select a group</option>
+                  <option value="vegan-cookbook">Vegan Cookbook Club</option>
+                  <option value="south-shore-eats">South Shore Eats</option>
+                  <option value="fitness-group">Fitness Group</option>
+                  <option value="book-club">Book Club</option>
+                  <option value="tech-talk">Tech Talk</option>
+                </select>
+              </div>
+              
+              <div>
+                <select class="w-full border border-gray-300 rounded-md px-3 py-2" id="subgroup-select">
+                  <option value="" disabled selected>Select a subgroup</option>
+                  <option value="recipes">Recipes</option>
+                  <option value="reviews">Reviews</option>
+                  <option value="questions">Questions</option>
+                  <option value="events">Events</option>
+                  <option value="general">General</option>
+                </select>
+              </div>
+              
+              <div>
+                <input type="text" class="w-full border border-gray-300 rounded-md px-3 py-2" id="post-title" placeholder="Title">
+              </div>
+              
+              <div>
+                <textarea class="w-full border border-gray-300 rounded-md px-3 py-2" id="post-content" placeholder="Type your content here" rows="4"></textarea>
+              </div>
+              
+              <div class="flex justify-end space-x-3 mt-6">
+                <button type="button" class="px-4 py-2 bg-gray-300 rounded-md hover:bg-gray-400" id="cancel-post">Cancel</button>
+                <button type="submit" class="px-4 py-2 bg-[#DDE5DD] text-gray-800 rounded-md hover:bg-[#c8d5c8]">Create Post</button>
+              </div>
+            </div>
+          </form>
+        </div>
       </div>
     </div>
 
     <script>
-    // Simple mobile menu toggle
-    document.addEventListener('click', function(event) {
-      if (event.target.closest('[phx-click="toggle_mobile_menu"]')) {
-        const menu = document.getElementById('mobile-menu');
-        menu.classList.toggle('hidden');
+    document.addEventListener('DOMContentLoaded', function() {
+      console.log('DOM loaded');
+      
+      // Modal functionality
+      const newPostModal = document.getElementById('new-post-modal');
+      const addPostButton = document.getElementById('add-post-button');
+      const mobileAddPostButton = document.getElementById('mobile-add-post-button');
+      const closeModal = document.getElementById('close-modal');
+      const cancelPost = document.getElementById('cancel-post');
+      const newPostForm = document.getElementById('new-post-form');
+      
+      console.log('Elements found:', {
+        newPostModal: !!newPostModal,
+        addPostButton: !!addPostButton,
+        mobileAddPostButton: !!mobileAddPostButton,
+        closeModal: !!closeModal,
+        cancelPost: !!cancelPost,
+        newPostForm: !!newPostForm
+      });
+      
+      let hasUnsavedChanges = false;
+      
+      function checkForChanges() {
+        const groupSelect = document.getElementById('group-select');
+        const subgroupSelect = document.getElementById('subgroup-select');
+        const postTitle = document.getElementById('post-title');
+        const postContent = document.getElementById('post-content');
+        
+        return groupSelect.value !== '' || 
+               subgroupSelect.value !== '' || 
+               postTitle.value !== '' || 
+               postContent.value !== '';
       }
       
-      // Close mobile menu when clicking outside
-      if (!event.target.closest('#mobile-menu') && !event.target.closest('[phx-click="toggle_mobile_menu"]')) {
-        const menu = document.getElementById('mobile-menu');
-        menu.classList.add('hidden');
+      function openModal() {
+        if (newPostModal) {
+          newPostModal.classList.remove('hidden');
+          document.body.style.overflow = 'hidden';
+          hasUnsavedChanges = false;
+        }
+      }
+      
+      function closeModalFunc() {
+        if (newPostModal) {
+          newPostModal.classList.add('hidden');
+          document.body.style.overflow = '';
+          setTimeout(() => {
+            newPostForm.reset();
+            hasUnsavedChanges = false;
+          }, 300);
+        }
+      }
+      
+      function discardChanges() {
+        newPostForm.reset();
+        closeModalFunc();
+      }
+      
+      function promptDiscardChanges() {
+        if (checkForChanges()) {
+          const confirmModal = document.createElement('div');
+          confirmModal.className = 'fixed inset-0 z-[60] flex items-center justify-center';
+          confirmModal.innerHTML = `
+            <div class="fixed inset-0 bg-black bg-opacity-50"></div>
+            <div class="bg-white rounded-lg p-6 max-w-sm mx-4 z-50">
+              <h3 class="text-lg font-semibold mb-2">Discard Changes?</h3>
+              <p class="text-gray-600 mb-4">You have unsaved changes. Are you sure you want to discard them?</p>
+              <div class="flex justify-end space-x-3">
+                <button id="confirm-no" class="px-4 py-2 bg-gray-300 text-gray-700 rounded-md hover:bg-gray-400">No</button>
+                <button id="confirm-yes" class="px-4 py-2 bg-[#DDE5DD] text-gray-800 rounded-md hover:bg-[#c8d5c8]">Yes</button>
+              </div>
+            </div>
+          `;
+          
+          document.body.appendChild(confirmModal);
+          
+          document.getElementById('confirm-no').addEventListener('click', function() {
+            document.body.removeChild(confirmModal);
+          });
+          
+          document.getElementById('confirm-yes').addEventListener('click', function() {
+            document.body.removeChild(confirmModal);
+            discardChanges();
+          });
+        } else {
+          closeModalFunc();
+        }
+      }
+      
+      // Event listeners for opening modal
+      if (addPostButton) addPostButton.addEventListener('click', openModal);
+      if (mobileAddPostButton) mobileAddPostButton.addEventListener('click', openModal);
+      
+      // Event listeners for closing modal - BOTH use promptDiscardChanges
+      if (closeModal) closeModal.addEventListener('click', promptDiscardChanges);
+      if (cancelPost) cancelPost.addEventListener('click', promptDiscardChanges);
+      
+      // Close modal when clicking outside
+      if (newPostModal) {
+        newPostModal.addEventListener('click', function(event) {
+          if (event.target === newPostModal) {
+            promptDiscardChanges();
+          }
+        });
+      }
+      
+      // Track form changes
+      if (newPostForm) {
+        newPostForm.addEventListener('input', function() {
+          hasUnsavedChanges = checkForChanges();
+        });
+        
+        newPostForm.addEventListener('change', function() {
+          hasUnsavedChanges = checkForChanges();
+        });
+        
+        // Handle form submission
+        newPostForm.addEventListener('submit', function(event) {
+          event.preventDefault();
+          alert('Post created successfully!');
+          this.reset();
+          hasUnsavedChanges = false;
+          closeModalFunc();
+        });
       }
     });
     </script>

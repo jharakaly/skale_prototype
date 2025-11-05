@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Beginner Vegan - Skale</title>
+  <title>Skale Prototype - Beginner Vegan</title>
   <script defer src="https://cdn.tailwindcss.com"></script>
   <style>
     body, html {
@@ -17,70 +17,6 @@
       max-width: 1200px;
       margin: 0 auto;
       padding: 0 1rem;
-    }
-    .header-content {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 0 0.5rem;
-    }
-    .icon-container {
-      display: flex;
-      gap: 1rem;
-    }
-    .icon-wrapper {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      width: 2.5rem;
-      height: 2.5rem;
-      background-color: rgba(255, 255, 255, 0.3);
-      border-radius: 8px;
-      transition: background-color 0.2s;
-      cursor: pointer;
-    }
-    .icon-wrapper:hover {
-      background-color: rgba(255, 255, 255, 0.5);
-    }
-    .icon {
-      font-size: 1.3rem;
-      line-height: 1;
-    }
-    .mobile-menu {
-      display: flex; /* Changed to flex - visible on mobile */
-      flex-direction: column;
-      cursor: pointer;
-      padding: 0.5rem;
-    }
-    .mobile-menu span {
-      width: 25px;
-      height: 3px;
-      background-color: #000;
-      margin: 2px 0;
-      transition: 0.3s;
-    }
-    .mobile-nav {
-      display: none;
-      position: absolute;
-      top: 100%;
-      right: 0;
-      background-color: #DDE5DD;
-      width: 100%;
-      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-      z-index: 1000;
-    }
-    .mobile-nav.active {
-      display: block;
-    }
-    .mobile-nav .icon-container {
-      flex-direction: column;
-      padding: 1rem;
-      gap: 0.5rem;
-    }
-    .mobile-nav .icon-wrapper {
-      width: 100%;
-      justify-content: flex-start;
-      padding: 0.75rem 1rem;
     }
     .main-content {
       display: flex;
@@ -115,35 +51,10 @@
         margin-top: 0;
       }
     }
-    .search-row {
-      display: flex;
-      flex-direction: column;
-      gap: 1rem;
-      padding: 1rem 0;
-      width: 100%;
-    }
-    @media (min-width: 768px) {
-      .search-row {
-        flex-direction: row;
-      }
-    }
-    .left-search-container {
-      width: 100%;
+    .search-container {
       position: relative;
-    }
-    @media (min-width: 768px) {
-      .left-search-container {
-        flex: 0 0 calc(70% - 0.5rem);
-      }
-    }
-    .right-search-container {
-      width: 100%;
-      position: relative;
-    }
-    @media (min-width: 768px) {
-      .right-search-container {
-        flex: 0 0 calc(30% - 0.5rem);
-      }
+      margin-bottom: 1.5rem;
+      padding-top: 0.75rem;
     }
     .search-icon {
       position: absolute;
@@ -164,7 +75,187 @@
     }
     @media (max-width: 480px) {
       .search-input {
-        font-size: 16px; /* Prevents zoom on iOS */
+        font-size: 16px;
+      }
+    }
+    .breadcrumb {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 1rem 0;
+      font-size: 0.9rem;
+      color: #6b7280;
+      flex-wrap: wrap;
+    }
+    @media (max-width: 480px) {
+      .breadcrumb {
+        font-size: 0.8rem;
+        padding: 0.75rem 0;
+      }
+    }
+    .breadcrumb-item {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .breadcrumb-link {
+      color: #6b7280;
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+    .breadcrumb-link:hover {
+      color: #374151;
+    }
+    .breadcrumb-active {
+      color: #A3B18A;
+      font-weight: 500;
+    }
+    .breadcrumb-separator {
+      color: #d1d5db;
+    }
+    .group-header-container {
+      background-color: white;
+      border: 1px solid #e5e7eb;
+      border-radius: 12px;
+      padding: 1.5rem;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+      margin-bottom: 2rem;
+      min-height: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+      position: relative;
+      transition: min-height 0.3s ease;
+      margin-top: 1rem;
+    }
+    @media (min-width: 768px) {
+      .group-header-container {
+        flex-direction: row;
+        padding: 2rem;
+        min-height: 300px;
+      }
+    }
+    .group-header-container.expanded {
+      min-height: auto;
+    }
+    @media (min-width: 768px) {
+      .group-header-container.expanded {
+        min-height: 400px;
+      }
+    }
+    .group-content {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      min-height: auto;
+    }
+    @media (min-width: 768px) {
+      .group-content {
+        min-height: 256px;
+      }
+    }
+    .group-title {
+      font-size: 1.25rem;
+      font-weight: bold;
+      color: #374151;
+      margin-bottom: 0.5rem;
+    }
+    @media (min-width: 768px) {
+      .group-title {
+        font-size: 1.5rem;
+      }
+    }
+    .group-subtitle {
+      font-size: 1rem;
+      color: #6b7280;
+      margin-bottom: 1rem;
+    }
+    @media (min-width: 768px) {
+      .group-subtitle {
+        font-size: 1.1rem;
+      }
+    }
+    .overview-container {
+      margin-bottom: 1.5rem;
+      flex-grow: 1;
+    }
+    .group-overview {
+      color: #374151;
+      line-height: 1.6;
+      overflow: hidden;
+      transition: all 0.3s ease;
+    }
+    .group-overview.collapsed {
+      display: -webkit-box;
+      -webkit-line-clamp: 3;
+      -webkit-box-orient: vertical;
+      max-height: 4.8em;
+    }
+    .group-overview.expanded {
+      display: block;
+      max-height: none;
+    }
+    .read-more-btn {
+      background: none;
+      border: none;
+      color: #A3B18A;
+      font-size: 0.9rem;
+      cursor: pointer;
+      padding: 0.25rem 0;
+      margin-top: 0.5rem;
+      font-weight: 500;
+    }
+    .read-more-btn:hover {
+      text-decoration: underline;
+    }
+    .moderator-info {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin-top: auto;
+      padding-top: 1rem;
+    }
+    .moderator-avatar {
+      width: 2.5rem;
+      height: 2.5rem;
+      background-color: #a3b18a;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-weight: bold;
+      font-size: 0.9rem;
+      flex-shrink: 0;
+    }
+    @media (min-width: 768px) {
+      .moderator-avatar {
+        width: 3rem;
+        height: 3rem;
+        font-size: 1rem;
+      }
+    }
+    .moderator-details {
+      font-size: 0.9rem;
+    }
+    .moderator-name {
+      font-weight: 600;
+      color: #374151;
+    }
+    .moderator-role {
+      color: #6b7280;
+    }
+    .group-image {
+      width: 100%;
+      height: 200px;
+      background-color: #9ca3af;
+      border-radius: 8px;
+      flex-shrink: 0;
+    }
+    @media (min-width: 768px) {
+      .group-image {
+        width: 25%;
+        height: 256px;
       }
     }
     .collection-container {
@@ -196,639 +287,87 @@
       background-color: #9ca3af;
       border-radius: 8px;
     }
-    .group-card {
-      background-color: white;
-      border: 1px solid #e5e7eb;
-      border-radius: 12px;
-      padding: 1.5rem;
-      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-      margin-bottom: 1.5rem;
-    }
-    @media (max-width: 480px) {
-      .group-card {
-        padding: 1rem;
-        margin-bottom: 1rem;
-      }
-    }
-    .group-header {
-      display: flex;
-      align-items: flex-start;
-      gap: 1rem;
-      margin-bottom: 1rem;
-    }
-    @media (max-width: 480px) {
-      .group-header {
-        flex-direction: row; /* Changed from column to row */
-        justify-content: space-between; /* This will push avatar to right */
-        gap: 0.75rem;
-      }
-    }
-    .group-avatar {
-      width: 4rem;
-      height: 4rem;
-      background-color: #9ca3af;
-      border-radius: 8px;
-      flex-shrink: 0;
-      order: 2;
-    }
-    @media (max-width: 480px) {
-      .group-avatar {
-        width: 3rem;
-        height: 3rem;
-        order: 2; /* Keep it as 2 to stay on right */
-        align-self: flex-start;
-      }
-    }
-    .group-info {
-      flex-grow: 1;
-      order: 1;
-    }
-    @media (max-width: 480px) {
-      .group-info {
-        order: 1; /* Keep it as 1 to stay on left */
-        width: auto; /* Changed from 100% to auto */
-      }
-    }
-    .post-container {
-      border-top: 1px solid #d1d5db;
-      padding-top: 1rem;
-      margin-left: 0;
-    }
-    @media (min-width: 481px) {
-      .post-container {
-        margin-left: 0.75rem;
-      }
-    }
-    .post {
-      display: flex;
-      align-items: flex-start;
-      gap: 0.75rem;
-    }
-    .post-avatar {
-      width: 2.5rem;
-      height: 2.5rem;
-      background-color: #a3b18a;
-      border-radius: 50%;
-      flex-shrink: 0;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: white;
-      font-weight: bold;
-      font-size: 0.9rem;
-    }
-    @media (max-width: 480px) {
-      .post-avatar {
-        width: 2rem;
-        height: 2rem;
-        font-size: 0.8rem;
-      }
-    }
-    .post-content {
-      flex-grow: 1;
-    }
-    .post-meta {
-      display: flex;
-      align-items: center;
-      margin-bottom: 0.25rem;
-    }
-    .post-author {
-      font-weight: 600;
-      margin-right: 0.5rem;
-      font-size: 0.9rem;
-    }
-    .post-time {
-      color: #6b7280;
-      font-size: 0.8rem;
-    }
-    .logo {
-      width: 40px;
-      height: 40px;
-      margin-right: 1rem;
-    }
-    @media (max-width: 480px) {
-      .logo {
-        width: 32px;
-        height: 32px;
-        margin-right: 0.75rem;
-      }
-    }
-    .desktop-icons {
-      display: none;
-    }
-    @media (min-width: 768px) {
-      .desktop-icons {
-        display: flex;
-      }
-      .mobile-menu {
-        display: none; /* Hide hamburger on desktop */
-      }
-    }
-    .button-group {
-      display: flex;
-      gap: 0.5rem;
-      margin-bottom: 1rem;
-    }
-    @media (max-width: 480px) {
-      .button-group {
-        gap: 0.25rem;
-      }
-    }
-    .nav-button {
-      padding: 0.5rem 1rem;
-      border-radius: 6px;
-      font-size: 0.9rem;
-      text-decoration: none;
-      display: inline-block;
-      text-align: center;
-    }
-    @media (max-width: 480px) {
-      .nav-button {
-        padding: 0.5rem 0.75rem;
-        font-size: 0.8rem;
-        flex: 1;
-      }
-    }
-    
-    /* Breadcrumb Styles */
-    .breadcrumb {
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-      margin-bottom: 1rem;
-      font-size: 0.9rem;
-      flex-wrap: wrap;
-    }
-    .breadcrumb-item {
-      color: #6b7280;
-      text-decoration: none;
-    }
-    .breadcrumb-item:hover {
-      color: #374151;
-    }
-    .breadcrumb-separator {
-      color: #9ca3af;
-    }
-    .breadcrumb-active {
-      color: #a3b18a;
-      font-weight: 500;
-    }
-    
-    /* Subgroup Header Styles */
-    .subgroup-header {
-      background-color: white;
-      border-radius: 12px;
-      padding: 1.5rem;
-      margin-bottom: 1.5rem;
-      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-      border: 1px solid #e5e7eb;
-    }
-    @media (max-width: 480px) {
-      .subgroup-header {
-        padding: 1rem;
-        margin-bottom: 1rem;
-      }
-    }
-    .subgroup-title-container {
-      display: flex;
-      align-items: flex-start;
-      gap: 1rem;
-      margin-bottom: 1rem;
-    }
-    @media (max-width: 480px) {
-      .subgroup-title-container {
-        flex-direction: row;
-        justify-content: space-between;
-        gap: 0.75rem;
-      }
-    }
-    .subgroup-info {
-      flex-grow: 1;
-    }
-    .subgroup-avatar {
-      width: 4rem;
-      height: 4rem;
-      background-color: #9ca3af;
-      border-radius: 8px;
-      flex-shrink: 0;
-    }
-    @media (max-width: 480px) {
-      .subgroup-avatar {
-        width: 3rem;
-        height: 3rem;
-      }
-    }
-    .subgroup-title {
-      font-size: 1.75rem;
-      font-weight: 700;
-      color: #1f2937;
-      margin-bottom: 0.5rem;
-    }
-    @media (max-width: 480px) {
-      .subgroup-title {
-        font-size: 1.5rem;
-      }
-    }
-    .subgroup-description {
-      color: #6b7280;
-      font-size: 1rem;
-      line-height: 1.5;
-      margin-bottom: 1rem;
-    }
-    .subgroup-moderator {
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-      margin-top: 1rem;
-    }
-    .moderator-avatar {
-      width: 2rem;
-      height: 2rem;
-      background-color: #a3b18a;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: white;
-      font-weight: bold;
-      font-size: 0.8rem;
-    }
-    .moderator-name {
-      font-size: 0.9rem;
-      color: #6b7280;
-    }
-    .subgroup-stats {
-      display: flex;
-      gap: 1.5rem;
-      color: #6b7280;
-      font-size: 0.85rem;
-      flex-wrap: wrap;
-    }
-    @media (max-width: 480px) {
-      .subgroup-stats {
-        gap: 1rem;
-      }
-    }
-    
-    /* Topic Card Styles */
-    .topic-card {
-      background-color: white;
-      border: 1px solid #e5e7eb;
-      border-radius: 12px;
-      padding: 1.25rem;
-      margin-bottom: 1rem;
-      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-      transition: transform 0.2s, box-shadow 0.2s;
-      cursor: pointer;
-    }
-    @media (max-width: 480px) {
-      .topic-card {
-        padding: 1rem;
-        margin-bottom: 0.75rem;
-      }
-    }
-    .topic-card:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    }
-    .topic-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: flex-start;
-      margin-bottom: 0.75rem;
-    }
-    @media (max-width: 480px) {
-      .topic-header {
-        flex-direction: column;
-        gap: 0.5rem;
-      }
-    }
-    .topic-content {
-      flex-grow: 1;
-    }
-    .topic-title {
-      font-size: 1.1rem;
-      font-weight: 600;
-      color: #1f2937;
-      margin-bottom: 0.25rem;
-      line-height: 1.3;
-    }
-    @media (max-width: 480px) {
-      .topic-title {
-        font-size: 1rem;
-      }
-    }
-    .topic-excerpt {
-      color: #6b7280;
-      font-size: 0.9rem;
-      line-height: 1.4;
-    }
-    .topic-meta {
-      display: flex;
-      align-items: center;
-      gap: 1rem;
-      color: #6b7280;
-      font-size: 0.8rem;
-      white-space: nowrap;
-    }
-    @media (max-width: 480px) {
-      .topic-meta {
-        align-self: flex-start;
-      }
-    }
-    .topic-stats {
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-    }
-    .topic-avatars {
-      display: flex;
-      align-items: center;
-    }
-    .topic-avatar {
-      width: 1.75rem;
-      height: 1.75rem;
-      border-radius: 50%;
-      border: 2px solid white;
-      margin-left: -0.4rem;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: white;
-      font-weight: bold;
-      font-size: 0.65rem;
-    }
-    .topic-avatar:first-child {
-      margin-left: 0;
-    }
-    .avatar-count {
-      margin-left: 0.5rem;
-      color: #6b7280;
-      font-size: 0.75rem;
-    }
-    
-    /* Avatar colors for variety */
-    .avatar-1 { background-color: #a3b18a; }
-    .avatar-2 { background-color: #588157; }
-    .avatar-3 { background-color: #3a5a40; }
-    .avatar-4 { background-color: #344e41; }
-    .avatar-5 { background-color: #dad7cd; color: #1f2937; }
   </style>
 </head>
 <body class="bg-gray-100 font-sans min-h-screen">
   <div class="container">
-    <!-- Search bars row -->
-    <div class="search-row">
-      <div class="left-search-container">
-        <span class="search-icon">🔍</span>
-        <input type="text" placeholder="Ask a question, share an idea..." class="p-2 rounded text-base search-input">
-      </div>
-      <div class="right-search-container">
-        <span class="search-icon">🔍</span>
-        <input type="text" placeholder="Search..." class="p-2 rounded text-base search-input">
-      </div>
-    </div>
-    
     <div class="main-content">
       <div class="left-column">
-        <!-- Breadcrumb -->
+        <!-- Breadcrumb only in left column -->
         <div class="breadcrumb">
-          <a href="/" class="breadcrumb-item">Home</a>
+          <div class="breadcrumb-item">
+            <a href="/" class="breadcrumb-link">Home</a>
+          </div>
           <span class="breadcrumb-separator">/</span>
-          <a href="/discussions" class="breadcrumb-item">Discussions</a>
+          <div class="breadcrumb-item">
+            <a href="/discussions" class="breadcrumb-link">Discussions</a>
+          </div>
           <span class="breadcrumb-separator">/</span>
-          <a href="/groups/vegan-cookbook" class="breadcrumb-item">Vegan Cookbook Club</a>
+          <div class="breadcrumb-item">
+            <a href="/groups/vegan-cookbook" class="breadcrumb-link">Vegan Cookbook Club</a>
+          </div>
           <span class="breadcrumb-separator">/</span>
-          <span class="breadcrumb-active">Beginner Vegan</span>
-        </div>
-        
-        <!-- Subgroup Header -->
-        <div class="subgroup-header">
-          <div class="subgroup-title-container">
-            <div class="subgroup-info">
-              <h1 class="subgroup-title">Beginner Vegan</h1>
-              <p class="subgroup-description">
-                Welcome to the Beginner Vegan subgroup! This is your starting point for transitioning to a plant-based lifestyle. 
-                Here you'll find support, recipes, tips, and answers to all your beginner questions.
-              </p>
-              <div class="subgroup-stats">
-                <span>428 members</span>
-                <span>127 topics</span>
-                <span>2.4k replies</span>
-                <span>Last activity: 2 hours ago</span>
-              </div>
-              <div class="subgroup-moderator">
-                <div class="moderator-avatar">MJ</div>
-                <span class="moderator-name">Moderator: Michael Johnson</span>
-              </div>
-            </div>
-            <div class="subgroup-avatar"></div>
+          <div class="breadcrumb-item">
+            <span class="breadcrumb-active">Beginner Vegan</span>
           </div>
         </div>
-        
-        <!-- Topic Cards -->
+        <!-- Group Header Container -->
+        <div class="group-header-container" id="groupHeader">
+          <div class="group-content">
+            <h1 class="group-title">Beginner Vegan</h1>
+            <h2 class="group-subtitle">Your Starting Point for Plant-Based Living</h2>
+            <div class="overview-container">
+              <div class="group-overview collapsed" id="overviewText">
+                Welcome to the Beginner Vegan subgroup! This is your starting point for transitioning to a plant-based lifestyle.
+                Here you'll find support, recipes, tips, and answers to all your beginner questions. Whether you're just curious
+                about veganism or fully committed to the lifestyle, this community is here to help you every step of the way.
+                Share your journey, ask questions, and connect with others who are also exploring plant-based living.
+              </div>
+              <button class="read-more-btn" id="readMoreBtn">Read more...</button>
+            </div>
+            <div class="moderator-info">
+              <div class="moderator-avatar">MJ</div>
+              <div class="moderator-details">
+                <div class="moderator-name">Michael Johnson</div>
+                <div class="moderator-role">Subgroup Moderator</div>
+              </div>
+            </div>
+          </div>
+          <div class="group-image"></div>
+        </div>
+
+        <!-- Topics Container (replaces subgroups) -->
         <div class="topics-container">
-          <!-- Topic 1 -->
-          <div class="topic-card">
-            <div class="topic-header">
-              <div class="topic-content">
-                <h3 class="topic-title">Essential pantry items for new vegans</h3>
-                <p class="topic-excerpt">What are the must-have ingredients to stock your kitchen when starting a vegan diet?</p>
-              </div>
-              <div class="topic-meta">
-                <span>24 replies</span>
-                <span>3 days ago</span>
-              </div>
-            </div>
-            <div class="topic-avatars">
-              <div class="topic-avatar avatar-1">C</div>
-              <div class="topic-avatar avatar-2">M</div>
-              <div class="topic-avatar avatar-3">J</div>
-              <div class="topic-avatar avatar-4">S</div>
-              <div class="topic-avatar avatar-5">+16</div>
-            </div>
+          <!-- Expanded views -->
+          <div id="topic-detail-1" style="display: none;">
+            <.topic_detail topic={SkalePrototypeWeb.MockData.get_topic_replies()} />
           </div>
-          
-          <!-- Topic 2 -->
-          <div class="topic-card">
-            <div class="topic-header">
-              <div class="topic-content">
-                <h3 class="topic-title">Easy vegan breakfast ideas</h3>
-                <p class="topic-excerpt">Share your quick and delicious vegan breakfast recipes that take less than 10 minutes to prepare.</p>
-              </div>
-              <div class="topic-meta">
-                <span>42 replies</span>
-                <span>1 day ago</span>
-              </div>
+          <%= for topic <- SkalePrototypeWeb.MockData.get_all_topics() |> Enum.drop(1) do %>
+            <div id={"topic-detail-#{topic.id}"} style="display: none;">
+              <.topic_detail topic={topic} />
             </div>
-            <div class="topic-avatars">
-              <div class="topic-avatar avatar-2">A</div>
-              <div class="topic-avatar avatar-3">T</div>
-              <div class="topic-avatar avatar-4">R</div>
-              <div class="topic-avatar avatar-5">+39</div>
-            </div>
-          </div>
-          
-          <!-- Topic 3 -->
-          <div class="topic-card">
-            <div class="topic-header">
-              <div class="topic-content">
-                <h3 class="topic-title">Dealing with cravings for cheese</h3>
-                <p class="topic-excerpt">How do you handle cravings for dairy products, especially cheese? Any good alternatives?</p>
-              </div>
-              <div class="topic-meta">
-                <span>31 replies</span>
-                <span>5 hours ago</span>
-              </div>
-            </div>
-            <div class="topic-avatars">
-              <div class="topic-avatar avatar-3">L</div>
-              <div class="topic-avatar avatar-4">K</div>
-              <div class="topic-avatar avatar-5">+29</div>
-            </div>
-          </div>
-          
-          <!-- Topic 4 -->
-          <div class="topic-card">
-            <div class="topic-header">
-              <div class="topic-content">
-                <h3 class="topic-title">Nutrition concerns for new vegans</h3>
-                <p class="topic-excerpt">What nutrients should beginners pay special attention to and how to ensure you're getting enough?</p>
-              </div>
-              <div class="topic-meta">
-                <span>18 replies</span>
-                <span>2 days ago</span>
-              </div>
-            </div>
-            <div class="topic-avatars">
-              <div class="topic-avatar avatar-4">P</div>
-              <div class="topic-avatar avatar-1">D</div>
-              <div class="topic-avatar avatar-2">N</div>
-              <div class="topic-avatar avatar-5">+15</div>
-            </div>
-          </div>
-          
-          <!-- Topic 5 -->
-          <div class="topic-card">
-            <div class="topic-header">
-              <div class="topic-content">
-                <h3 class="topic-title">Budget-friendly vegan meals</h3>
-                <p class="topic-excerpt">Share your most affordable vegan recipes that don't break the bank but still taste amazing.</p>
-              </div>
-              <div class="topic-meta">
-                <span>27 replies</span>
-                <span>4 days ago</span>
-              </div>
-            </div>
-            <div class="topic-avatars">
-              <div class="topic-avatar avatar-5">E</div>
-              <div class="topic-avatar avatar-1">F</div>
-              <div class="topic-avatar avatar-2">G</div>
-              <div class="topic-avatar avatar-3">H</div>
-              <div class="topic-avatar avatar-4">+23</div>
-            </div>
-          </div>
-          
-          <!-- Topic 6 -->
-          <div class="topic-card">
-            <div class="topic-header">
-              <div class="topic-content">
-                <h3 class="topic-title">Eating out as a new vegan</h3>
-                <p class="topic-excerpt">Tips for navigating restaurants and social situations when you're new to veganism.</p>
-              </div>
-              <div class="topic-meta">
-                <span>15 replies</span>
-                <span>1 week ago</span>
-              </div>
-            </div>
-            <div class="topic-avatars">
-              <div class="topic-avatar avatar-1">I</div>
-              <div class="topic-avatar avatar-3">J</div>
-              <div class="topic-avatar avatar-5">+13</div>
-            </div>
-          </div>
-          
-          <!-- Topic 7 -->
-          <div class="topic-card">
-            <div class="topic-header">
-              <div class="topic-content">
-                <h3 class="topic-title">Vegan protein sources beyond tofu</h3>
-                <p class="topic-excerpt">What are some creative and delicious ways to get enough protein without relying on tofu?</p>
-              </div>
-              <div class="topic-meta">
-                <span>33 replies</span>
-                <span>3 days ago</span>
-              </div>
-            </div>
-            <div class="topic-avatars">
-              <div class="topic-avatar avatar-2">K</div>
-              <div class="topic-avatar avatar-4">L</div>
-              <div class="topic-avatar avatar-5">+31</div>
-            </div>
-          </div>
-          
-          <!-- Topic 8 -->
-          <div class="topic-card">
-            <div class="topic-header">
-              <div class="topic-content">
-                <h3 class="topic-title">Transitioning family meals to vegan</h3>
-                <p class="topic-excerpt">How to gradually introduce vegan meals to a non-vegan family without resistance?</p>
-              </div>
-              <div class="topic-meta">
-                <span>22 replies</span>
-                <span>6 days ago</span>
-              </div>
-            </div>
-            <div class="topic-avatars">
-              <div class="topic-avatar avatar-3">M</div>
-              <div class="topic-avatar avatar-1">N</div>
-              <div class="topic-avatar avatar-5">+20</div>
-            </div>
-          </div>
-          
-          <!-- Topic 9 -->
-          <div class="topic-card">
-            <div class="topic-header">
-              <div class="topic-content">
-                <h3 class="topic-title">Quick vegan lunch ideas for work</h3>
-                <p class="topic-excerpt">What are your go-to vegan lunches that are easy to prep and transport to work?</p>
-              </div>
-              <div class="topic-meta">
-                <span>29 replies</span>
-                <span>2 days ago</span>
-              </div>
-            </div>
-            <div class="topic-avatars">
-              <div class="topic-avatar avatar-4">O</div>
-              <div class="topic-avatar avatar-2">P</div>
-              <div class="topic-avatar avatar-5">+27</div>
-            </div>
-          </div>
-          
-          <!-- Topic 10 -->
-          <div class="topic-card">
-            <div class="topic-header">
-              <div class="topic-content">
-                <h3 class="topic-title">Common mistakes new vegans make</h3>
-                <p class="topic-excerpt">What are some pitfalls to avoid when starting a vegan lifestyle?</p>
-              </div>
-              <div class="topic-meta">
-                <span>38 replies</span>
-                <span>1 day ago</span>
-              </div>
-            </div>
-            <div class="topic-avatars">
-              <div class="topic-avatar avatar-5">Q</div>
-              <div class="topic-avatar avatar-1">R</div>
-              <div class="topic-avatar avatar-3">S</div>
-              <div class="topic-avatar avatar-4">T</div>
-              <div class="topic-avatar avatar-2">+34</div>
-            </div>
-          </div>
+          <% end %>
+          <!-- Collapsed topic cards -->
+          <%= for topic <- SkalePrototypeWeb.MockData.get_all_topics() do %>
+            <.topic_card
+              id={topic.id}
+              title={topic.title}
+              excerpt={topic.excerpt}
+              reply_count={topic.reply_count}
+              time_ago={topic.time_ago}
+              avatars={topic.avatars}
+              additional_count={topic.additional_count}
+            />
+          <% end %>
         </div>
       </div>
-      
+
       <div class="right-column">
+        <!-- Search bar moved to right column -->
+        <div class="search-container">
+          <span class="search-icon">Search</span>
+          <input type="text" placeholder="Search..." class="p-2 rounded text-base search-input">
+        </div>
         <div class="space-y-4">
           <div class="collection-container">
             <div class="collection-header">
@@ -863,15 +402,94 @@
       </div>
     </div>
   </div>
-
   <script>
     document.addEventListener('DOMContentLoaded', function() {
-      // Make topic cards clickable (in a real app, this would navigate to the topic)
-      document.querySelectorAll('.topic-card').forEach(card => {
-        card.addEventListener('click', function() {
-          alert('This would navigate to the individual topic page in a real application');
-        });
+      const overviewText = document.getElementById('overviewText');
+      const readMoreBtn = document.getElementById('readMoreBtn');
+      const groupHeader = document.getElementById('groupHeader');
+     
+      let isExpanded = false;
+      readMoreBtn.addEventListener('click', function() {
+        if (isExpanded) {
+          overviewText.classList.remove('expanded');
+          overviewText.classList.add('collapsed');
+          readMoreBtn.textContent = 'Read more...';
+          groupHeader.classList.remove('expanded');
+        } else {
+          overviewText.classList.remove('collapsed');
+          overviewText.classList.add('expanded');
+          readMoreBtn.textContent = 'Read less';
+          groupHeader.classList.add('expanded');
+        }
+        isExpanded = !isExpanded;
       });
+    });
+
+    // Reply functionality
+    let activeReplyId = null;
+    window.toggleReplies = function(replyId) {
+      const container = document.getElementById(`nested-replies-${replyId}`);
+      const btn = document.querySelector(`button.expand-btn[data-reply-id="${replyId}"]`);
+      if (container && btn) {
+        container.classList.toggle('hidden');
+        const svg = btn.querySelector('svg');
+        const textSpan = btn.querySelector('.show-text');
+        const count = btn.getAttribute('data-count');
+        if (container.classList.contains('hidden')) {
+          svg.style.transform = 'rotate(0deg)';
+          textSpan.textContent = `Show ${count}`;
+        } else {
+          svg.style.transform = 'rotate(180deg)';
+          textSpan.textContent = `Hide ${count}`;
+        }
+      }
+    };
+    window.showReplyForm = function(replyId) {
+      hideAllReplyForms();
+      activeReplyId = replyId;
+      const form = document.getElementById(`reply-form-${replyId}`);
+      if (form) form.classList.remove('hidden');
+    };
+    function hideAllReplyForms() {
+      document.querySelectorAll('[id^="reply-form-"]').forEach(form => {
+        form.classList.add('hidden');
+      });
+      activeReplyId = null;
+    }
+    window.cancelReply = function(replyId) {
+      const form = document.getElementById(`reply-form-${replyId}`);
+      if (form) form.classList.add('hidden');
+      activeReplyId = null;
+    };
+    window.submitReply = function(replyId) {
+      const textarea = document.querySelector(`#reply-form-${replyId} textarea`);
+      if (textarea && textarea.value.trim()) {
+        alert(`Reply submitted: ${textarea.value}`);
+        textarea.value = '';
+        cancelReply(replyId);
+      }
+    };
+
+    // FIXED: View Replies Button
+    document.addEventListener('click', function (e) {
+      const viewRepliesBtn = e.target.closest('.view-replies-btn');
+      if (viewRepliesBtn) {
+        const topicId = viewRepliesBtn.getAttribute('phx-value-topic-id');
+        const topicDetail = document.getElementById(`topic-detail-${topicId}`);
+        if (topicDetail) {
+          document.querySelectorAll('[id^="topic-detail-"]').forEach(d => d.id !== `topic-detail-${topicId}` && (d.style.display = 'none'));
+          document.querySelectorAll('.topic-card').forEach(c => c.style.display = 'none');
+          topicDetail.style.display = 'block';
+          topicDetail.querySelectorAll('[id^="nested-replies-"]').forEach(el => el.classList.add('hidden'));
+          topicDetail.querySelectorAll('.expand-btn').forEach(btn => {
+            const svg = btn.querySelector('svg');
+            const textSpan = btn.querySelector('.show-text');
+            svg.style.transform = 'rotate(0deg)';
+            textSpan.textContent = `Show ${btn.getAttribute('data-count')}`;
+          });
+          hideAllReplyForms();
+        }
+      }
     });
   </script>
 </body>

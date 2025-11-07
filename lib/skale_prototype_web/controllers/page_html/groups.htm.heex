@@ -18,69 +18,6 @@
       margin: 0 auto;
       padding: 0 1rem;
     }
-    .header-content {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 0 0.5rem;
-    }
-    .icon-container {
-      display: flex;
-      gap: 1rem;
-    }
-    .icon-wrapper {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      width: 2.5rem;
-      height: 2.5rem;
-      background-color: rgba(255, 255, 255, 0.3);
-      border-radius: 8px;
-      transition: background-color 0.2s;
-    }
-    .icon-wrapper:hover {
-      background-color: rgba(255, 255, 255, 0.5);
-    }
-    .icon {
-      font-size: 1.3rem;
-      line-height: 1;
-    }
-    .mobile-menu {
-      display: flex;
-      flex-direction: column;
-      cursor: pointer;
-      padding: 0.5rem;
-    }
-    .mobile-menu span {
-      width: 25px;
-      height: 3px;
-      background-color: #000;
-      margin: 2px 0;
-      transition: 0.3s;
-    }
-    .mobile-nav {
-      display: none;
-      position: absolute;
-      top: 100%;
-      right: 0;
-      background-color: #DDE5DD;
-      width: 100%;
-      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-      z-index: 1000;
-    }
-    .mobile-nav.active {
-      display: block;
-    }
-    .mobile-nav .icon-container {
-      flex-direction: column;
-      padding: 1rem;
-      gap: 0.5rem;
-    }
-    .mobile-nav .icon-wrapper {
-      width: 100%;
-      justify-content: flex-start;
-      padding: 0.75rem 1rem;
-    }
     .main-content {
       display: flex;
       flex-direction: column;
@@ -398,6 +335,8 @@
       font-size: 0.75rem;
       color: #6b7280;
     }
+
+    /* Sidebar Styles (copied from homepage) */
     .collection-container {
       aspect-ratio: 1 / 1;
       display: flex;
@@ -427,29 +366,6 @@
       background-color: #9ca3af;
       border-radius: 8px;
     }
-    .logo {
-      width: 40px;
-      height: 40px;
-      margin-right: 1rem;
-    }
-    @media (max-width: 480px) {
-      .logo {
-        width: 32px;
-        height: 32px;
-        margin-right: 0.75rem;
-      }
-    }
-    .desktop-icons {
-      display: none;
-    }
-    @media (min-width: 768px) {
-      .desktop-icons {
-        display: flex;
-      }
-      .mobile-menu {
-        display: none;
-      }
-    }
   </style>
 </head>
 <body class="bg-gray-100 font-sans min-h-screen">
@@ -470,7 +386,6 @@
             <span class="breadcrumb-active">Vegan Recipe Tips</span>
           </div>
         </div>
-
         <!-- Group Header Container -->
         <div class="group-header-container" id="groupHeader">
           <div class="group-content">
@@ -478,13 +393,13 @@
             <h2 class="group-subtitle">Mastering Plant-Based Cooking</h2>
             <div class="overview-container">
               <div class="group-overview collapsed" id="overviewText">
-                Join our community of passionate vegan cooks sharing innovative recipes, 
-                ingredient substitutions, and cooking techniques. Whether you're new to 
-                plant-based eating or a seasoned vegan chef, you'll find inspiration and 
-                practical advice to elevate your culinary skills. Share your discoveries 
-                and learn from others in this supportive environment. Our members range 
-                from beginners looking for simple meal ideas to professional chefs 
-                exploring advanced techniques. We cover everything from basic ingredient 
+                Join our community of passionate vegan cooks sharing innovative recipes,
+                ingredient substitutions, and cooking techniques. Whether you're new to
+                plant-based eating or a seasoned vegan chef, you'll find inspiration and
+                practical advice to elevate your culinary skills. Share your discoveries
+                and learn from others in this supportive environment. Our members range
+                from beginners looking for simple meal ideas to professional chefs
+                exploring advanced techniques. We cover everything from basic ingredient
                 swaps to complex flavor balancing.
               </div>
               <button class="read-more-btn" id="readMoreBtn">Read more...</button>
@@ -499,7 +414,6 @@
           </div>
           <div class="group-image"></div>
         </div>
-
         <!-- Subgroups Container -->
         <div class="subgroups-container">
           <h2 class="subgroups-title">Subgroups</h2>
@@ -514,9 +428,9 @@
                 </div>
               </div>
             </a>
-            
-            <!-- Subgroup 2 -->
-            <a href="#" class="subgroup-link">
+          
+            <!-- Subgroup 2 Linked to the Vegan Baking subgroup page-->
+            <a href="subgroup_topics2" class="subgroup-link">
               <div class="subgroup-card">
                 <div class="subgroup-image"></div>
                 <div class="subgroup-info">
@@ -525,7 +439,7 @@
                 </div>
               </div>
             </a>
-            
+          
             <!-- Subgroup 3 -->
             <a href="#" class="subgroup-link">
               <div class="subgroup-card">
@@ -536,7 +450,7 @@
                 </div>
               </div>
             </a>
-            
+          
             <!-- Subgroup 4 -->
             <a href="#" class="subgroup-link">
               <div class="subgroup-card">
@@ -547,7 +461,7 @@
                 </div>
               </div>
             </a>
-            
+          
             <!-- Subgroup 5 -->
             <a href="#" class="subgroup-link">
               <div class="subgroup-card">
@@ -558,7 +472,7 @@
                 </div>
               </div>
             </a>
-            
+          
             <!-- Subgroup 6 -->
             <a href="#" class="subgroup-link">
               <div class="subgroup-card">
@@ -569,7 +483,7 @@
                 </div>
               </div>
             </a>
-            
+          
             <!-- Subgroup 7 -->
             <a href="#" class="subgroup-link">
               <div class="subgroup-card">
@@ -580,7 +494,7 @@
                 </div>
               </div>
             </a>
-            
+          
             <!-- Subgroup 8 -->
             <a href="#" class="subgroup-link">
               <div class="subgroup-card">
@@ -591,7 +505,7 @@
                 </div>
               </div>
             </a>
-            
+          
             <!-- Subgroup 9 -->
             <a href="#" class="subgroup-link">
               <div class="subgroup-card">
@@ -605,57 +519,18 @@
           </div>
         </div>
       </div>
-      
-      <div class="right-column">
-        <!-- Search bar moved to right column -->
-        <div class="search-container">
-          <span class="search-icon">🔍</span>
-          <input type="text" placeholder="Search..." class="p-2 rounded text-base search-input">
-        </div>
-
-        <div class="space-y-4">
-          <div class="collection-container">
-            <div class="collection-header">
-              <h2 class="text-black text-base font-semibold">My Collection</h2>
-              <a href="#" class="text-[#A3B18A] text-sm">See All</a>
-            </div>
-            <div class="gray-square"></div>
-            <div class="text-left mt-2">
-              <p class="text-black text-sm">Vegan Recipe Book</p>
-              <p class="text-black text-xs">Personal favorites</p>
-            </div>
-          </div>
-          <div class="collection-container">
-            <div class="collection-header">
-              <h2 class="text-black text-base font-semibold">Recent Events</h2>
-              <a href="#" class="text-[#A3B18A] text-sm">See All</a>
-            </div>
-            <div class="gray-square"></div>
-            <div class="text-left mt-2">
-              <p class="text-black text-xs">Nov 15</p>
-              <p class="text-black text-xs">Vegan Cooking Demo</p>
-            </div>
-          </div>
-          <div class="collection-container">
-            <div class="collection-header">
-              <h2 class="text-black text-base font-semibold">Featured</h2>
-              <a href="#" class="text-[#A3B18A] text-sm">See All</a>
-            </div>
-            <div class="gray-square"></div>
-          </div>
-        </div>
-      </div>
+    
+      <!-- Right Sidebar Component -->
+      <SkalePrototypeWeb.Components.RightSidebar.right_sidebar />
     </div>
   </div>
-
   <script>
     document.addEventListener('DOMContentLoaded', function() {
       const overviewText = document.getElementById('overviewText');
       const readMoreBtn = document.getElementById('readMoreBtn');
       const groupHeader = document.getElementById('groupHeader');
-      
+    
       let isExpanded = false;
-
       readMoreBtn.addEventListener('click', function() {
         if (isExpanded) {
           // Collapse

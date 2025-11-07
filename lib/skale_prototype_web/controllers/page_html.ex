@@ -1,8 +1,10 @@
 defmodule SkalePrototypeWeb.PageHTML do
   use SkalePrototypeWeb, :html
 
-  import SkalePrototypeWeb.Components.TopicCard
-  import SkalePrototypeWeb.Components.TopicDetail
+  # NO IMPORTS — they cause errors
+  # import SkalePrototypeWeb.Components.TopicCards
+  # import SkalePrototypeWeb.Components.TopicDetail
+  # import SkalePrototypeWeb.Components.RightSidebar
 
   embed_templates "page_html/*"
 end

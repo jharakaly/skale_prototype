@@ -80,6 +80,12 @@ defmodule SkalePrototypeWeb do
     end
   end
 
+  def components do
+    quote do
+      use Phoenix.Component
+    end
+  end
+
   defp html_helpers do
     quote do
       # Translation

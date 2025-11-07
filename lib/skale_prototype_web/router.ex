@@ -16,14 +16,17 @@ defmodule SkalePrototypeWeb.Router do
   scope "/", SkalePrototypeWeb do
     pipe_through :browser
 
-    get "/", PageController, :home
-    get "/activity", PageController, :activity
+    # LIVEVIEW: Home page
+    live "/", HomeLive, :home
+    live "/activity", ActivityLive, :index
+
+    # STATIC PAGES
     get "/profile", PageController, :profile
     get "/discussions", PageController, :discussions
     get "/groups", PageController, :groups
     get "/groups2", PageController, :groups2
     get "/subgroup_topics", PageController, :subgroup_topics
-
+    get "/subgroup_topics2", PageController, :subgroup_topics2
   end
 
   # Other scopes may use custom stacks.
@@ -33,11 +36,6 @@ defmodule SkalePrototypeWeb.Router do
 
   # Enable LiveDashboard and Swoosh mailbox preview in development
   if Application.compile_env(:skale_prototype, :dev_routes) do
-    # If you want to use the LiveDashboard in production, you should put
-    # it behind authentication and allow only admins to access it.
-    # If your application does not have an admins-only section yet,
-    # you can use Plug.BasicAuth to set up some basic authentication
-    # as long as you are also using SSL (which you should anyway).
     import Phoenix.LiveDashboard.Router
 
     scope "/dev" do

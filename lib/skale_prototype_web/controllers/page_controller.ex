@@ -1,13 +1,15 @@
 defmodule SkalePrototypeWeb.PageController do
   use SkalePrototypeWeb, :controller
 
-  def home(conn, _params) do
-    render(conn, "home.html")
-  end
+  # REMOVED: home/2 — now handled by LiveView
+  # def home(conn, _params) do
+  #   render(conn, "home.html")
+  # end
 
-  def activity(conn, _params) do
-    render(conn, "activity.html")
-  end
+  # REMOVED: activity/2 — now handled by LiveView
+  # def activity(conn, _params) do
+  #   render(conn, "activity.html")
+  # end
 
   def profile(conn, _params) do
     render(conn, "profile.html")
@@ -29,4 +31,7 @@ defmodule SkalePrototypeWeb.PageController do
     render(conn, "subgroup_topics.html")
   end
 
+  def subgroup_topics2(conn, _params) do
+    render(conn, "subgroup_topics2.html")
+  end
 end

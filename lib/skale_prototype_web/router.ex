@@ -14,20 +14,26 @@ defmodule SkalePrototypeWeb.Router do
   end
 
   scope "/", SkalePrototypeWeb do
-    pipe_through :browser
+  pipe_through :browser
 
-    # LIVEVIEW: Home page
-    live "/", HomeLive, :home
-    live "/activity", ActivityLive, :index
+  # Home page (main LiveView with tab switching)
+  live "/", HomeLive, :index
 
-    # STATIC PAGES
-    get "/profile", PageController, :profile
-    get "/discussions", PageController, :discussions
-    get "/groups", PageController, :groups
-    get "/groups2", PageController, :groups2
-    get "/subgroup_topics", PageController, :subgroup_topics
-    get "/subgroup_topics2", PageController, :subgroup_topics2
-  end
+  # Activity page route (you’ll no longer need this once Activity is a tab)
+  # Comment it out for now so it doesn't interfere:
+  # live "/activity", ActivityLive, :index
+
+  # Static Pages
+  get "/profile", PageController, :profile
+  get "/discussions", PageController, :discussions
+  get "/groups", PageController, :groups
+  get "/groups2", PageController, :groups2
+  get "/subgroup_topics", PageController, :subgroup_topics
+  get "/subgroup_topics2", PageController, :subgroup_topics2
+  get "/group_building_skale", PageController, :group_building_skale
+  get "/subgroup_building_culture", PageController, :subgroup_building_culture
+end
+
 
   # Other scopes may use custom stacks.
   # scope "/api", SkalePrototypeWeb do

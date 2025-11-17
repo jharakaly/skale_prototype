@@ -234,7 +234,7 @@
     /* === ULTRA-CONDENSED TOPIC DETAIL STYLING === */
     .topic-detail-container {
       background-color: white;
-      border: none;
+      border: none; /* REMOVED: No border around replies container */
       border-radius: 0;
       padding: 0.75rem;
       box-shadow: none;
@@ -428,6 +428,12 @@
     </div>
   </div>
   <script>
+    // Store the original topic card element for scroll restoration
+    let originalTopicCard = null;
+    let activeTopicId = null;
+    let originalReadMoreCard = null;
+    let activeReadMoreId = null;
+
     document.addEventListener('DOMContentLoaded', function() {
       const overviewText = document.getElementById('overviewText');
       const readMoreBtn = document.getElementById('readMoreBtn');
@@ -450,7 +456,7 @@
       });
     });
 
-   // Read More functionality for topic cards - UPDATED VERSION
+   // Read More functionality for topic cards - UPDATED VERSION WITH SCROLL RESTORATION
 window.toggleReadMore = function(topicId) {
   const excerpt = document.getElementById(`excerpt-${topicId}`);
   const fullContent = document.getElementById(`content-full-${topicId}`);
@@ -484,6 +490,20 @@ window.toggleReadMore = function(topicId) {
     if (topicCard) {
       topicCard.style.backgroundColor = '';
     }
+
+    // Scroll back to the original topic card position
+    setTimeout(() => {
+      if (originalReadMoreCard && activeReadMoreId === topicId) {
+        originalReadMoreCard.scrollIntoView({ 
+          behavior: 'smooth', 
+          block: 'start',
+          inline: 'nearest'
+        });
+        originalReadMoreCard = null;
+        activeReadMoreId = null;
+      }
+    }, 100);
+
   } else {
     // Expand - show full content without line clamping, hide excerpt and thumbnail
     excerpt.classList.add('hidden');
@@ -506,6 +526,10 @@ window.toggleReadMore = function(topicId) {
     if (topicCard) {
       topicCard.style.backgroundColor = 'white';
     }
+
+    // Store the original topic card for scroll restoration
+    originalReadMoreCard = document.getElementById(`topic-${topicId}`);
+    activeReadMoreId = topicId;
   }
 };
 
@@ -570,6 +594,11 @@ window.toggleReadMore = function(topicId) {
             collapseTopicDetail(topicId);
           } else {
             // EXPAND: Show detail view, hide clicked card, slide down others
+            
+            // Store the original topic card for scroll restoration
+            originalTopicCard = document.getElementById(`topic-${topicId}`);
+            activeTopicId = topicId;
+            
             // Hide all other detail views
             document.querySelectorAll('[id^="topic-detail-"]').forEach(d => {
               d.style.display = 'none';
@@ -637,6 +666,19 @@ window.toggleReadMore = function(topicId) {
         if (viewRepliesBtn) {
           viewRepliesBtn.textContent = 'View replies';
         }
+
+        // Scroll back to the original topic card
+        setTimeout(() => {
+          if (originalTopicCard && activeTopicId === topicId) {
+            originalTopicCard.scrollIntoView({ 
+              behavior: 'smooth', 
+              block: 'start',
+              inline: 'nearest'
+            });
+            originalTopicCard = null;
+            activeTopicId = null;
+          }
+        }, 100); // Small delay to ensure DOM has updated
       }
     }
   </script>

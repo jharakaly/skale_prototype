@@ -34,4 +34,14 @@ defmodule SkalePrototypeWeb.PageController do
   def subgroup_topics2(conn, _params) do
     render(conn, "subgroup_topics2.html")
   end
+
+  def group_building_skale(conn, _params) do
+    render(conn, "group_building_skale.html")
+  end
+
+
+   def subgroup_building_culture(conn, _params) do
+    render(conn, "subgroup_building_culture.html")
+  end
+
 end

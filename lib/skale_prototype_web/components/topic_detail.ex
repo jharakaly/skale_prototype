@@ -43,9 +43,11 @@ defmodule SkalePrototypeWeb.Components.TopicDetail do
         </div>
       <% end %>
 
-      <p class="text-gray-700 mb-4 text-sm md:text-base break-words whitespace-pre-line"><%= @topic.content %></p>
+      <!-- Upper container - increased bottom margin by 50% -->
+      <p class="text-gray-700 mb-6 text-sm md:text-base break-words whitespace-pre-line"><%= @topic.content %></p>
 
-      <div class="flex items-center justify-between text-sm text-gray-500 mb-3">
+      <!-- Middle container - increased bottom margin by 50% and added top/bottom padding -->
+      <div class="flex items-center justify-between text-sm text-gray-500 mb-9 py-4">
         <div class="flex items-center space-x-1">
           <span><%= @topic.reply_count %> replies</span>
         </div>
@@ -67,7 +69,8 @@ defmodule SkalePrototypeWeb.Components.TopicDetail do
         </div>
       </div>
 
-      <div class="w-full">
+      <!-- Lower container - added top margin -->
+      <div class="w-full mt-6">
         <% replies = Map.get(@topic, :replies) || [] %>
         <%= if length(replies) > 0 do %>
           <%= for reply <- replies do %>
@@ -100,6 +103,25 @@ defmodule SkalePrototypeWeb.Components.TopicDetail do
         </div>
       <% end %>
     </div>
+
+    <script>
+      function toggleReplies(replyId) {
+        const nested = document.getElementById(`nested-replies-${replyId}`);
+        const btn = document.querySelector(`[data-reply-id="${replyId}"]`);
+        const svg = btn.querySelector('.down-carrot');
+        const show = btn.querySelector('.show-text');
+        const hide = btn.querySelector('.hide-text');
+
+        nested.classList.toggle('hidden');
+        svg.classList.toggle('rotate-180');
+        show.classList.toggle('hidden');
+        hide.classList.toggle('hidden');
+      }
+    </script>
+
+    <style>
+      .rotate-180 { transform: rotate(180deg); }
+    </style>
     """
   end
 
@@ -137,11 +159,11 @@ defmodule SkalePrototypeWeb.Components.TopicDetail do
                 data-reply-id={@reply_id}
                 data-count={length(@nested_replies)}
               >
-                <svg class="w-3 h-3 md:w-3.5 md:h-3.5 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg class="w-3 h-3 md:w-3.5 md:h-3.5 transition-transform duration-200 down-carrot" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
                 </svg>
-                <span class="hidden sm:inline show-text"><%= length(@nested_replies) %> More</span>
-                <span class="sm:hidden"><%= length(@nested_replies) %> More</span>
+                <span class="show-text"><%= length(@nested_replies) %> more</span>
+                <span class="hide-text hidden"><%= length(@nested_replies) %> less</span>
               </button>
             <% end %>
           </div>

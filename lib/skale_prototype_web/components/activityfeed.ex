@@ -551,4 +551,186 @@ defmodule SkalePrototypeWeb.Components.ActivityFeed do
     </script>
     """
   end
+
+  # Helper function to convert activity data to feed item format
+  defp convert_activity_to_item(activity) do
+    case activity.type do
+      :reply ->
+        # For reply activities, fetch the full topic data
+        topic = get_topic_by_id(activity.topic_id)
+
+        %{
+          id: activity.id,
+          type: :reply,
+          reply_context: :topic,  # This activity is a reply to a topic
+          user_name: activity.user_name,
+          user_avatar: activity.user_avatar,
+          group_name: activity.group_name,
+          topic: topic,
+          reply_text: activity.reply_excerpt,
+          time_ago: activity.time_ago,
+          new_reply_count: 1,
+          timestamp: parse_time_ago(activity.time_ago)
+        }
+
+      :nested_reply ->
+        # For nested replies (reply to a reply)
+        %{
+          id: activity.id,
+          type: :reply,
+          reply_context: :comment,  # This is a reply to a comment
+          user_name: activity.user_name,
+          user_avatar: activity.user_avatar,
+          group_name: activity.group_name,
+          topic_id: activity.topic_id,
+          topic_title: activity.topic_title,
+          reply_text: activity.reply_excerpt,
+          time_ago: activity.time_ago,
+          timestamp: parse_time_ago(activity.time_ago)
+        }
+
+      :like ->
+        %{
+          id: activity.id,
+          type: :like,
+          user_name: activity.user_name,
+          user_avatar: activity.user_avatar,
+          group_name: activity.group_name,
+          topic_title: activity.topic_title,
+          liked_content: activity.target_content,
+          time_ago: activity.time_ago,
+          timestamp: parse_time_ago(activity.time_ago)
+        }
+
+      :mention ->
+        %{
+          id: activity.id,
+          type: :mention,
+          user_name: activity.user_name,
+          user_avatar: activity.user_avatar,
+          group_name: activity.group_name,
+          topic_title: activity.topic_title,
+          mentioned_content: activity.target_content,
+          time_ago: activity.time_ago,
+          timestamp: parse_time_ago(activity.time_ago)
+        }
+
+      :follow ->
+        %{
+          id: activity.id,
+          type: :follow,
+          user_name: activity.user_name,
+          user_avatar: activity.user_avatar,
+          time_ago: activity.time_ago,
+          timestamp: parse_time_ago(activity.time_ago)
+        }
+
+      :new_topic ->
+        %{
+          id: activity.id,
+          type: :new_topic,
+          user_name: activity.user_name,
+          user_avatar: activity.user_avatar,
+          group_name: activity.group_name,
+          topic_title: activity.topic_title,
+          time_ago: activity.time_ago,
+          timestamp: parse_time_ago(activity.time_ago)
+        }
+
+      _ ->
+        nil
+    end
+  end
+
+  # Helper function to get a full topic by ID
+  defp get_topic_by_id(topic_id) do
+    all_topics = MockData.get_all_topics()
+    topic = Enum.find(all_topics, fn t -> t.id == topic_id end)
+
+    if topic do
+      topic
+    else
+      # Default topic structure if not found
+      %{
+        id: topic_id,
+        title: "Topic #{topic_id}",
+        excerpt: "Topic content...",
+        content: "Topic content...",
+        reply_count: 0,
+        time_ago: "recently",
+        avatars: [],
+        additional_count: 0,
+        media: []
+      }
+    end
+  end
+
+  # Helper function to build activity titles
+  defp build_title(item) do
+    case item.type do
+      :like ->
+        "#{item.user_name} liked your comment"
+
+      :mention ->
+        "#{item.user_name} mentioned you"
+
+      :follow ->
+        "#{item.user_name} started following you"
+
+      :new_topic ->
+        "#{item.user_name} posted a new topic"
+
+      _ ->
+        "#{item.user_name} activity"
+    end
+  end
+
+  # Helper function to build activity subtexts
+  defp build_subtext(item) do
+    case item.type do
+      :like ->
+        if item.topic_title, do: "in '#{item.topic_title}'", else: "your post"
+
+      :mention ->
+        if item.topic_title, do: "in '#{item.topic_title}'", else: "in a discussion"
+
+      :follow ->
+        "new follower"
+
+      :new_topic ->
+        if item.topic_title, do: "'#{item.topic_title}'", else: "new topic"
+
+      _ ->
+        ""
+    end
+  end
+
+  # Helper function to parse time_ago strings into timestamps for sorting
+  defp parse_time_ago(time_ago) do
+    cond do
+      String.contains?(time_ago, "min") ->
+        [num | _] = String.split(time_ago, " ")
+        minutes = String.to_integer(num)
+        NaiveDateTime.add(NaiveDateTime.utc_now(), -minutes * 60)
+
+      String.contains?(time_ago, "hour") ->
+        [num | _] = String.split(time_ago, " ")
+        hours = String.to_integer(num)
+        NaiveDateTime.add(NaiveDateTime.utc_now(), -hours * 3600)
+
+      String.contains?(time_ago, "day") ->
+        [num | _] = String.split(time_ago, " ")
+        days = String.to_integer(num)
+        NaiveDateTime.add(NaiveDateTime.utc_now(), -days * 86400)
+
+      String.contains?(time_ago, "week") ->
+        [num | _] = String.split(time_ago, " ")
+        weeks = String.to_integer(num)
+        NaiveDateTime.add(NaiveDateTime.utc_now(), -weeks * 604800)
+
+      true ->
+        # Default to current time if we can't parse
+        NaiveDateTime.utc_now()
+    end
+  end
 end

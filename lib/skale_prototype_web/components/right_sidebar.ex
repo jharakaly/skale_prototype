@@ -49,10 +49,14 @@ defmodule SkalePrototypeWeb.Components.RightSidebar do
     </div>
 
     <style>
-      /* ────── ALL ORIGINAL STYLES UNCHANGED ────── */
+      /* Search container (now 90% width, centered) */
       .search-container {
         position: relative;
         margin-bottom: 1.5rem;
+        margin-top: 11px;
+        width: 95%;
+        margin-left: auto;
+        margin-right: auto;
       }
       .search-icon {
         position: absolute;
@@ -77,8 +81,8 @@ defmodule SkalePrototypeWeb.Components.RightSidebar do
         }
       }
 
+      /* Events container (95% width) */
       .collection-container {
-        aspect-ratio: 1 / 1.5;
         display: flex;
         flex-direction: column;
         background-color: white;
@@ -87,11 +91,20 @@ defmodule SkalePrototypeWeb.Components.RightSidebar do
         padding: 1.5rem;
         box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
         margin-bottom: 1.5rem;
+        min-height: 400px;
       }
+
+      .events-container {
+        width: 95%;
+        margin-left: auto;
+        margin-right: auto;
+      }
+
       @media (max-width: 480px) {
         .collection-container {
           padding: 1rem;
           margin-bottom: 1rem;
+          min-height: 350px;
         }
       }
       .collection-header {
@@ -103,6 +116,7 @@ defmodule SkalePrototypeWeb.Components.RightSidebar do
       .events-list {
         flex: 1;
         overflow-y: auto;
+        min-height: 300px;
       }
       .event-item {
         background: white;

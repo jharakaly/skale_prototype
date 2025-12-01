@@ -1,137 +1,438 @@
 defmodule SkalePrototypeWeb.Components.Homepage do
   use SkalePrototypeWeb, :components
   alias SkalePrototypeWeb.Components.ActivityFeed
+  alias SkalePrototypeWeb.Components.RightSidebar
 
   def render(assigns) do
+    # Ensures @active_tab always exists
     assigns = assign_new(assigns, :active_tab, fn -> "groups" end)
 
     ~H"""
-    <div class="w-full bg-white min-h-screen">
-      <!-- Full-width wrapper to match header -->
-      <div class="max-w-6xl mx-auto px-4">
-        <!-- Search bar -->
-        <div class="py-6">
-          <div class="left-search-container">
-            <span class="search-icon">Search</span>
-            <input type="text" placeholder="Ask a question, share an idea..." class="p-2 rounded text-base search-input w-full">
+    <div class="container mx-auto px-4">
+      <!-- Replaced search bar with "What's on your mind?" bar -->
+      <div class="header-spacing">
+        <div class="whats-on-mind-bar" id="whats-on-mind-bar">
+          <div class="profile-avatar">
+            <div class="avatar-initials">Y</div>
+          </div>
+          <div class="whats-on-mind-input">
+            <input
+              type="text"
+              placeholder="What's on your mind?"
+              class="whats-on-mind-input-field"
+              readonly
+            />
+          </div>
+        </div>
+      </div>
+
+      <div class="main-layout">
+        <!-- Left Content Column -->
+        <div class="left-content-column">
+          <!-- Button group -->
+          <div class="button-group">
+            <button
+              phx-click="show-tab"
+              phx-value-tab="groups"
+              class={"nav-button #{if @active_tab == "groups", do: "bg-[#A3B18A] text-white", else: "bg-gray-200 text-gray-700"}"}>
+              Groups
+            </button>
+
+            <button
+              phx-click="show-tab"
+              phx-value-tab="activity"
+              class={"nav-button #{if @active_tab == "activity", do: "bg-[#A3B18A] text-white", else: "bg-gray-200 text-gray-700"}"}>
+              Activity
+            </button>
+          </div>
+
+          <div class="groups-container">
+            <%= if @active_tab == "groups" do %>
+              <!-- Vegan Cookbook Club Card (CARD 1 – DEBUG TARGET) -->
+              <div class="group-card" phx-click="navigate_to_group" phx-value-group="vegan-cookbook">
+                <div class="group-header">
+                  <div class="group-info">
+                    <h2 class="text-black text-base font-semibold">Vegan Cookbook Club</h2>
+                    <p
+                      class="group-description"
+                      id="group-desc-1"
+                      data-expanded="false"
+                    >
+                      Explore plant-based recipes, share cooking tips, and discover delicious vegan meals together.
+                      Explore plant-based recipes, share cooking tips, and discover delicious vegan meals together.
+                      Explore plant-based recipes, share cooking tips, and discover delicious vegan meals together.
+                      Explore plant-based recipes, share cooking tips, and discover delicious vegan meals together.
+                      Explore plant-based recipes, share cooking tips, and discover delicious vegan meals together.
+                      Explore plant-based recipes, share cooking tips, and discover delicious vegan meals together.
+                    </p>
+                    <p class="text-black text-sm">700 members · 5 new topics · 44 replies</p>
+
+                    <div
+                      class="group-read-more"
+                      onclick="toggleGroupReadMore(1, event)"
+                    >
+                      <span class="group-read-more-text">Read more</span>
+                      <svg class="read-more-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                        <path
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          stroke-width="2"
+                          d="M19 9l-7 7-7-7"
+                        />
+                        <path
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          stroke-width="2"
+                          d="M19 5l-7 7-7-7"
+                        />
+                      </svg>
+                    </div>
+                  </div>
+                  <div class="group-avatar"></div>
+                </div>
+                <!-- Latest Reply (REPLY 1 – DEBUG TARGET) -->
+                <div class="latest-reply">
+                  <div class="reply-avatar">C</div>
+                  <div class="reply-content">
+                    <div class="reply-meta">
+                      <span class="reply-author">cabot</span>
+                      <span class="reply-time">5m</span>
+                    </div>
+                    <p
+                      class="text-black text-sm reply-body"
+                      id="reply-body-1"
+                      data-expanded="false"
+                    >
+                      We successfully made our first baked vegan mac and cheese from the cookbook and it was absolutely
+                      delicious! The cashew-based sauce was surprisingly creamy.
+                      We successfully made our first baked vegan mac and cheese from the cookbook and it was absolutely
+                      delicious! The cashew-based sauce was surprisingly creamy.
+                      We successfully made our first baked vegan mac and cheese from the cookbook and it was absolutely
+                      delicious! The cashew-based sauce was surprisingly creamy.
+                    </p>
+
+                    <!-- Reply Read More -->
+                    <div
+                      class="reply-read-more"
+                      onclick="toggleReplyReadMore(1, event)"
+                    >
+                      <span class="reply-read-more-text">Read more</span>
+                      <svg class="read-more-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                        <path
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          stroke-width="2"
+                          d="M19 9l-7 7-7-7"
+                        />
+                        <path
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          stroke-width="2"
+                          d="M19 5l-7 7-7-7"
+                        />
+                      </svg>
+                    </div>
+                  </div>
+                  <!-- Reply icon -->
+                  <div class="reply-icon-container">
+                    <svg class="reply-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M3 10h10a8 8 0 018 8v2M3 10l6 6m-6-6l6-6"
+                      />
+                    </svg>
+                  </div>
+                </div>
+              </div>
+
+              <!-- South Shore Eats Card (unchanged except longer text you added) -->
+              <div class="group-card" phx-click="navigate_to_group" phx-value-group="south-shore-eats">
+                <div class="group-header">
+                  <div class="group-info">
+                    <h2 class="text-black text-base font-semibold">South Shore Eats</h2>
+                    <p class="group-description">
+                      Discover local restaurants, food events, and culinary experiences across the South Shore region.
+                      Discover local restaurants, food events, and culinary experiences across the South Shore region.
+                      Discover local restaurants, food events, and culinary experiences across the South Shore region.
+                      Discover local restaurants, food events, and culinary experiences across the South Shore region.
+                      Discover local restaurants, food events, and culinary experiences across the South Shore region.
+                      Discover local restaurants, food events, and culinary experiences across the South Shore region.
+                      Discover local restaurants, food events, and culinary experiences across the South Shore region.
+                    </p>
+                    <p class="text-black text-sm">1k members · 7 new topics · 56 replies</p>
+
+                    <div class="group-read-more">
+                      <span class="group-read-more-text">Read more</span>
+                      <svg class="read-more-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                        <path
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          stroke-width="2"
+                          d="M19 9l-7 7-7-7"
+                        />
+                        <path
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          stroke-width="2"
+                          d="M19 5l-7 7-7-7"
+                        />
+                      </svg>
+                    </div>
+                  </div>
+                  <div class="group-avatar"></div>
+                </div>
+                <!-- Latest Reply -->
+                <div class="latest-reply">
+                  <div class="reply-avatar">C</div>
+                  <div class="reply-content">
+                    <div class="reply-meta">
+                      <span class="reply-author">Christina</span>
+                      <span class="reply-time">1hr</span>
+                    </div>
+                    <p class="text-black text-sm">
+                      The farmers market in Cohasset will feature a new raw bar on Saturday with fresh oysters from
+                      local farms. They're also hosting a cooking demonstration!
+                    </p>
+                  </div>
+                  <!-- Reply icon -->
+                  <div class="reply-icon-container">
+                    <svg class="reply-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M3 10h10a8 8 0 018 8v2M3 10l6 6m-6-6l6-6"
+                      />
+                    </svg>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Building Skale Card (unchanged) -->
+              <div class="group-card" phx-click="navigate_to_group" phx-value-group="building-skale">
+                <div class="group-header">
+                  <div class="group-info">
+                    <h2 class="text-black text-base font-semibold">Building Skale</h2>
+                    <p class="group-description">
+                      Join the development journey of Skale platform - share ideas, report bugs, and help shape our community.
+                    </p>
+                    <p class="text-black text-sm">500 members · 12 new topics · 89 replies</p>
+
+                    <div class="group-read-more">
+                      <span class="group-read-more-text">Read more</span>
+                      <svg class="read-more-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                        <path
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          stroke-width="2"
+                          d="M19 9l-7 7-7-7"
+                        />
+                        <path
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          stroke-width="2"
+                          d="M19 5l-7 7-7-7"
+                        />
+                      </svg>
+                    </div>
+                  </div>
+                  <div class="group-avatar"></div>
+                </div>
+                <!-- Latest Reply -->
+                <div class="latest-reply">
+                  <div class="reply-avatar">A</div>
+                  <div class="reply-content">
+                    <div class="reply-meta">
+                      <span class="reply-author">alex</span>
+                      <span class="reply-time">2hr</span>
+                    </div>
+                    <p class="text-black text-sm">
+                      Just pushed the new homepage design with improved group layouts and better mobile responsiveness.
+                      Let me know what you think about the latest updates!
+                    </p>
+                  </div>
+                  <!-- Reply icon -->
+                  <div class="reply-icon-container">
+                    <svg class="reply-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M3 10h10a8 8 0 018 8v2M3 10l6 6m-6-6l6-6"
+                      />
+                    </svg>
+                  </div>
+                </div>
+              </div>
+            <% else %>
+              <!-- ACTIVITY FEED -->
+              <ActivityFeed.activity_feed />
+            <% end %>
           </div>
         </div>
 
-        <!-- Main content area -->
-        <div class="flex flex-col lg:flex-row gap-8 pb-12">
-          <!-- Left Column -->
-          <div class="flex-1 lg:w-0">
-            <div class="button-group mb-6">
-              <button
-                phx-click="show-tab"
-                phx-value-tab="groups"
-                class={"nav-button #{if @active_tab == "groups", do: "bg-[#A3B18A] text-white", else: "bg-gray-200 text-gray-700"}"}>
-                Groups
-              </button>
-              <button
-                phx-click="show-tab"
-                phx-value-tab="activity"
-                class={"nav-button #{if @active_tab == "activity", do: "bg-[#A3B18A] text-white", else: "bg-gray-200 text-gray-700"}"}>
-                Activity
-              </button>
-            </div>
-
-            <div class="space-y-6">
-              <%= if @active_tab == "groups" do %>
-                <!-- Vegan Cookbook Club Card -->
-                <div class="group-card">
-                  <div class="group-header">
-                    <div class="group-info">
-                      <h2 class="text-black text-base font-semibold">Vegan Cookbook Club</h2>
-                      <p class="text-black text-sm">700 members · 5 new topics · 44 replies</p>
-                    </div>
-                    <div class="group-avatar"></div>
-                  </div>
-                  <div class="post-container">
-                    <div class="post">
-                      <div class="post-avatar">C</div>
-                      <div class="post-content">
-                        <div class="post-meta">
-                          <span class="post-author">cabot</span>
-                          <span class="post-time">5m</span>
-                        </div>
-                        <p class="text-black text-sm">We successfully made our first baked vegan mac and cheese from the cookbook and it was absolutely delicious! The cashew-based sauce was surprisingly creamy.</p>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-
-                <!-- South Shore Eats Card -->
-                <div class="group-card">
-                  <div class="group-header">
-                    <div class="group-info">
-                      <h2 class="text-black text-base font-semibold">South Shore Eats</h2>
-                      <p class="text-black text-sm">1k members · 7 new topics · 56 replies</p>
-                    </div>
-                    <div class="group-avatar"></div>
-                  </div>
-                  <div class="post-container">
-                    <div class="post">
-                      <div class="post-avatar">C</div>
-                      <div class="post-content">
-                        <div class="post-meta">
-                          <span class="post-author">Christina</span>
-                          <span class="post-time">1hr</span>
-                        </div>
-                        <p class="text-black text-sm">The farmers market in Cohasset will feature a new raw bar on Saturday with fresh oysters from local farms. They're also hosting a cooking demonstration!</p>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              <% else %>
-                <ActivityFeed.render />
-              <% end %>
-            </div>
-          </div>
-
-          <!-- Right Sidebar -->
-          <div class="lg:w-80 xl:w-96">
-            <SkalePrototypeWeb.Components.RightSidebar.right_sidebar />
-          </div>
+        <!-- Right Sidebar Column -->
+        <div class="right-sidebar-column">
+          <RightSidebar.right_sidebar />
         </div>
       </div>
     </div>
 
-    <style>
-      .left-search-container { position: relative; }
-      .search-icon {
-        position: absolute; left: 1rem; top: 50%; transform: translateY(-50%);
-        font-size: 1.2rem; color: #6b7280;
-      }
-      .search-input {
-        padding-left: 3rem; width: 100%; background: white;
-        border: 1px solid #e5e7eb; border-radius: 8px;
-        box-shadow: 0 1px 2px rgba(0,0,0,0.05); font-size: 1rem;
-      }
-      .button-group { display: flex; gap: 0.5rem; }
-      .nav-button {
-        padding: 0.5rem 1rem; border-radius: 6px; font-size: 0.9rem;
-      }
-      .group-card {
-        background: white; border: 1px solid #e5e7eb; border-radius: 12px;
-        padding: 1.5rem; box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-      }
-      .group-header { display: flex; align-items: flex-start; gap: 1rem; margin-bottom: 1rem; }
-      .group-avatar { width: 4rem; height: 4rem; background-color: #9ca3af; border-radius: 8px; flex-shrink: 0; order: 2; }
-      .group-info { flex-grow: 1; order: 1; }
-      .post-container { border-top: 1px solid #d1d5db; padding-top: 1rem; }
-      .post { display: flex; align-items: flex-start; gap: 0.75rem; }
-      .post-avatar {
-        width: 2.5rem; height: 2.5rem; background-color: #a3b18a;
-        border-radius: 50%; flex-shrink: 0; display: flex;
-        align-items: center; justify-content: center; color: white;
-        font-weight: bold; font-size: 0.9rem;
-      }
-      .post-content { flex-grow: 1; }
-      .post-meta { display: flex; align-items: center; margin-bottom: 0.25rem; }
-      .post-author { font-weight: 600; margin-right: 0.5rem; font-size: 0.9rem; }
-      .post-time { color: #6b7280; font-size: 0.8rem; }
-    </style>
+    <script>
+      // Minimal, non-LiveView click handler for the "What's on your mind?" bar
+      document.addEventListener('DOMContentLoaded', function() {
+        const whatsOnMindBar = document.getElementById('whats-on-mind-bar');
+
+        if (whatsOnMindBar) {
+          whatsOnMindBar.addEventListener('click', function(event) {
+            event.preventDefault();
+            event.stopPropagation();
+
+            const newPostModal = document.getElementById('new-post-modal');
+            const overlay = document.getElementById('modal-overlay');
+
+            if (newPostModal) {
+              newPostModal.classList.remove('hidden');
+            }
+            if (overlay) {
+              overlay.classList.remove('hidden');
+            }
+
+            // Lock scroll while modal is open
+            document.body.style.overflow = 'hidden';
+          });
+        }
+      });
+
+      // GROUP CARD READ MORE TOGGLER (only wired for card 1 right now)
+      window.toggleGroupReadMore = function(id, event) {
+        if (event) {
+          event.stopPropagation();
+          event.preventDefault();
+        }
+
+        const desc = document.getElementById(`group-desc-${id}`);
+        const btn = event.currentTarget;
+        const textSpan = btn.querySelector('.group-read-more-text');
+        const icon = btn.querySelector('.read-more-icon');
+
+        if (!desc || !btn) return;
+
+        const expanded = desc.classList.contains('expanded');
+
+        if (expanded) {
+          desc.classList.remove('expanded');
+          btn.classList.remove('expanded');
+          if (textSpan) textSpan.textContent = 'Read more';
+          if (icon) icon.style.transform = 'rotate(0deg)';
+        } else {
+          desc.classList.add('expanded');
+          btn.classList.add('expanded');
+          if (textSpan) textSpan.textContent = 'Read less';
+          if (icon) icon.style.transform = 'rotate(180deg)';
+        }
+      };
+
+      // REPLY READ MORE TOGGLER (only wired for reply 1 right now)
+      window.toggleReplyReadMore = function(id, event) {
+        if (event) {
+          event.stopPropagation();
+          event.preventDefault();
+        }
+
+        const desc = document.getElementById(`reply-body-${id}`);
+        const btn = event.currentTarget;
+        const textSpan = btn.querySelector('.reply-read-more-text');
+        const icon = btn.querySelector('.read-more-icon');
+
+        if (!desc || !btn) return;
+
+        const expanded = desc.classList.contains('expanded');
+
+        if (expanded) {
+          desc.classList.remove('expanded');
+          btn.classList.remove('expanded');
+          if (textSpan) textSpan.textContent = 'Read more';
+          if (icon) icon.style.transform = 'rotate(0deg)';
+        } else {
+          desc.classList.add('expanded');
+          btn.classList.add('expanded');
+          if (textSpan) textSpan.textContent = 'Read less';
+          if (icon) icon.style.transform = 'rotate(180deg)';
+        }
+      };
+
+      // Existing helpers (unchanged)
+      window.toggleReadMore = function(topicId) {
+        const excerpt = document.getElementById(`excerpt-${topicId}`);
+        const fullContent = document.getElementById(`content-full-${topicId}`);
+        const readMoreBtn = document.getElementById(`read-more-btn-${topicId}`);
+        const thumbnail = document.getElementById(`thumbnail-${topicId}`);
+        const leftCol = document.getElementById(`left-col-${topicId}`);
+        const rightCol = document.getElementById(`right-col-${topicId}`);
+        const topicCard = document.getElementById(`topic-${topicId}`);
+
+        if (!excerpt || !fullContent || !readMoreBtn) {
+          return;
+        }
+
+        const btnText = readMoreBtn.querySelector('span');
+        const btnSvg = readMoreBtn.querySelector('svg');
+
+        if (excerpt.classList.contains('hidden')) {
+          excerpt.classList.remove('hidden');
+          fullContent.classList.add('hidden');
+          if (btnText) btnText.textContent = 'Read more';
+          if (btnSvg) btnSvg.style.transform = 'rotate(0deg)';
+
+          if (thumbnail) thumbnail.classList.remove('hidden');
+          if (rightCol) rightCol.style.display = 'flex';
+          if (leftCol) leftCol.style.width = '80%';
+          if (topicCard) topicCard.style.backgroundColor = '';
+        } else {
+          excerpt.classList.add('hidden');
+          fullContent.classList.remove('hidden');
+          if (btnText) btnText.textContent = 'Read less';
+          if (btnSvg) btnSvg.style.transform = 'rotate(180deg)';
+
+          if (thumbnail) thumbnail.classList.add('hidden');
+          if (rightCol) rightCol.style.display = 'none';
+          if (leftCol) leftCol.style.width = '100%';
+          if (topicCard) topicCard.style.backgroundColor = 'white';
+        }
+      };
+
+      window.toggleTopicDetail = function(topicId) {
+        const container = document.getElementById(`topic-detail-${topicId}`);
+        const button = document.querySelector(`.view-replies-btn[phx-value-topic-id="${topicId}"]`);
+        if (!container || !button) return;
+
+        const isHidden = container.classList.contains('hidden');
+
+        if (isHidden) {
+          container.classList.remove('hidden');
+          container.style.maxHeight = 'none';
+          const targetHeight = container.scrollHeight;
+          container.style.maxHeight = '0px';
+          requestAnimationFrame(function() {
+            container.style.maxHeight = targetHeight + 'px';
+          });
+          button.textContent = 'Hide replies';
+        } else {
+          const currentHeight = container.scrollHeight;
+          container.style.maxHeight = currentHeight + 'px';
+          requestAnimationFrame(function() {
+            container.style.maxHeight = '0px';
+          });
+          setTimeout(function() {
+            container.classList.add('hidden');
+          }, 300);
+          button.textContent = 'View replies';
+        }
+      };
+    </script>
     """
   end
 end

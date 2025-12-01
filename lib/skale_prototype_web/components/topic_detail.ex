@@ -103,25 +103,6 @@ defmodule SkalePrototypeWeb.Components.TopicDetail do
         </div>
       <% end %>
     </div>
-
-    <script>
-      function toggleReplies(replyId) {
-        const nested = document.getElementById(`nested-replies-${replyId}`);
-        const btn = document.querySelector(`[data-reply-id="${replyId}"]`);
-        const svg = btn.querySelector('.down-carrot');
-        const show = btn.querySelector('.show-text');
-        const hide = btn.querySelector('.hide-text');
-
-        nested.classList.toggle('hidden');
-        svg.classList.toggle('rotate-180');
-        show.classList.toggle('hidden');
-        hide.classList.toggle('hidden');
-      }
-    </script>
-
-    <style>
-      .rotate-180 { transform: rotate(180deg); }
-    </style>
     """
   end
 

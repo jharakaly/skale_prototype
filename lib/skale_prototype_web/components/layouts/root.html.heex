@@ -1,33 +1,186 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
+    <!-- Basic meta + LiveView wiring -->
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="csrf-token" content={get_csrf_token()} />
     <.live_title><%= assigns[:page_title] || "SkalePrototype" %></.live_title>
+
+    <!-- App CSS + JS -->
     <link phx-track-static rel="stylesheet" href={~p"/assets/app.css"} />
     <script defer phx-track-static type="text/javascript" src={~p"/assets/app.js"}></script>
-  </head>
-  <body class="bg-gray-100 font-sans min-h-screen">
-    <._header />
 
+    <!-- Shared icon sizing for header + mobile menu SVGs -->
+    <style>
+      .icon-wrapper svg {
+        width: 24px;
+        height: 24px;
+        stroke: currentColor;
+        stroke-width: 2;
+        fill: none;
+      }
+      .mobile-icon svg {
+        width: 24px;
+        height: 24px;
+        stroke: currentColor;
+        stroke-width: 2;
+        fill: none;
+      }
+    </style>
+  </head>
+
+  <!-- Page body: global background + base typography -->
+  <body class="bg-white font-sans min-h-screen">
+    <!-- HEADER (Global, reused across pages) -->
+    <header class="bg-[#DDE5DD] p-4 max-w-[1200px] mx-auto">
+      <div class="flex items-center justify-between">
+        <!-- Left side: logo + welcome message -->
+        <div class="flex items-center">
+          <a href="/">
+            <img src="/images/logo.png" alt="Skale" class="w-10 h-10">
+          </a>
+          <h1 class="text-black text-lg sm:text-xl ml-3">Welcome, Christina!</h1>
+        </div>
+        
+        <!-- Desktop icon row (right side) - hidden on mobile -->
+        <div class="hidden md:flex gap-3">
+          <!-- NOTE: Search/magnifying-glass icon removed as requested -->
+
+          <!-- Discussions / messages icon -->
+          <a href="/discussions" class="icon-wrapper">
+            <svg viewBox="0 0 24 24">
+              <path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/>
+            </svg>
+          </a>
+
+          <!-- Notifications (bell) icon -->
+          <button class="icon-wrapper">
+            <svg viewBox="0 0 24 24">
+              <path d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/>
+            </svg>
+          </button>
+
+          <!-- Profile icon -->
+          <a href="/profile" class="icon-wrapper">
+            <svg viewBox="0 0 24 24">
+              <path d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
+            </svg>
+          </a>
+
+          <!-- Settings / gear icon -->
+          <button class="icon-wrapper">
+            <svg viewBox="0 0 24 24">
+              <path d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/>
+              <path d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+            </svg>
+          </button>
+        </div>
+        
+        <!-- Mobile hamburger menu button (visible only on small screens) -->
+        <button class="md:hidden" phx-click="toggle_mobile_menu">
+          <div class="flex flex-col gap-1.5">
+            <span class="w-9 h-0.5 bg-black"></span>
+            <span class="w-9 h-0.5 bg-black"></span>
+            <span class="w-9 h-0.5 bg-black"></span>
+          </div>
+        </button>
+      </div>
+      
+      <!-- MOBILE MENU (collapsible) -->
+      <div class="hidden md:hidden mt-4 space-y-3" id="mobile-menu">
+        <!-- Search item (icon removed per request, text kept) -->
+        <a href="/discussions" class="flex items-center gap-4 p-3 w-full text-left bg-white/30 rounded-lg">
+          <span>Search</span>
+        </a>
+
+        <!-- Discussions item -->
+        <a href="/discussions" class="flex items-center gap-4 p-3 w-full text-left bg-white/30 rounded-lg">
+          <span class="mobile-icon">
+            <svg viewBox="0 0 24 24">
+              <path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/>
+            </svg>
+          </span>
+          <span>Discussions</span>
+        </a>
+
+        <!-- Money / payments item -->
+        <button class="flex items-center gap-4 p-3 w-full text-left bg-white/30 rounded-lg">
+          <span class="mobile-icon">
+            <svg viewBox="0 0 24 24">
+              <path d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+            </svg>
+          </span>
+          <span>Money</span>
+        </button>
+
+        <!-- Notifications item -->
+        <button class="flex items-center gap-4 p-3 w-full text-left bg-white/30 rounded-lg">
+          <span class="mobile-icon">
+            <svg viewBox="0 0 24 24">
+              <path d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/>
+            </svg>
+          </span>
+          <span>Notifications</span>
+        </button>
+
+        <!-- Profile item -->
+        <a href="/profile" class="flex items-center gap-4 p-3 w-full text-left bg-white/30 rounded-lg">
+          <span class="mobile-icon">
+            <svg viewBox="0 0 24 24">
+              <path d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
+            </svg>
+          </span>
+          <span>Profile</span>
+        </a>
+
+        <!-- Settings item -->
+        <button class="flex items-center gap-4 p-3 w-full text-left bg-white/30 rounded-lg">
+          <span class="mobile-icon">
+            <svg viewBox="0 0 24 24">
+              <path d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/>
+              <path d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+            </svg>
+          </span>
+          <span>Settings</span>
+        </button>
+      </div>
+
+      <!-- Simple JS: toggles the mobile menu open/close when hamburger is clicked -->
+      <script>
+        document.addEventListener('click', function(e) {
+          if (e.target.closest('[phx-click="toggle_mobile_menu"]')) {
+            const menu = document.getElementById('mobile-menu');
+            menu.classList.toggle('hidden');
+          }
+        });
+      </script>
+    </header>
+
+    <!-- PAGE CONTENT from LiveView (homepage, discussions, etc.) -->
     <%= @inner_content %>
 
-    <!-- New Post Modal -->
+    <!-- Global footer for all pages -->
+    <SkalePrototypeWeb.Components.Footer.footer />
+
+    <!-- NEW POST MODAL (used by homepage "What's on your mind?" etc.) -->
     <div id="new-post-modal" class="hidden fixed inset-0 z-50 overflow-y-auto">
       <div class="flex items-center justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
-        <!-- Background overlay -->
+        <!-- Background overlay behind the modal -->
         <div class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity"></div>
 
-        <!-- Modal panel -->
+        <!-- Modal panel container -->
         <div class="inline-block align-bottom bg-white rounded-lg px-4 pt-5 pb-4 text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full sm:p-6">
+          <!-- Modal header: title + close button -->
           <div class="flex justify-between items-center mb-4">
             <h2 class="text-lg font-semibold">Create New Post</h2>
             <button id="close-modal" class="text-gray-500 hover:text-gray-700 text-2xl">&times;</button>
           </div>
           
+          <!-- Modal form: group, subgroup, title, content, buttons -->
           <form id="new-post-form">
             <div class="space-y-4">
+              <!-- Group selector -->
               <div>
                 <select class="w-full border border-gray-300 rounded-md px-3 py-2" id="group-select">
                   <option value="" disabled selected>Select a group</option>
@@ -39,6 +192,7 @@
                 </select>
               </div>
               
+              <!-- Subgroup selector -->
               <div>
                 <select class="w-full border border-gray-300 rounded-md px-3 py-2" id="subgroup-select">
                   <option value="" disabled selected>Select a subgroup</option>
@@ -50,14 +204,17 @@
                 </select>
               </div>
               
+              <!-- Post title -->
               <div>
                 <input type="text" class="w-full border border-gray-300 rounded-md px-3 py-2" id="post-title" placeholder="Title">
               </div>
               
+              <!-- Post content -->
               <div>
                 <textarea class="w-full border border-gray-300 rounded-md px-3 py-2" id="post-content" placeholder="Type your content here" rows="4"></textarea>
               </div>
               
+              <!-- Modal action buttons -->
               <div class="flex justify-end space-x-3 mt-6">
                 <button type="button" class="px-4 py-2 bg-gray-300 rounded-md hover:bg-gray-400" id="cancel-post">Cancel</button>
                 <button type="submit" class="px-4 py-2 bg-[#DDE5DD] text-gray-800 rounded-md hover:bg-[#c8d5c8]">Create Post</button>
@@ -68,11 +225,12 @@
       </div>
     </div>
 
+    <!-- JS: modal open/close + unsaved changes confirmation -->
     <script>
     document.addEventListener('DOMContentLoaded', function() {
       console.log('DOM loaded');
       
-      // Modal functionality
+      // Cache modal + control elements
       const newPostModal = document.getElementById('new-post-modal');
       const addPostButton = document.getElementById('add-post-button');
       const mobileAddPostButton = document.getElementById('mobile-add-post-button');
@@ -91,6 +249,7 @@
       
       let hasUnsavedChanges = false;
       
+      // Check if any form fields have been touched
       function checkForChanges() {
         const groupSelect = document.getElementById('group-select');
         const subgroupSelect = document.getElementById('subgroup-select');
@@ -103,6 +262,7 @@
                postContent.value !== '';
       }
       
+      // Open modal and lock scroll
       function openModal() {
         if (newPostModal) {
           newPostModal.classList.remove('hidden');
@@ -111,6 +271,7 @@
         }
       }
       
+      // Close modal and reset form after a small delay
       function closeModalFunc() {
         if (newPostModal) {
           newPostModal.classList.add('hidden');
@@ -122,11 +283,13 @@
         }
       }
       
+      // Helper to discard changes and close the modal
       function discardChanges() {
         newPostForm.reset();
         closeModalFunc();
       }
       
+      // Show confirmation modal if there are unsaved changes
       function promptDiscardChanges() {
         if (checkForChanges()) {
           const confirmModal = document.createElement('div');
@@ -158,15 +321,15 @@
         }
       }
       
-      // Event listeners for opening modal
+      // Trigger modal open from desktop + mobile "add post" buttons (if present)
       if (addPostButton) addPostButton.addEventListener('click', openModal);
       if (mobileAddPostButton) mobileAddPostButton.addEventListener('click', openModal);
       
-      // Event listeners for closing modal - BOTH use promptDiscardChanges
+      // Close modal via X button or Cancel button (both use confirm flow)
       if (closeModal) closeModal.addEventListener('click', promptDiscardChanges);
       if (cancelPost) cancelPost.addEventListener('click', promptDiscardChanges);
       
-      // Close modal when clicking outside
+      // Close modal when clicking outside the panel (on overlay)
       if (newPostModal) {
         newPostModal.addEventListener('click', function(event) {
           if (event.target === newPostModal) {
@@ -175,7 +338,7 @@
         });
       }
       
-      // Track form changes
+      // Track form edits to set hasUnsavedChanges flag
       if (newPostForm) {
         newPostForm.addEventListener('input', function() {
           hasUnsavedChanges = checkForChanges();
@@ -185,7 +348,7 @@
           hasUnsavedChanges = checkForChanges();
         });
         
-        // Handle form submission
+        // Handle "Create Post" submit (demo only)
         newPostForm.addEventListener('submit', function(event) {
           event.preventDefault();
           alert('Post created successfully!');

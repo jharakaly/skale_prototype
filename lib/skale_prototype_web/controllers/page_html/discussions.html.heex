@@ -1,11 +1,31 @@
 <div class="container mx-auto px-4 py-6">
-  <!-- Search bar -->
-  <div class="search-row mb-4 flex gap-3">
-    <div class="search-container flex-1 relative">
+  <!-- What's on your mind + Search row -->
+  <div class="search-row mb-4 flex flex-col md:flex-row gap-3">
+    <!-- What's on your mind (60%) -->
+    <div class="w-full md:w-[60%]">
+      <div class="whats-on-mind-bar" id="whats-on-mind-bar" phx-click="open_new_post_modal">
+        <div class="profile-avatar">
+          <div class="avatar-initials">Y</div>
+        </div>
+        <div class="whats-on-mind-input">
+          <input
+            type="text"
+            placeholder="What's on your mind?"
+            class="whats-on-mind-input-field"
+            readonly
+          />
+        </div>
+      </div>
+    </div>
+
+    <!-- Search bar (30%) -->
+    <div class="w-full md:w-[30%] search-container relative">
       <span class="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400">🔍</span>
-      <input type="text"
-             placeholder="Search discussions..."
-             class="pl-10 p-2 w-full rounded-md border border-gray-300 focus:ring-2 focus:ring-[#A3B18A]" />
+      <input
+        type="text"
+        placeholder="Search discussions..."
+        class="pl-10 p-2 w-full rounded-md border border-gray-300 focus:ring-2 focus:ring-[#A3B18A]"
+      />
     </div>
   </div>
 
@@ -61,16 +81,91 @@
 <script>
   document.addEventListener('DOMContentLoaded', function() {
     // Simple infinite scroll placeholder
-    const sentinel = document.createElement('div');
-    sentinel.id = 'scroll-sentinel';
-    document.querySelector('.discussion-grid').after(sentinel);
-    const observer = new IntersectionObserver((entries) => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          console.log('Loading more discussions...');
+    const grid = document.querySelector('.discussion-grid');
+    if (grid) {
+      const sentinel = document.createElement('div');
+      sentinel.id = 'scroll-sentinel';
+      grid.after(sentinel);
+
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            console.log('Loading more discussions...');
+          }
+        });
+      });
+      observer.observe(sentinel);
+    }
+
+    // "What's on your mind?" bar -> open New Post Modal (same behavior as homepage)
+    const whatsOnMindBar = document.getElementById('whats-on-mind-bar');
+    if (whatsOnMindBar) {
+      whatsOnMindBar.addEventListener('click', function() {
+        const newPostModal = document.getElementById('new-post-modal');
+        if (newPostModal) {
+          newPostModal.classList.remove('hidden');
+          document.body.style.overflow = 'hidden';
+        } else {
+          console.error('New post modal not found in DOM');
         }
       });
-    });
-    observer.observe(sentinel);
+    }
   });
 </script>
+
+<style>
+  /* Match homepage "What's on your mind?" styling */
+  .whats-on-mind-bar {
+    display: flex;
+    align-items: center;
+    background-color: white;
+    border: 1px solid #e5e7eb;
+    border-radius: 12px;
+    padding: 0.1rem 1rem;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+    cursor: pointer;
+    transition: all 0.2s ease;
+    margin-bottom: 0.5rem;
+    width: 100%; /* fills its 60% column */
+  }
+
+  .whats-on-mind-bar:hover {
+    border-color: #a3b18a;
+    box-shadow: 0 2px 4px rgba(163, 177, 138, 0.1);
+  }
+
+  .profile-avatar {
+    margin-right: 0.75rem;
+  }
+
+  .avatar-initials {
+    width: 1.7rem;
+    height: 1.7rem;
+    background-color: #a3b18a;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-weight: bold;
+    font-size: 0.8rem;
+  }
+
+  .whats-on-mind-input {
+    flex: 1;
+  }
+
+  .whats-on-mind-input-field {
+    width: 100%;
+    border: none;
+    outline: none;
+    font-size: 0.9rem;
+    color: #6b7280;
+    background: transparent;
+    cursor: pointer;
+  }
+
+  .whats-on-mind-input-field::placeholder {
+    color: #6b7280;
+  }
+</style>

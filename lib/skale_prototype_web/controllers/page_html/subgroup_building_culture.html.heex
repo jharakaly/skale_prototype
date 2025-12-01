@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Skale Prototype - Building Skale: Community Culture</title>
-  <script defer src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.tailwindcss.com"></script>
   <style>
     body, html {
       margin: 0;
@@ -39,8 +39,7 @@
       width: 100%;
       padding-left: 0;
       margin-top: 1rem;
-      /* MATCH breadcrumb top spacing exactly */
-      padding-top: 0.75rem; /* same as breadcrumb vertical padding */
+      padding-top: 0.75rem;
     }
     @media (min-width: 768px) {
       .right-column { flex: 0 0 30%; padding-left: 1rem; margin-top: 0; }
@@ -108,22 +107,228 @@
     .topics-container { position: relative; }
     .topic-card {
       background-color: white;
-      border: none !important;
-      border-radius: 0 !important;
-      box-shadow: none !important;
-      margin-bottom: 0.75rem !important;
-      padding: 0.5rem 0.25rem;
-      border-bottom: 1px solid #e5e7eb !important;
+      border: 1px solid #e5e7eb;
+      border-radius: 8px;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+      margin-bottom: 1rem;
+      padding: 1rem;
+      transition: box-shadow 0.2s;
     }
-    .topic-card:last-child { border-bottom: none !important; }
+    .topic-card:hover {
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+    }
+    .topic-header {
+      display: flex;
+      justify-content: between;
+      align-items: flex-start;
+      margin-bottom: 0.75rem;
+    }
+    .topic-title {
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: #374151;
+      margin-bottom: 0.5rem;
+    }
+    .topic-excerpt {
+      color: #6b7280;
+      line-height: 1.5;
+      margin-bottom: 0.75rem;
+    }
+    .topic-meta {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.875rem;
+      color: #6b7280;
+    }
+    .topic-replies {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .topic-avatars {
+      display: flex;
+      align-items: center;
+    }
+    .topic-avatar {
+      width: 1.5rem;
+      height: 1.5rem;
+      border-radius: 50%;
+      background-color: #A3B18A;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-size: 0.7rem;
+      margin-left: -0.5rem;
+      border: 2px solid white;
+    }
+    .topic-avatar:first-child {
+      margin-left: 0;
+    }
+    .view-replies-btn {
+      background: none;
+      border: none;
+      color: #A3B18A;
+      font-size: 0.875rem;
+      cursor: pointer;
+      font-weight: 500;
+    }
+    .view-replies-btn:hover {
+      text-decoration: underline;
+    }
+
+    /* Topic Detail Styles */
     .topic-detail-container {
       background-color: white;
-      border: none !important;
-      border-radius: 0;
-      box-shadow: none !important;
-      padding: 0.75rem 0;
+      border: 1px solid #e5e7eb;
+      border-radius: 8px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+      margin-bottom: 1rem;
+      padding: 1.5rem;
+    }
+    .topic-detail-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 1rem;
+      padding-bottom: 1rem;
+      border-bottom: 1px solid #e5e7eb;
+    }
+    .topic-detail-title {
+      font-size: 1.25rem;
+      font-weight: 600;
+      color: #374151;
+      margin-bottom: 0.5rem;
+    }
+    .topic-detail-meta {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      font-size: 0.875rem;
+      color: #6b7280;
+    }
+    .topic-detail-content {
+      color: #374151;
+      line-height: 1.6;
+      margin-bottom: 1.5rem;
+    }
+    .close-topic-btn {
+      background: none;
+      border: none;
+      color: #6b7280;
+      cursor: pointer;
+      font-size: 1.25rem;
+      padding: 0.25rem;
+    }
+    .close-topic-btn:hover {
+      color: #374151;
+    }
+    .replies-section {
+      margin-top: 1.5rem;
+    }
+    .replies-title {
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: #374151;
+      margin-bottom: 1rem;
+    }
+    .reply-item {
+      padding: 1rem 0;
+      border-bottom: 1px solid #e5e7eb;
+    }
+    .reply-item:last-child {
+      border-bottom: none;
+    }
+    .reply-header {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
       margin-bottom: 0.75rem;
-      border-bottom: 1px solid #e5e7eb !important;
+    }
+    .reply-avatar {
+      width: 2rem;
+      height: 2rem;
+      border-radius: 50%;
+      background-color: #A3B18A;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-weight: bold;
+      font-size: 0.8rem;
+    }
+    .reply-author {
+      font-weight: 600;
+      color: #374151;
+    }
+    .reply-time {
+      font-size: 0.875rem;
+      color: #6b7280;
+    }
+    .reply-content {
+      color: #374151;
+      line-height: 1.5;
+    }
+
+    /* Right Sidebar Styles */
+    .sidebar-section {
+      background-color: white;
+      border: 1px solid #e5e7eb;
+      border-radius: 12px;
+      padding: 1.5rem;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+      margin-bottom: 1.5rem;
+    }
+    .sidebar-title {
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: #374151;
+      margin-bottom: 1rem;
+    }
+    .member-item {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      padding: 0.5rem 0;
+    }
+    .member-avatar {
+      width: 2.5rem;
+      height: 2.5rem;
+      border-radius: 50%;
+      background-color: #A3B18A;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-weight: bold;
+      flex-shrink: 0;
+    }
+    .member-info {
+      flex: 1;
+    }
+    .member-name {
+      font-weight: 500;
+      color: #374151;
+    }
+    .member-role {
+      font-size: 0.875rem;
+      color: #6b7280;
+    }
+    .join-btn {
+      width: 100%;
+      background-color: #A3B18A;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      padding: 0.75rem 1rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: background-color 0.2s;
+      margin-top: 1rem;
+    }
+    .join-btn:hover {
+      background-color: #8a9a7b;
     }
   </style>
 </head>
@@ -153,7 +358,7 @@
                 nurture the values, kindness, and global spirit that define our platform.
                 We discuss leadership, inclusion, respect, and collaboration — building
                 a foundation that makes Skale a thriving, supportive community for everyone.
-                Whether you’re mentoring, moderating, or contributing ideas, your voice
+                Whether you're mentoring, moderating, or contributing ideas, your voice
                 helps shape the atmosphere that powers our collective growth.
               </div>
               <button class="read-more-btn" id="readMoreBtn">Read more...</button>
@@ -174,40 +379,278 @@
         <h2 class="text-2xl font-semibold text-[#344E41] mb-6">Discussion Topics</h2>
 
         <div id="expanded-topics" class="topics-container">
+          <!-- Topic Detail 1 (Hidden by default) -->
           <div id="topic-detail-1" style="display: none;" class="topic-detail-container">
-            <SkalePrototypeWeb.Components.TopicDetail.render topic={SkalePrototypeWeb.MockData.get_topic_replies()} topic_id={1} />
+            <div class="topic-detail-header">
+              <div>
+                <h3 class="topic-detail-title">How do we build a more inclusive community?</h3>
+                <div class="topic-detail-meta">
+                  <span>Posted by Alex Morgan</span>
+                  <span>2 hours ago</span>
+                  <span>12 replies</span>
+                </div>
+              </div>
+              <button class="close-topic-btn" data-topic-id="1">×</button>
+            </div>
+            <div class="topic-detail-content">
+              <p>Looking for ideas on how we can make Skale more welcoming to people from all backgrounds and cultures. We have a diverse user base but I feel we could do more to ensure everyone feels included and valued.</p>
+              <p>What initiatives have worked in other communities you've been part of? How can we better recognize and celebrate our differences while building a cohesive community?</p>
+            </div>
+            <div class="replies-section">
+              <h4 class="replies-title">Replies</h4>
+              <div class="reply-item">
+                <div class="reply-header">
+                  <div class="reply-avatar" style="background-color: #588157;">SC</div>
+                  <div>
+                    <div class="reply-author">Sarah Chen</div>
+                    <div class="reply-time">1 hour ago</div>
+                  </div>
+                </div>
+                <div class="reply-content">
+                  <p>Great topic! One thing that worked well in my previous community was having regular "cultural spotlights" where members could share something about their background or culture.</p>
+                </div>
+              </div>
+              <div class="reply-item">
+                <div class="reply-header">
+                  <div class="reply-avatar" style="background-color: #3A5A40;">MJ</div>
+                  <div>
+                    <div class="reply-author">Maria Johnson</div>
+                    <div class="reply-time">45 minutes ago</div>
+                  </div>
+                </div>
+                <div class="reply-content">
+                  <p>I think having more moderators from different time zones would help. Sometimes discussions happen when certain regions are asleep, and they miss out.</p>
+                </div>
+              </div>
+            </div>
           </div>
 
-          <%= for topic <- SkalePrototypeWeb.MockData.get_building_culture_topics() |> Enum.drop(1) do %>
-            <div id={"topic-detail-#{topic.id}"} style="display: none;" class="topic-detail-container">
-              <SkalePrototypeWeb.Components.TopicDetail.render topic={topic} topic_id={topic.id} />
+          <!-- Topic Detail 2 (Hidden by default) -->
+          <div id="topic-detail-2" style="display: none;" class="topic-detail-container">
+            <div class="topic-detail-header">
+              <div>
+                <h3 class="topic-detail-title">Community guidelines feedback</h3>
+                <div class="topic-detail-meta">
+                  <span>Posted by James Harakaly</span>
+                  <span>1 day ago</span>
+                  <span>8 replies</span>
+                </div>
+              </div>
+              <button class="close-topic-btn" data-topic-id="2">×</button>
             </div>
-          <% end %>
+            <div class="topic-detail-content">
+              <p>We're updating our community guidelines and would love your input on the proposed changes. The main updates focus on:</p>
+              <ul class="list-disc pl-5 mt-2">
+                <li>Clearer expectations around respectful communication</li>
+                <li>Guidelines for cross-cultural discussions</li>
+                <li>Process for reporting and resolving conflicts</li>
+                <li>Expectations for mentorship relationships</li>
+              </ul>
+              <p class="mt-2">Please review the draft and share your thoughts - what's missing? What could be clearer?</p>
+            </div>
+            <div class="replies-section">
+              <h4 class="replies-title">Replies</h4>
+              <div class="reply-item">
+                <div class="reply-header">
+                  <div class="reply-avatar" style="background-color: #588157;">TK</div>
+                  <div>
+                    <div class="reply-author">Tom Kim</div>
+                    <div class="reply-time">20 hours ago</div>
+                  </div>
+                </div>
+                <div class="reply-content">
+                  <p>The guidelines look good overall. I'd suggest adding more specific examples of what constitutes respectful vs disrespectful communication.</p>
+                </div>
+              </div>
+            </div>
+          </div>
 
-          <%= for topic <- SkalePrototypeWeb.MockData.get_building_culture_topics() do %>
-            <SkalePrototypeWeb.Components.TopicCards.topic_cards
-              id={topic.id}
-              title={topic.title}
-              excerpt={topic.excerpt}
-              content={topic.content}
-              reply_count={topic.reply_count}
-              time_ago={topic.time_ago}
-              avatars={topic.avatars}
-              additional_count={topic.additional_count}
-              has_media={Map.get(topic, :media, nil) != nil && Map.get(topic, :media, []) != []}
-              media_type={
-                if Map.get(topic, :media, nil) != nil && Map.get(topic, :media, []) != [] do
-                  topic.media |> List.first() |> Map.get(:type)
-                end
-              }
-              media={Map.get(topic, :media, [])}
-            />
-          <% end %>
+          <!-- Topic Detail 3 (Hidden by default) -->
+          <div id="topic-detail-3" style="display: none;" class="topic-detail-container">
+            <div class="topic-detail-header">
+              <div>
+                <h3 class="topic-detail-title">Global community events</h3>
+                <div class="topic-detail-meta">
+                  <span>Posted by Lisa Rodriguez</span>
+                  <span>3 days ago</span>
+                  <span>3 replies</span>
+                </div>
+              </div>
+              <button class="close-topic-btn" data-topic-id="3">×</button>
+            </div>
+            <div class="topic-detail-content">
+              <p>Let's brainstorm ideas for virtual events that can bring our global community together across time zones. With members from all over the world, it's challenging to find times that work for everyone.</p>
+              <p>What types of events would you be interested in? Skill-sharing sessions? Cultural exchanges? Social hangouts? And how can we schedule them to be as inclusive as possible?</p>
+            </div>
+            <div class="replies-section">
+              <h4 class="replies-title">Replies</h4>
+              <div class="reply-item">
+                <div class="reply-header">
+                  <div class="reply-avatar" style="background-color: #588157;">AB</div>
+                  <div>
+                    <div class="reply-author">Aisha Bello</div>
+                    <div class="reply-time">2 days ago</div>
+                  </div>
+                </div>
+                <div class="reply-content">
+                  <p>I love the idea of cultural exchanges! Maybe we could have monthly "virtual coffee" sessions where people from different regions share about their local culture.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Topic Cards -->
+          <div class="topic-card" id="topic-1">
+            <div class="topic-header">
+              <h3 class="topic-title">How do we build a more inclusive community?</h3>
+            </div>
+            <p class="topic-excerpt">Looking for ideas on how we can make Skale more welcoming to people from all backgrounds and cultures...</p>
+            <div class="topic-meta">
+              <div class="topic-replies">
+                <div class="topic-avatars">
+                  <div class="topic-avatar" style="background-color: #A3B18A;">AB</div>
+                  <div class="topic-avatar" style="background-color: #588157;">CD</div>
+                  <div class="topic-avatar" style="background-color: #3A5A40;">EF</div>
+                </div>
+                <span>12 replies</span>
+              </div>
+              <span>2 hours ago</span>
+            </div>
+            <button class="view-replies-btn" phx-value-topic-id="1">View discussion</button>
+          </div>
+
+          <div class="topic-card" id="topic-2">
+            <div class="topic-header">
+              <h3 class="topic-title">Community guidelines feedback</h3>
+            </div>
+            <p class="topic-excerpt">We're updating our community guidelines and would love your input on the proposed changes...</p>
+            <div class="topic-meta">
+              <div class="topic-replies">
+                <div class="topic-avatars">
+                  <div class="topic-avatar" style="background-color: #A3B18A;">GH</div>
+                  <div class="topic-avatar" style="background-color: #588157;">IJ</div>
+                </div>
+                <span>8 replies</span>
+              </div>
+              <span>1 day ago</span>
+            </div>
+            <button class="view-replies-btn" phx-value-topic-id="2">View discussion</button>
+          </div>
+
+          <div class="topic-card" id="topic-3">
+            <div class="topic-header">
+              <h3 class="topic-title">Global community events</h3>
+            </div>
+            <p class="topic-excerpt">Let's brainstorm ideas for virtual events that can bring our global community together across time zones...</p>
+            <div class="topic-meta">
+              <div class="topic-replies">
+                <div class="topic-avatars">
+                  <div class="topic-avatar" style="background-color: #A3B18A;">KL</div>
+                </div>
+                <span>3 replies</span>
+              </div>
+              <span>3 days ago</span>
+            </div>
+            <button class="view-replies-btn" phx-value-topic-id="3">View discussion</button>
+          </div>
+
+          <div class="topic-card" id="topic-4">
+            <div class="topic-header">
+              <h3 class="topic-title">Mentorship program improvements</h3>
+            </div>
+            <p class="topic-excerpt">How can we enhance our mentorship matching system to better connect mentors and mentees...</p>
+            <div class="topic-meta">
+              <div class="topic-replies">
+                <div class="topic-avatars">
+                  <div class="topic-avatar" style="background-color: #A3B18A;">MN</div>
+                  <div class="topic-avatar" style="background-color: #588157;">OP</div>
+                  <div class="topic-avatar" style="background-color: #3A5A40;">QR</div>
+                  <div class="topic-avatar" style="background-color: #344E41;">+2</div>
+                </div>
+                <span>15 replies</span>
+              </div>
+              <span>5 days ago</span>
+            </div>
+            <button class="view-replies-btn" phx-value-topic-id="4">View discussion</button>
+          </div>
         </div>
       </div>
 
       <!-- Right Sidebar -->
-      <SkalePrototypeWeb.Components.RightSidebar.right_sidebar />
+      <div class="right-column">
+        <div class="sidebar-section">
+          <h3 class="sidebar-title">Group Members</h3>
+          <div class="member-item">
+            <div class="member-avatar">JH</div>
+            <div class="member-info">
+              <div class="member-name">James Harakaly</div>
+              <div class="member-role">Community Director</div>
+            </div>
+          </div>
+          <div class="member-item">
+            <div class="member-avatar" style="background-color: #588157;">SC</div>
+            <div class="member-info">
+              <div class="member-name">Sarah Chen</div>
+              <div class="member-role">Moderator</div>
+            </div>
+          </div>
+          <div class="member-item">
+            <div class="member-avatar" style="background-color: #3A5A40;">AM</div>
+            <div class="member-info">
+              <div class="member-name">Alex Martinez</div>
+              <div class="member-role">Moderator</div>
+            </div>
+          </div>
+          <button class="join-btn">Join Community Culture</button>
+        </div>
+
+        <div class="sidebar-section">
+          <h3 class="sidebar-title">Related Groups</h3>
+          <div class="member-item">
+            <div class="member-avatar" style="background-color: #A3B18A; border-radius: 6px;"></div>
+            <div class="member-info">
+              <div class="member-name">Onboarding</div>
+              <div class="member-role">355 members</div>
+            </div>
+          </div>
+          <div class="member-item">
+            <div class="member-avatar" style="background-color: #588157; border-radius: 6px;"></div>
+            <div class="member-info">
+              <div class="member-name">Mentorship & Growth</div>
+              <div class="member-role">187 members</div>
+            </div>
+          </div>
+          <div class="member-item">
+            <div class="member-avatar" style="background-color: #3A5A40; border-radius: 6px;"></div>
+            <div class="member-info">
+              <div class="member-name">Platform Development</div>
+              <div class="member-role">298 members</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="sidebar-section">
+          <h3 class="sidebar-title">Group Stats</h3>
+          <div class="member-item">
+            <div class="member-info">
+              <div class="member-name">412 members</div>
+              <div class="member-role">Active community</div>
+            </div>
+          </div>
+          <div class="member-item">
+            <div class="member-info">
+              <div class="member-name">24 topics</div>
+              <div class="member-role">This month</div>
+            </div>
+          </div>
+          <div class="member-item">
+            <div class="member-info">
+              <div class="member-name">87% engagement</div>
+              <div class="member-role">Active participation</div>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 
@@ -232,27 +675,27 @@
         }
         isExpanded = !isExpanded;
       });
-    });
 
-    document.addEventListener("click", function(e) {
-      if (e.target && e.target.closest(".view-replies-btn")) {
-        const btn = e.target.closest(".view-replies-btn");
-        const topicId = btn.getAttribute("phx-value-topic-id");
-        const detail = document.getElementById(`topic-detail-${topicId}`);
-        document.querySelectorAll(".topic-detail-container").forEach(d => d.style.display = "none");
-        const card = document.getElementById(`topic-${topicId}`);
-        if (card && detail) {
-          detail.style.display = "block";
-          card.insertAdjacentElement("afterend", detail);
-          detail.scrollIntoView({ behavior: "smooth", block: "start" });
+      // Handle topic expansion
+      document.addEventListener("click", function(e) {
+        if (e.target && e.target.classList.contains("view-replies-btn")) {
+          const topicId = e.target.getAttribute("phx-value-topic-id");
+          const detail = document.getElementById(`topic-detail-${topicId}`);
+          document.querySelectorAll(".topic-detail-container").forEach(d => d.style.display = "none");
+          const card = document.getElementById(`topic-${topicId}`);
+          if (card && detail) {
+            detail.style.display = "block";
+            card.insertAdjacentElement("afterend", detail);
+            detail.scrollIntoView({ behavior: "smooth", block: "start" });
+          }
         }
-      }
-      if (e.target && e.target.closest(".close-topic-btn")) {
-        const btn = e.target.closest(".close-topic-btn");
-        const topicId = btn.getAttribute("data-topic-id");
-        const detail = document.getElementById(`topic-detail-${topicId}`);
-        if (detail) detail.style.display = "none";
-      }
+        
+        if (e.target && e.target.classList.contains("close-topic-btn")) {
+          const topicId = e.target.getAttribute("data-topic-id");
+          const detail = document.getElementById(`topic-detail-${topicId}`);
+          if (detail) detail.style.display = "none";
+        }
+      });
     });
   </script>
 </body>

@@ -1,9 +1,9 @@
-<div class="container mx-auto px-4 py-6">
+<div class="container mx-auto px-4 pt-1">
   <!-- What's on your mind + Search row -->
-  <div class="search-row mb-4 flex flex-col md:flex-row gap-3">
+  <div class="search-row mb-0 flex flex-col md:flex-row gap-3">
     <!-- What's on your mind (60%) -->
     <div class="w-full md:w-[60%]">
-      <div class="whats-on-mind-bar" id="whats-on-mind-bar" phx-click="open_new_post_modal">
+      <div class="whats-on-mind-bar" id="whats-on-mind-bar" phx-click="open_new_post_modal" style="margin-bottom: 0.25rem;">
         <div class="profile-avatar">
           <div class="avatar-initials">Y</div>
         </div>
@@ -18,19 +18,21 @@
       </div>
     </div>
 
-    <!-- Search bar (30%) -->
-    <div class="w-full md:w-[30%] search-container relative">
-      <span class="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400">🔍</span>
-      <input
-        type="text"
-        placeholder="Search discussions..."
-        class="pl-10 p-2 w-full rounded-md border border-gray-300 focus:ring-2 focus:ring-[#A3B18A]"
-      />
+    <!-- Search bar (30%) - FIXED TO MATCH BUILDING COMMUNITY PAGE -->
+    <div class="w-full md:w-[30%]">
+      <div class="left-search-container">
+        <span class="search-icon">🔍</span>
+        <input
+          type="text"
+          placeholder="Search discussions..."
+          class="search-input"
+        />
+      </div>
     </div>
   </div>
 
-  <!-- Breadcrumb -->
-  <div class="breadcrumb flex items-center gap-2 text-sm text-gray-600 mb-6">
+  <!-- Breadcrumb with fucking reduced spacing -->
+  <div class="breadcrumb flex items-center gap-2 text-sm text-gray-600 mt-0 mb-0">
     <a href="/" class="hover:text-gray-800">Home</a>
     <span>/</span>
     <span class="text-[#A3B18A] font-semibold">Discussions</span>
@@ -45,7 +47,7 @@
       <p class="text-sm text-gray-600">A group for shaping, developing, and supporting the Skale community — from culture and recruiting to onboarding and platform growth.</p>
     </a>
 
-    <!-- Example Groups -->
+    <!-- Vegan Recipe Tips - ONLY LINK UPDATED -->
     <a href="/groups" class="discussion-card block rounded-xl border border-gray-200 p-5 shadow-sm hover:shadow-md hover:-translate-y-1 transition">
       <div class="h-40 rounded-md bg-gray-300 mb-4"></div>
       <h3 class="font-semibold text-gray-900 mb-1">Vegan Recipe Tips</h3>
@@ -125,7 +127,6 @@
     box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
     cursor: pointer;
     transition: all 0.2s ease;
-    margin-bottom: 0.5rem;
     width: 100%; /* fills its 60% column */
   }
 
@@ -167,5 +168,17 @@
 
   .whats-on-mind-input-field::placeholder {
     color: #6b7280;
+  }
+
+  /* REDUCE SPACING FOR DISCUSSIONS PAGE SPECIFICALLY */
+  .container.mx-auto.px-4 {
+    padding-top: 0.25rem !important; /* Reduced from 0.75rem to 0.25rem (66% reduction) */
+  }
+  
+  .breadcrumb {
+    margin-top: 0 !important;
+    margin-bottom: 0 !important;
+    padding-top: 0.125rem !important;
+    padding-bottom: 0.125rem !important;
   }
 </style>

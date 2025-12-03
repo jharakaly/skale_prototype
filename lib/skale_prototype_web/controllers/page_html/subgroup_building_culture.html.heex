@@ -1,702 +1,173 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Skale Prototype - Building Skale: Community Culture</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <style>
-    body, html {
-      margin: 0;
-      padding: 0;
-      overflow-x: hidden;
-      width: 100%;
-      background-color: white !important;
-    }
-    .container {
-      width: 100%;
-      max-width: 1200px;
-      margin: 0 auto;
-      padding: 0 1rem;
-    }
-    .main-content {
-      display: flex;
-      flex-direction: column;
-      width: 100%;
-      padding: 0;
-    }
-    @media (min-width: 768px) {
-      .main-content { flex-direction: row; }
-    }
-    .left-column {
-      width: 100%;
-      padding-right: 0;
-    }
-    @media (min-width: 768px) {
-      .left-column { flex: 0 0 70%; padding-right: 1rem; }
-    }
-    .right-column {
-      width: 100%;
-      padding-left: 0;
-      margin-top: 1rem;
-      padding-top: 0.75rem;
-    }
-    @media (min-width: 768px) {
-      .right-column { flex: 0 0 30%; padding-left: 1rem; margin-top: 0; }
-    }
-
-    /* ==== Breadcrumb ==== */
-    .breadcrumb {
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-      padding: 0.75rem 0;
-      font-size: 0.9rem;
-      color: #6b7280;
-      flex-wrap: wrap;
-    }
-    .breadcrumb-item { display: flex; align-items: center; gap: 0.5rem; }
-    .breadcrumb-link { color: #6b7280; text-decoration: none; transition: color 0.2s; }
-    .breadcrumb-link:hover { color: #374151; }
-    .breadcrumb-active { color: #A3B18A; font-weight: 500; }
-    .breadcrumb-separator { color: #d1d5db; }
-
-    /* ==== Header ==== */
-    .group-header-container {
-      background-color: white;
-      border: 1px solid #e5e7eb;
-      border-radius: 12px;
-      padding: 1rem;
-      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-      margin-bottom: 1rem;
-      display: flex;
-      flex-direction: column;
-      gap: 1rem;
-      margin-top: 0.5rem;
-    }
-    @media (min-width: 768px) {
-      .group-header-container { flex-direction: row; padding: 1.5rem; min-height: 250px; }
-    }
-    .group-content { flex: 1; display: flex; flex-direction: column; }
-    .group-title { font-size: 1.5rem; font-weight: bold; color: #374151; margin-bottom: 0.25rem; }
-    .group-subtitle { font-size: 1rem; color: #6b7280; margin-bottom: 0.5rem; }
-    .overview-container { margin-bottom: 0.75rem; flex-grow: 1; }
-    .group-overview { color: #374151; line-height: 1.6; overflow: hidden; transition: all 0.3s ease; }
-    .group-overview.collapsed {
-      display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; max-height: 4.8em;
-    }
-    .group-overview.expanded { display: block; max-height: none; }
-    .read-more-btn { background: none; border: none; color: #A3B18A; font-size: 0.9rem; cursor: pointer; padding: 0.25rem 0; margin-top: 0.5rem; font-weight: 500; }
-    .read-more-btn:hover { text-decoration: underline; }
-
-    .moderator-info { display: flex; align-items: center; gap: 1rem; margin-top: auto; padding-top: 0.5rem; }
-    .moderator-avatar {
-      width: 2.5rem; height: 2.5rem; background-color: #A3B18A; border-radius: 50%;
-      display: flex; align-items: center; justify-content: center; color: white; font-weight: bold; font-size: 0.9rem; flex-shrink: 0;
-    }
-    .moderator-details { font-size: 0.9rem; }
-    .moderator-name { font-weight: 600; color: #374151; }
-    .moderator-role { color: #6b7280; }
-
-    .group-image {
-      width: 100%; height: 200px; background-color: #A3B18A; border-radius: 8px; flex-shrink: 0;
-    }
-    @media (min-width: 768px) { .group-image { width: 25%; height: 200px; } }
-
-    /* ==== Topics ==== */
-    .topics-container { position: relative; }
-    .topic-card {
-      background-color: white;
-      border: 1px solid #e5e7eb;
-      border-radius: 8px;
-      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-      margin-bottom: 1rem;
-      padding: 1rem;
-      transition: box-shadow 0.2s;
-    }
-    .topic-card:hover {
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
-    }
-    .topic-header {
-      display: flex;
-      justify-content: between;
-      align-items: flex-start;
-      margin-bottom: 0.75rem;
-    }
-    .topic-title {
-      font-size: 1.1rem;
-      font-weight: 600;
-      color: #374151;
-      margin-bottom: 0.5rem;
-    }
-    .topic-excerpt {
-      color: #6b7280;
-      line-height: 1.5;
-      margin-bottom: 0.75rem;
-    }
-    .topic-meta {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      font-size: 0.875rem;
-      color: #6b7280;
-    }
-    .topic-replies {
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-    }
-    .topic-avatars {
-      display: flex;
-      align-items: center;
-    }
-    .topic-avatar {
-      width: 1.5rem;
-      height: 1.5rem;
-      border-radius: 50%;
-      background-color: #A3B18A;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: white;
-      font-size: 0.7rem;
-      margin-left: -0.5rem;
-      border: 2px solid white;
-    }
-    .topic-avatar:first-child {
-      margin-left: 0;
-    }
-    .view-replies-btn {
-      background: none;
-      border: none;
-      color: #A3B18A;
-      font-size: 0.875rem;
-      cursor: pointer;
-      font-weight: 500;
-    }
-    .view-replies-btn:hover {
-      text-decoration: underline;
-    }
-
-    /* Topic Detail Styles */
-    .topic-detail-container {
-      background-color: white;
-      border: 1px solid #e5e7eb;
-      border-radius: 8px;
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-      margin-bottom: 1rem;
-      padding: 1.5rem;
-    }
-    .topic-detail-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: flex-start;
-      margin-bottom: 1rem;
-      padding-bottom: 1rem;
-      border-bottom: 1px solid #e5e7eb;
-    }
-    .topic-detail-title {
-      font-size: 1.25rem;
-      font-weight: 600;
-      color: #374151;
-      margin-bottom: 0.5rem;
-    }
-    .topic-detail-meta {
-      display: flex;
-      align-items: center;
-      gap: 1rem;
-      font-size: 0.875rem;
-      color: #6b7280;
-    }
-    .topic-detail-content {
-      color: #374151;
-      line-height: 1.6;
-      margin-bottom: 1.5rem;
-    }
-    .close-topic-btn {
-      background: none;
-      border: none;
-      color: #6b7280;
-      cursor: pointer;
-      font-size: 1.25rem;
-      padding: 0.25rem;
-    }
-    .close-topic-btn:hover {
-      color: #374151;
-    }
-    .replies-section {
-      margin-top: 1.5rem;
-    }
-    .replies-title {
-      font-size: 1.1rem;
-      font-weight: 600;
-      color: #374151;
-      margin-bottom: 1rem;
-    }
-    .reply-item {
-      padding: 1rem 0;
-      border-bottom: 1px solid #e5e7eb;
-    }
-    .reply-item:last-child {
-      border-bottom: none;
-    }
-    .reply-header {
-      display: flex;
-      align-items: center;
-      gap: 0.75rem;
-      margin-bottom: 0.75rem;
-    }
-    .reply-avatar {
-      width: 2rem;
-      height: 2rem;
-      border-radius: 50%;
-      background-color: #A3B18A;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: white;
-      font-weight: bold;
-      font-size: 0.8rem;
-    }
-    .reply-author {
-      font-weight: 600;
-      color: #374151;
-    }
-    .reply-time {
-      font-size: 0.875rem;
-      color: #6b7280;
-    }
-    .reply-content {
-      color: #374151;
-      line-height: 1.5;
-    }
-
-    /* Right Sidebar Styles */
-    .sidebar-section {
-      background-color: white;
-      border: 1px solid #e5e7eb;
-      border-radius: 12px;
-      padding: 1.5rem;
-      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-      margin-bottom: 1.5rem;
-    }
-    .sidebar-title {
-      font-size: 1.1rem;
-      font-weight: 600;
-      color: #374151;
-      margin-bottom: 1rem;
-    }
-    .member-item {
-      display: flex;
-      align-items: center;
-      gap: 0.75rem;
-      padding: 0.5rem 0;
-    }
-    .member-avatar {
-      width: 2.5rem;
-      height: 2.5rem;
-      border-radius: 50%;
-      background-color: #A3B18A;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: white;
-      font-weight: bold;
-      flex-shrink: 0;
-    }
-    .member-info {
-      flex: 1;
-    }
-    .member-name {
-      font-weight: 500;
-      color: #374151;
-    }
-    .member-role {
-      font-size: 0.875rem;
-      color: #6b7280;
-    }
-    .join-btn {
-      width: 100%;
-      background-color: #A3B18A;
-      color: white;
-      border: none;
-      border-radius: 8px;
-      padding: 0.75rem 1rem;
-      font-weight: 500;
-      cursor: pointer;
-      transition: background-color 0.2s;
-      margin-top: 1rem;
-    }
-    .join-btn:hover {
-      background-color: #8a9a7b;
-    }
-  </style>
-</head>
-<body class="font-sans min-h-screen">
-  <div class="container">
-    <div class="main-content">
-      <div class="left-column">
-        <!-- Breadcrumb -->
-        <div class="breadcrumb">
-          <div class="breadcrumb-item"><a href="/" class="breadcrumb-link">Home</a></div>
-          <span class="breadcrumb-separator">/</span>
-          <div class="breadcrumb-item"><a href="/discussions" class="breadcrumb-link">Discussions</a></div>
-          <span class="breadcrumb-separator">/</span>
-          <div class="breadcrumb-item"><a href="/group_building_skale" class="breadcrumb-link">Building Skale</a></div>
-          <span class="breadcrumb-separator">/</span>
-          <div class="breadcrumb-item"><span class="breadcrumb-active">Community Culture</span></div>
+<div class="container mx-auto px-4 py-3">
+  <!-- What's on your mind + Search row -->
+  <div class="search-row mb-0 flex flex-col md:flex-row gap-3">
+    <!-- What's on your mind (60%) -->
+    <div class="w-full md:w-[60%]">
+      <div class="whats-on-mind-bar" id="whats-on-mind-bar" phx-click="open_new_post_modal">
+        <div class="profile-avatar">
+          <div class="avatar-initials">Y</div>
         </div>
-
-        <!-- Header -->
-        <div class="group-header-container" id="groupHeader">
-          <div class="group-content">
-            <h1 class="group-title">Community Culture</h1>
-            <h2 class="group-subtitle">Fostering a Kind and Global Skale Environment</h2>
-            <div class="overview-container">
-              <div class="group-overview collapsed" id="overviewText">
-                The Community Culture subgroup is where Skale members come together to
-                nurture the values, kindness, and global spirit that define our platform.
-                We discuss leadership, inclusion, respect, and collaboration — building
-                a foundation that makes Skale a thriving, supportive community for everyone.
-                Whether you're mentoring, moderating, or contributing ideas, your voice
-                helps shape the atmosphere that powers our collective growth.
-              </div>
-              <button class="read-more-btn" id="readMoreBtn">Read more...</button>
-            </div>
-
-            <div class="moderator-info">
-              <div class="moderator-avatar">JH</div>
-              <div class="moderator-details">
-                <div class="moderator-name">James Harakaly</div>
-                <div class="moderator-role">Community Director</div>
-              </div>
-            </div>
-          </div>
-          <div class="group-image"></div>
-        </div>
-
-        <!-- Topic Feed -->
-        <h2 class="text-2xl font-semibold text-[#344E41] mb-6">Discussion Topics</h2>
-
-        <div id="expanded-topics" class="topics-container">
-          <!-- Topic Detail 1 (Hidden by default) -->
-          <div id="topic-detail-1" style="display: none;" class="topic-detail-container">
-            <div class="topic-detail-header">
-              <div>
-                <h3 class="topic-detail-title">How do we build a more inclusive community?</h3>
-                <div class="topic-detail-meta">
-                  <span>Posted by Alex Morgan</span>
-                  <span>2 hours ago</span>
-                  <span>12 replies</span>
-                </div>
-              </div>
-              <button class="close-topic-btn" data-topic-id="1">×</button>
-            </div>
-            <div class="topic-detail-content">
-              <p>Looking for ideas on how we can make Skale more welcoming to people from all backgrounds and cultures. We have a diverse user base but I feel we could do more to ensure everyone feels included and valued.</p>
-              <p>What initiatives have worked in other communities you've been part of? How can we better recognize and celebrate our differences while building a cohesive community?</p>
-            </div>
-            <div class="replies-section">
-              <h4 class="replies-title">Replies</h4>
-              <div class="reply-item">
-                <div class="reply-header">
-                  <div class="reply-avatar" style="background-color: #588157;">SC</div>
-                  <div>
-                    <div class="reply-author">Sarah Chen</div>
-                    <div class="reply-time">1 hour ago</div>
-                  </div>
-                </div>
-                <div class="reply-content">
-                  <p>Great topic! One thing that worked well in my previous community was having regular "cultural spotlights" where members could share something about their background or culture.</p>
-                </div>
-              </div>
-              <div class="reply-item">
-                <div class="reply-header">
-                  <div class="reply-avatar" style="background-color: #3A5A40;">MJ</div>
-                  <div>
-                    <div class="reply-author">Maria Johnson</div>
-                    <div class="reply-time">45 minutes ago</div>
-                  </div>
-                </div>
-                <div class="reply-content">
-                  <p>I think having more moderators from different time zones would help. Sometimes discussions happen when certain regions are asleep, and they miss out.</p>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <!-- Topic Detail 2 (Hidden by default) -->
-          <div id="topic-detail-2" style="display: none;" class="topic-detail-container">
-            <div class="topic-detail-header">
-              <div>
-                <h3 class="topic-detail-title">Community guidelines feedback</h3>
-                <div class="topic-detail-meta">
-                  <span>Posted by James Harakaly</span>
-                  <span>1 day ago</span>
-                  <span>8 replies</span>
-                </div>
-              </div>
-              <button class="close-topic-btn" data-topic-id="2">×</button>
-            </div>
-            <div class="topic-detail-content">
-              <p>We're updating our community guidelines and would love your input on the proposed changes. The main updates focus on:</p>
-              <ul class="list-disc pl-5 mt-2">
-                <li>Clearer expectations around respectful communication</li>
-                <li>Guidelines for cross-cultural discussions</li>
-                <li>Process for reporting and resolving conflicts</li>
-                <li>Expectations for mentorship relationships</li>
-              </ul>
-              <p class="mt-2">Please review the draft and share your thoughts - what's missing? What could be clearer?</p>
-            </div>
-            <div class="replies-section">
-              <h4 class="replies-title">Replies</h4>
-              <div class="reply-item">
-                <div class="reply-header">
-                  <div class="reply-avatar" style="background-color: #588157;">TK</div>
-                  <div>
-                    <div class="reply-author">Tom Kim</div>
-                    <div class="reply-time">20 hours ago</div>
-                  </div>
-                </div>
-                <div class="reply-content">
-                  <p>The guidelines look good overall. I'd suggest adding more specific examples of what constitutes respectful vs disrespectful communication.</p>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <!-- Topic Detail 3 (Hidden by default) -->
-          <div id="topic-detail-3" style="display: none;" class="topic-detail-container">
-            <div class="topic-detail-header">
-              <div>
-                <h3 class="topic-detail-title">Global community events</h3>
-                <div class="topic-detail-meta">
-                  <span>Posted by Lisa Rodriguez</span>
-                  <span>3 days ago</span>
-                  <span>3 replies</span>
-                </div>
-              </div>
-              <button class="close-topic-btn" data-topic-id="3">×</button>
-            </div>
-            <div class="topic-detail-content">
-              <p>Let's brainstorm ideas for virtual events that can bring our global community together across time zones. With members from all over the world, it's challenging to find times that work for everyone.</p>
-              <p>What types of events would you be interested in? Skill-sharing sessions? Cultural exchanges? Social hangouts? And how can we schedule them to be as inclusive as possible?</p>
-            </div>
-            <div class="replies-section">
-              <h4 class="replies-title">Replies</h4>
-              <div class="reply-item">
-                <div class="reply-header">
-                  <div class="reply-avatar" style="background-color: #588157;">AB</div>
-                  <div>
-                    <div class="reply-author">Aisha Bello</div>
-                    <div class="reply-time">2 days ago</div>
-                  </div>
-                </div>
-                <div class="reply-content">
-                  <p>I love the idea of cultural exchanges! Maybe we could have monthly "virtual coffee" sessions where people from different regions share about their local culture.</p>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <!-- Topic Cards -->
-          <div class="topic-card" id="topic-1">
-            <div class="topic-header">
-              <h3 class="topic-title">How do we build a more inclusive community?</h3>
-            </div>
-            <p class="topic-excerpt">Looking for ideas on how we can make Skale more welcoming to people from all backgrounds and cultures...</p>
-            <div class="topic-meta">
-              <div class="topic-replies">
-                <div class="topic-avatars">
-                  <div class="topic-avatar" style="background-color: #A3B18A;">AB</div>
-                  <div class="topic-avatar" style="background-color: #588157;">CD</div>
-                  <div class="topic-avatar" style="background-color: #3A5A40;">EF</div>
-                </div>
-                <span>12 replies</span>
-              </div>
-              <span>2 hours ago</span>
-            </div>
-            <button class="view-replies-btn" phx-value-topic-id="1">View discussion</button>
-          </div>
-
-          <div class="topic-card" id="topic-2">
-            <div class="topic-header">
-              <h3 class="topic-title">Community guidelines feedback</h3>
-            </div>
-            <p class="topic-excerpt">We're updating our community guidelines and would love your input on the proposed changes...</p>
-            <div class="topic-meta">
-              <div class="topic-replies">
-                <div class="topic-avatars">
-                  <div class="topic-avatar" style="background-color: #A3B18A;">GH</div>
-                  <div class="topic-avatar" style="background-color: #588157;">IJ</div>
-                </div>
-                <span>8 replies</span>
-              </div>
-              <span>1 day ago</span>
-            </div>
-            <button class="view-replies-btn" phx-value-topic-id="2">View discussion</button>
-          </div>
-
-          <div class="topic-card" id="topic-3">
-            <div class="topic-header">
-              <h3 class="topic-title">Global community events</h3>
-            </div>
-            <p class="topic-excerpt">Let's brainstorm ideas for virtual events that can bring our global community together across time zones...</p>
-            <div class="topic-meta">
-              <div class="topic-replies">
-                <div class="topic-avatars">
-                  <div class="topic-avatar" style="background-color: #A3B18A;">KL</div>
-                </div>
-                <span>3 replies</span>
-              </div>
-              <span>3 days ago</span>
-            </div>
-            <button class="view-replies-btn" phx-value-topic-id="3">View discussion</button>
-          </div>
-
-          <div class="topic-card" id="topic-4">
-            <div class="topic-header">
-              <h3 class="topic-title">Mentorship program improvements</h3>
-            </div>
-            <p class="topic-excerpt">How can we enhance our mentorship matching system to better connect mentors and mentees...</p>
-            <div class="topic-meta">
-              <div class="topic-replies">
-                <div class="topic-avatars">
-                  <div class="topic-avatar" style="background-color: #A3B18A;">MN</div>
-                  <div class="topic-avatar" style="background-color: #588157;">OP</div>
-                  <div class="topic-avatar" style="background-color: #3A5A40;">QR</div>
-                  <div class="topic-avatar" style="background-color: #344E41;">+2</div>
-                </div>
-                <span>15 replies</span>
-              </div>
-              <span>5 days ago</span>
-            </div>
-            <button class="view-replies-btn" phx-value-topic-id="4">View discussion</button>
-          </div>
+        <div class="whats-on-mind-input">
+          <input
+            type="text"
+            placeholder="What's on your mind?"
+            class="whats-on-mind-input-field"
+            readonly
+          />
         </div>
       </div>
+    </div>
 
-      <!-- Right Sidebar -->
-      <div class="right-column">
-        <div class="sidebar-section">
-          <h3 class="sidebar-title">Group Members</h3>
-          <div class="member-item">
-            <div class="member-avatar">JH</div>
-            <div class="member-info">
-              <div class="member-name">James Harakaly</div>
-              <div class="member-role">Community Director</div>
-            </div>
-          </div>
-          <div class="member-item">
-            <div class="member-avatar" style="background-color: #588157;">SC</div>
-            <div class="member-info">
-              <div class="member-name">Sarah Chen</div>
-              <div class="member-role">Moderator</div>
-            </div>
-          </div>
-          <div class="member-item">
-            <div class="member-avatar" style="background-color: #3A5A40;">AM</div>
-            <div class="member-info">
-              <div class="member-name">Alex Martinez</div>
-              <div class="member-role">Moderator</div>
-            </div>
-          </div>
-          <button class="join-btn">Join Community Culture</button>
-        </div>
-
-        <div class="sidebar-section">
-          <h3 class="sidebar-title">Related Groups</h3>
-          <div class="member-item">
-            <div class="member-avatar" style="background-color: #A3B18A; border-radius: 6px;"></div>
-            <div class="member-info">
-              <div class="member-name">Onboarding</div>
-              <div class="member-role">355 members</div>
-            </div>
-          </div>
-          <div class="member-item">
-            <div class="member-avatar" style="background-color: #588157; border-radius: 6px;"></div>
-            <div class="member-info">
-              <div class="member-name">Mentorship & Growth</div>
-              <div class="member-role">187 members</div>
-            </div>
-          </div>
-          <div class="member-item">
-            <div class="member-avatar" style="background-color: #3A5A40; border-radius: 6px;"></div>
-            <div class="member-info">
-              <div class="member-name">Platform Development</div>
-              <div class="member-role">298 members</div>
-            </div>
-          </div>
-        </div>
-
-        <div class="sidebar-section">
-          <h3 class="sidebar-title">Group Stats</h3>
-          <div class="member-item">
-            <div class="member-info">
-              <div class="member-name">412 members</div>
-              <div class="member-role">Active community</div>
-            </div>
-          </div>
-          <div class="member-item">
-            <div class="member-info">
-              <div class="member-name">24 topics</div>
-              <div class="member-role">This month</div>
-            </div>
-          </div>
-          <div class="member-item">
-            <div class="member-info">
-              <div class="member-name">87% engagement</div>
-              <div class="member-role">Active participation</div>
-            </div>
-          </div>
-        </div>
+    <!-- Search bar (30%) - FIXED TO MATCH BUILDING COMMUNITY PAGE -->
+    <div class="w-full md:w-[30%]">
+      <div class="left-search-container">
+        <span class="search-icon">🔍</span>
+        <input
+          type="text"
+          placeholder="Search discussions..."
+          class="search-input"
+        />
       </div>
     </div>
   </div>
 
-  <script>
-    document.addEventListener('DOMContentLoaded', function() {
-      const overviewText = document.getElementById('overviewText');
-      const readMoreBtn = document.getElementById('readMoreBtn');
-      const groupHeader = document.getElementById('groupHeader');
+  <!-- Breadcrumb with 75% reduced spacing -->
+  <div class="breadcrumb flex items-center gap-2 text-sm text-gray-600 mt-1 mb-1">
+    <a href="/" class="hover:text-gray-800">Home</a>
+    <span>/</span>
+    <span class="text-[#A3B18A] font-semibold">Discussions</span>
+  </div>
 
-      let isExpanded = false;
-      readMoreBtn.addEventListener('click', function() {
-        if (isExpanded) {
-          overviewText.classList.remove('expanded');
-          overviewText.classList.add('collapsed');
-          readMoreBtn.textContent = 'Read more...';
-          groupHeader.classList.remove('expanded');
-        } else {
-          overviewText.classList.remove('collapsed');
-          overviewText.classList.add('expanded');
-          readMoreBtn.textContent = 'Read less';
-          groupHeader.classList.add('expanded');
-        }
-        isExpanded = !isExpanded;
-      });
+  <!-- Discussions Grid -->
+  <div class="discussion-grid grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+    <!-- Building Skale -->
+    <a href="/group_building_skale" class="discussion-card block rounded-xl border border-gray-200 p-5 shadow-sm hover:shadow-md hover:-translate-y-1 transition">
+      <div class="h-40 rounded-md bg-[#A3B18A] mb-4"></div>
+      <h3 class="font-semibold text-gray-900 mb-1">Building Skale</h3>
+      <p class="text-sm text-gray-600">A group for shaping, developing, and supporting the Skale community — from culture and recruiting to onboarding and platform growth.</p>
+    </a>
 
-      // Handle topic expansion
-      document.addEventListener("click", function(e) {
-        if (e.target && e.target.classList.contains("view-replies-btn")) {
-          const topicId = e.target.getAttribute("phx-value-topic-id");
-          const detail = document.getElementById(`topic-detail-${topicId}`);
-          document.querySelectorAll(".topic-detail-container").forEach(d => d.style.display = "none");
-          const card = document.getElementById(`topic-${topicId}`);
-          if (card && detail) {
-            detail.style.display = "block";
-            card.insertAdjacentElement("afterend", detail);
-            detail.scrollIntoView({ behavior: "smooth", block: "start" });
+    <!-- Vegan Recipe Tips - ONLY LINK UPDATED -->
+    <a href="/groups" class="discussion-card block rounded-xl border border-gray-200 p-5 shadow-sm hover:shadow-md hover:-translate-y-1 transition">
+      <div class="h-40 rounded-md bg-gray-300 mb-4"></div>
+      <h3 class="font-semibold text-gray-900 mb-1">Vegan Recipe Tips</h3>
+      <p class="text-sm text-gray-600">Share your best vegan cooking techniques and ingredient substitutions.</p>
+    </a>
+
+    <div class="discussion-card block rounded-xl border border-gray-200 p-5 shadow-sm">
+      <div class="h-40 rounded-md bg-gray-300 mb-4"></div>
+      <h3 class="font-semibold text-gray-900 mb-1">Local Farmers Markets</h3>
+      <p class="text-sm text-gray-600">Discuss the best local markets and seasonal produce finds.</p>
+    </div>
+
+    <div class="discussion-card block rounded-xl border border-gray-200 p-5 shadow-sm">
+      <div class="h-40 rounded-md bg-gray-300 mb-4"></div>
+      <h3 class="font-semibold text-gray-900 mb-1">Kitchen Equipment</h3>
+      <p class="text-sm text-gray-600">Essential tools and gear recommendations for home cooks.</p>
+    </div>
+
+    <div class="discussion-card block rounded-xl border border-gray-200 p-5 shadow-sm">
+      <div class="h-40 rounded-md bg-gray-300 mb-4"></div>
+      <h3 class="font-semibold text-gray-900 mb-1">Meal Prep Ideas</h3>
+      <p class="text-sm text-gray-600">Weekly planning and batch cooking strategies.</p>
+    </div>
+
+    <div class="discussion-card block rounded-xl border border-gray-200 p-5 shadow-sm">
+      <div class="h-40 rounded-md bg-gray-300 mb-4"></div>
+      <h3 class="font-semibold text-gray-900 mb-1">Sustainable Cooking</h3>
+      <p class="text-sm text-gray-600">Reducing food waste and eco-friendly kitchen practices.</p>
+    </div>
+  </div>
+</div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    // Simple infinite scroll placeholder
+    const grid = document.querySelector('.discussion-grid');
+    if (grid) {
+      const sentinel = document.createElement('div');
+      sentinel.id = 'scroll-sentinel';
+      grid.after(sentinel);
+
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            console.log('Loading more discussions...');
           }
-        }
-        
-        if (e.target && e.target.classList.contains("close-topic-btn")) {
-          const topicId = e.target.getAttribute("data-topic-id");
-          const detail = document.getElementById(`topic-detail-${topicId}`);
-          if (detail) detail.style.display = "none";
+        });
+      });
+      observer.observe(sentinel);
+    }
+
+    // "What's on your mind?" bar -> open New Post Modal (same behavior as homepage)
+    const whatsOnMindBar = document.getElementById('whats-on-mind-bar');
+    if (whatsOnMindBar) {
+      whatsOnMindBar.addEventListener('click', function() {
+        const newPostModal = document.getElementById('new-post-modal');
+        if (newPostModal) {
+          newPostModal.classList.remove('hidden');
+          document.body.style.overflow = 'hidden';
+        } else {
+          console.error('New post modal not found in DOM');
         }
       });
-    });
-  </script>
-</body>
-</html>
+    }
+  });
+</script>
+
+<style>
+  /* Match homepage "What's on your mind?" styling */
+  .whats-on-mind-bar {
+    display: flex;
+    align-items: center;
+    background-color: white;
+    border: 1px solid #e5e7eb;
+    border-radius: 12px;
+    padding: 0.1rem 1rem;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+    cursor: pointer;
+    transition: all 0.2s ease;
+    margin-bottom: 0.5rem;
+    width: 100%; /* fills its 60% column */
+  }
+
+  .whats-on-mind-bar:hover {
+    border-color: #a3b18a;
+    box-shadow: 0 2px 4px rgba(163, 177, 138, 0.1);
+  }
+
+  .profile-avatar {
+    margin-right: 0.75rem;
+  }
+
+  .avatar-initials {
+    width: 1.7rem;
+    height: 1.7rem;
+    background-color: #a3b18a;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-weight: bold;
+    font-size: 0.8rem;
+  }
+
+  .whats-on-mind-input {
+    flex: 1;
+  }
+
+  .whats-on-mind-input-field {
+    width: 100%;
+    border: none;
+    outline: none;
+    font-size: 0.9rem;
+    color: #6b7280;
+    background: transparent;
+    cursor: pointer;
+  }
+
+  .whats-on-mind-input-field::placeholder {
+    color: #6b7280;
+  }
+</style>

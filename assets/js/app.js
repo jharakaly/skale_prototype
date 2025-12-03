@@ -22,10 +22,40 @@ import {Socket} from "phoenix"
 import {LiveSocket} from "phoenix_live_view"
 import topbar from "../vendor/topbar"
 
+// Groups page scripts - Read more/less functionality
+let groupsPageScripts = {
+  mounted() {
+    const overviewText = document.getElementById('overviewText');
+    const readMoreBtn = document.getElementById('readMoreBtn');
+    const groupHeader = document.getElementById('groupHeader');
+  
+    if (overviewText && readMoreBtn && groupHeader) {
+      let isExpanded = false;
+      readMoreBtn.addEventListener('click', function() {
+        if (isExpanded) {
+          // Collapse
+          overviewText.classList.remove('expanded');
+          overviewText.classList.add('collapsed');
+          readMoreBtn.textContent = 'Read more...';
+          groupHeader.classList.remove('expanded');
+        } else {
+          // Expand
+          overviewText.classList.remove('collapsed');
+          overviewText.classList.add('expanded');
+          readMoreBtn.textContent = 'Read less';
+          groupHeader.classList.add('expanded');
+        }
+        isExpanded = !isExpanded;
+      });
+    }
+  }
+}
+
 let csrfToken = document.querySelector("meta[name='csrf-token']").getAttribute("content")
 let liveSocket = new LiveSocket("/live", Socket, {
   longPollFallbackMs: 2500,
-  params: {_csrf_token: csrfToken}
+  params: {_csrf_token: csrfToken},
+  hooks: { groupsPageScripts: groupsPageScripts }
 })
 
 // Show progress bar on live navigation and form submits

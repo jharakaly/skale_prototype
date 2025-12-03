@@ -18,7 +18,7 @@ defmodule SkalePrototypeWeb.Router do
 
   # Home page (main LiveView with tab switching)
   live "/", HomeLive, :index
-
+  live "/groups", GroupsLive
   # Activity page route (you’ll no longer need this once Activity is a tab)
   # Comment it out for now so it doesn't interfere:
   # live "/activity", ActivityLive, :index
@@ -26,7 +26,7 @@ defmodule SkalePrototypeWeb.Router do
   # Static Pages
   get "/profile", PageController, :profile
   get "/discussions", PageController, :discussions
-  get "/groups", PageController, :groups
+  #get "/groups", PageController, :groups
   get "/groups2", PageController, :groups2
   get "/subgroup_topics", PageController, :subgroup_topics
   get "/subgroup_topics2", PageController, :subgroup_topics2

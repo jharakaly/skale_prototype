@@ -4,10 +4,12 @@ defmodule SkalePrototypeWeb.Components.RightSidebar do
   def right_sidebar(assigns) do
     ~H"""
     <div class="right-column">
-      <!-- Search bar in sidebar -->
-      <div class="search-container mb-6">
-        <span class="search-icon">Search</span>
-        <input type="text" placeholder="Search..." class="p-2 rounded text-base search-input w-full">
+      <!-- Search bar in sidebar - Updated to match Building Culture and have same width as events -->
+      <div class="search-wrapper">
+        <div class="search-container">
+          <span class="search-icon">Search</span>
+          <input type="text" placeholder="Search..." class="p-2 rounded text-base search-input w-full">
+        </div>
       </div>
 
       <div class="space-y-4">
@@ -49,39 +51,48 @@ defmodule SkalePrototypeWeb.Components.RightSidebar do
     </div>
 
     <style>
-      /* Search container (now 90% width, centered) */
-      .search-container {
-        position: relative;
-        margin-bottom: 1.5rem;
-        margin-top: 11px;
+      /* ============================================
+         Search Wrapper - Same 95% width as events container
+         ============================================ */
+      .search-wrapper {
         width: 95%;
         margin-left: auto;
         margin-right: auto;
+        margin-bottom: 1.5rem;
+      }
+
+      /* ============================================
+         Search Container - MATCHES BUILDING CULTURE
+         ============================================ */
+      .search-container {
+        position: relative;
+        width: 100%;
       }
       .search-icon {
         position: absolute;
         left: 1rem;
         top: 50%;
         transform: translateY(-50%);
-        font-size: 1.2rem;
+        font-size: 1rem;
         color: #6b7280;
       }
       .search-input {
-        padding-left: 3rem;
+        padding-left: 3rem !important;
         width: 100%;
         background-color: white;
         border: 1px solid #e5e7eb;
         border-radius: 8px;
         box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
-        font-size: 1rem;
-      }
-      @media (max-width: 480px) {
-        .search-input {
-          font-size: 16px;
-        }
+        font-size: 0.9rem;
+        padding-top: 0.4rem;
+        padding-bottom: 0.4rem;
+        height: auto;
+        line-height: 1.2;
       }
 
-      /* Events container (95% width) */
+      /* ============================================
+         Events Container (95% width - matches search bar)
+         ============================================ */
       .collection-container {
         display: flex;
         flex-direction: column;
@@ -92,12 +103,17 @@ defmodule SkalePrototypeWeb.Components.RightSidebar do
         box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
         margin-bottom: 1.5rem;
         min-height: 400px;
+        flex-grow: 1;
+        height: 90%;
       }
 
       .events-container {
         width: 95%;
         margin-left: auto;
         margin-right: auto;
+        display: flex;
+        flex-direction: column;
+        height: 90%;
       }
 
       @media (max-width: 480px) {
@@ -107,12 +123,14 @@ defmodule SkalePrototypeWeb.Components.RightSidebar do
           min-height: 350px;
         }
       }
+
       .collection-header {
         display: flex;
         justify-content: space-between;
         align-items: center;
         margin-bottom: 0.75rem;
       }
+
       .events-list {
         flex: 1;
         overflow-y: auto;

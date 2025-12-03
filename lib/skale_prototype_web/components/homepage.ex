@@ -8,27 +8,25 @@ defmodule SkalePrototypeWeb.Components.Homepage do
     assigns = assign_new(assigns, :active_tab, fn -> "groups" end)
 
     ~H"""
-    <div class="container mx-auto px-4">
-      <!-- Replaced search bar with "What's on your mind?" bar -->
-      <div class="header-spacing">
-        <div class="whats-on-mind-bar" id="whats-on-mind-bar">
-          <div class="profile-avatar">
-            <div class="avatar-initials">Y</div>
-          </div>
-          <div class="whats-on-mind-input">
-            <input
-              type="text"
-              placeholder="What's on your mind?"
-              class="whats-on-mind-input-field"
-              readonly
-            />
-          </div>
-        </div>
-      </div>
-
-      <div class="main-layout">
+    <div class="container">
+      <div class="main-content">
         <!-- Left Content Column -->
-        <div class="left-content-column">
+        <div class="left-column">
+          <!-- "What's on your mind?" bar -->
+          <div class="whats-on-mind-bar" id="whats-on-mind-bar" style="margin-top: 1rem; margin-bottom: 1rem;">
+            <div class="profile-avatar">
+              <div class="avatar-initials">Y</div>
+            </div>
+            <div class="whats-on-mind-input">
+              <input
+                type="text"
+                placeholder="What's on your mind?"
+                class="whats-on-mind-input-field"
+                readonly
+              />
+            </div>
+          </div>
+
           <!-- Button group -->
           <div class="button-group">
             <button
@@ -50,25 +48,38 @@ defmodule SkalePrototypeWeb.Components.Homepage do
             <%= if @active_tab == "groups" do %>
               <!-- Vegan Cookbook Club Card (CARD 1 – DEBUG TARGET) -->
               <div class="group-card" phx-click="navigate_to_group" phx-value-group="vegan-cookbook">
-                <div class="group-header">
-                  <div class="group-info">
-                    <h2 class="text-black text-base font-semibold">Vegan Cookbook Club</h2>
-                    <p
-                      class="group-description"
-                      id="group-desc-1"
-                      data-expanded="false"
-                    >
-                      Explore plant-based recipes, share cooking tips, and discover delicious vegan meals together.
-                      Explore plant-based recipes, share cooking tips, and discover delicious vegan meals together.
-                      Explore plant-based recipes, share cooking tips, and discover delicious vegan meals together.
-                      Explore plant-based recipes, share cooking tips, and discover delicious vegan meals together.
-                      Explore plant-based recipes, share cooking tips, and discover delicious vegan meals together.
-                      Explore plant-based recipes, share cooking tips, and discover delicious vegan meals together.
-                    </p>
-                    <p class="text-black text-sm">700 members · 5 new topics · 44 replies</p>
+                <div class="group-header flex items-stretch">
+                  <div class="group-info flex flex-col justify-between">
+                    <div>
+                      <h2 class="text-black text-base font-semibold">Vegan Cookbook Club</h2>
+                      <p
+                        class="group-description"
+                        id="group-desc-1"
+                        data-expanded="false"
+                      >
+                        Explore plant-based recipes, share cooking tips, and discover delicious vegan meals together.
+                        Explore plant-based recipes, share cooking tips, and discover delicious vegan meals together.
+                        Explore plant-based recipes, share cooking tips, and discover delicious vegan meals together.
+                        Explore plant-based recipes, share cooking tips, and discover delicious vegan meals together.
+                        Explore plant-based recipes, share cooking tips, and discover delicious vegan meals together.
+                        Explore plant-based recipes, share cooking tips, and discover delicious vegan meals together.
+                        Explore plant-based recipes, share cooking tips, and discover delicious vegan meals together.
+                        Explore plant-based recipes, share cooking tips, and discover delicious vegan meals together.
+                        Explore plant-based recipes, share cooking tips, and discover delicious vegan meals together.
+                        Explore plant-based recipes, share cooking tips, and discover delicious vegan meals together.
+                        Explore plant-based recipes, share cooking tips, and discover delicious vegan meals together.
+                        Explore plant-based recipes, share cooking tips, and discover delicious vegan meals together.
+                        Explore plant-based recipes, share cooking tips, and discover delicious vegan meals together.
+                        Explore plant-based recipes, share cooking tips, and discover delicious vegan meals together.
+                        Explore plant-based recipes, share cooking tips, and discover delicious vegan meals together.
+                        Explore plant-based recipes, share cooking tips, and discover delicious vegan meals together.
+                        Explore plant-based recipes, share cooking tips, and discover delicious vegan meals together.
+                      </p>
+                      <p class="text-black text-sm">700 members · 5 new topics · 44 replies</p>
+                    </div>
 
                     <div
-                      class="group-read-more"
+                      class="group-read-more mt-2"
                       onclick="toggleGroupReadMore(1, event)"
                     >
                       <span class="group-read-more-text">Read more</span>
@@ -132,17 +143,13 @@ defmodule SkalePrototypeWeb.Components.Homepage do
                         />
                       </svg>
                     </div>
-                  </div>
-                  <!-- Reply icon -->
-                  <div class="reply-icon-container">
-                    <svg class="reply-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                        stroke-width="2"
-                        d="M3 10h10a8 8 0 018 8v2M3 10l6 6m-6-6l6-6"
-                      />
-                    </svg>
+
+                    <!-- Reply actions (text only, with vertical separator) -->
+                    <div class="reply-actions flex items-center mt-2 text-xs text-gray-700 ml-2">
+                      <span class="cursor-pointer">Like</span>
+                      <span class="mx-1">|</span>
+                      <span class="cursor-pointer">Reply</span>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -274,7 +281,7 @@ defmodule SkalePrototypeWeb.Components.Homepage do
         </div>
 
         <!-- Right Sidebar Column -->
-        <div class="right-sidebar-column">
+        <div class="right-column">
           <RightSidebar.right_sidebar />
         </div>
       </div>

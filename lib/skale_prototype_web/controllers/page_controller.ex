@@ -19,9 +19,9 @@ defmodule SkalePrototypeWeb.PageController do
     render(conn, "discussions.html")
   end
 
-  def groups(conn, _params) do
-    render(conn, "groups.html")
-  end
+ # def groups(conn, _params) do
+ #   render(conn, "groups.html")
+ # end
 
   def groups2(conn, _params) do
     render(conn, "groups2.html")

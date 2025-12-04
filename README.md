@@ -5,8 +5,10 @@ To start your Phoenix server:
   * Run `mix setup` to install and setup dependencies
   * Start Phoenix endpoint with `mix phx.server` or inside IEx with `iex -S mix phx.server`
 
-Homepage should look like this with the footer down below
-<img width="1252" height="929" alt="image" src="https://github.com/user-attachments/assets/e57b7c64-a576-4d4f-a066-49a11ad3da94" />
+Homepage should look like this with the footer down below - 
+  I updated the buttons a little bit and remove the vertical line on the side of the replies
+<img width="1287" height="943" alt="image" src="https://github.com/user-attachments/assets/48376bc6-62a0-421b-8ec0-a90205cf55ca" />
+
 
 On the homepage we have like and reply underneath the comments. That's the latest comment for that group.
 That reply btn should open up to standard reply from the subgroup_topics2 page

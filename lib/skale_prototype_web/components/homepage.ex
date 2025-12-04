@@ -75,44 +75,50 @@ defmodule SkalePrototypeWeb.Components.Homepage do
                         Explore plant-based recipes, share cooking tips, and discover delicious vegan meals together.
                         Explore plant-based recipes, share cooking tips, and discover delicious vegan meals together.
                       </p>
-                      <p class="text-black text-sm">700 members · 5 new topics · 44 replies</p>
-                    </div>
 
-                    <div
-                      class="group-read-more mt-2"
-                      onclick="toggleGroupReadMore(1, event)"
-                    >
-                      <span class="group-read-more-text">Read more</span>
-                      <svg class="read-more-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                        <path
-                          stroke-linecap="round"
-                          stroke-linejoin="round"
-                          stroke-width="2"
-                          d="M19 9l-7 7-7-7"
-                        />
-                        <path
-                          stroke-linecap="round"
-                          stroke-linejoin="round"
-                          stroke-width="2"
-                          d="M19 5l-7 7-7-7"
-                        />
-                      </svg>
+                      <!-- Member count and Read more button on same line -->
+                      <div class="flex items-center justify-between mt-2">
+                        <p class="text-black text-sm">700 members · 5 new topics · 44 replies</p>
+                        <div
+                          class="group-read-more flex items-center gap-1 font-semibold text-sm text-gray-800 cursor-pointer"
+                          onclick="toggleGroupReadMore(1, event)"
+                        >
+                          <span class="group-read-more-text">Read more</span>
+                          <svg class="read-more-icon w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                            <path
+                              stroke-linecap="round"
+                              stroke-linejoin="round"
+                              stroke-width="2"
+                              d="M19 9l-7 7-7-7"
+                            />
+                            <path
+                              stroke-linecap="round"
+                              stroke-linejoin="round"
+                              stroke-width="2"
+                              d="M19 5l-7 7-7-7"
+                            />
+                          </svg>
+                        </div>
+                      </div>
                     </div>
                   </div>
                   <div class="group-avatar"></div>
                 </div>
                 <!-- Latest Reply (REPLY 1 – DEBUG TARGET) -->
-                <div class="latest-reply">
+                <div class="latest-reply" style="border-left: none;">
                   <div class="reply-avatar">C</div>
                   <div class="reply-content">
                     <div class="reply-meta">
                       <span class="reply-author">cabot</span>
                       <span class="reply-time">5m</span>
                     </div>
+
+                    <!-- Clickable body text -->
                     <p
-                      class="text-black text-sm reply-body"
+                      class="text-black text-sm reply-body cursor-pointer"
                       id="reply-body-1"
                       data-expanded="false"
+                      onclick="toggleReplyReadMore(1, event)"
                     >
                       We successfully made our first baked vegan mac and cheese from the cookbook and it was absolutely
                       delicious! The cashew-based sauce was surprisingly creamy.
@@ -122,39 +128,42 @@ defmodule SkalePrototypeWeb.Components.Homepage do
                       delicious! The cashew-based sauce was surprisingly creamy.
                     </p>
 
-                    <!-- Reply Read More -->
-                    <div
-                      class="reply-read-more"
-                      onclick="toggleReplyReadMore(1, event)"
-                    >
-                      <span class="reply-read-more-text">Read more</span>
-                      <svg class="read-more-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                        <path
-                          stroke-linecap="round"
-                          stroke-linejoin="round"
-                          stroke-width="2"
-                          d="M19 9l-7 7-7-7"
-                        />
-                        <path
-                          stroke-linecap="round"
-                          stroke-linejoin="round"
-                          stroke-width="2"
-                          d="M19 5l-7 7-7-7"
-                        />
-                      </svg>
-                    </div>
+                    <!-- Buttons row with Like/Reply on left -->
+                    <div class="flex items-center justify-between mt-2">
+                      <!-- UPDATED: Like/Reply buttons on LEFT - increased size, vertical line, closer spacing -->
+                      <div class="reply-actions flex items-center text-base font-semibold text-gray-800">
+                        <span class="cursor-pointer hover:text-gray-600">Like</span>
+                        <span class="mx-1 text-gray-400">|</span>
+                        <span class="cursor-pointer hover:text-gray-600">Reply</span>
+                      </div>
 
-                    <!-- Reply actions (text only, with vertical separator) -->
-                    <div class="reply-actions flex items-center mt-2 text-xs text-gray-700 ml-2">
-                      <span class="cursor-pointer">Like</span>
-                      <span class="mx-1">|</span>
-                      <span class="cursor-pointer">Reply</span>
+                      <!-- Read more button on RIGHT -->
+                      <div
+                        class="reply-read-more flex items-center gap-1 font-semibold text-sm text-gray-800 cursor-pointer"
+                        onclick="toggleReplyReadMore(1, event)"
+                      >
+                        <span class="reply-read-more-text">Read more</span>
+                        <svg class="read-more-icon w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                          <path
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            stroke-width="2"
+                            d="M19 9l-7 7-7-7"
+                          />
+                          <path
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            stroke-width="2"
+                            d="M19 5l-7 7-7-7"
+                          />
+                        </svg>
+                      </div>
                     </div>
                   </div>
                 </div>
               </div>
 
-              <!-- South Shore Eats Card (unchanged except longer text you added) -->
+              <!-- South Shore Eats Card -->
               <div class="group-card" phx-click="navigate_to_group" phx-value-group="south-shore-eats">
                 <div class="group-header">
                   <div class="group-info">
@@ -168,56 +177,57 @@ defmodule SkalePrototypeWeb.Components.Homepage do
                       Discover local restaurants, food events, and culinary experiences across the South Shore region.
                       Discover local restaurants, food events, and culinary experiences across the South Shore region.
                     </p>
-                    <p class="text-black text-sm">1k members · 7 new topics · 56 replies</p>
 
-                    <div class="group-read-more">
-                      <span class="group-read-more-text">Read more</span>
-                      <svg class="read-more-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                        <path
-                          stroke-linecap="round"
-                          stroke-linejoin="round"
-                          stroke-width="2"
-                          d="M19 9l-7 7-7-7"
-                        />
-                        <path
-                          stroke-linecap="round"
-                          stroke-linejoin="round"
-                          stroke-width="2"
-                          d="M19 5l-7 7-7-7"
-                        />
-                      </svg>
+                    <!-- Member count and Read more button on same line -->
+                    <div class="flex items-center justify-between mt-2">
+                      <p class="text-black text-sm">1k members · 7 new topics · 56 replies</p>
+                      <div class="group-read-more flex items-center gap-1 font-semibold text-sm text-gray-800 cursor-pointer">
+                        <span class="group-read-more-text">Read more</span>
+                        <svg class="read-more-icon w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                          <path
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            stroke-width="2"
+                            d="M19 9l-7 7-7-7"
+                          />
+                          <path
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            stroke-width="2"
+                            d="M19 5l-7 7-7-7"
+                          />
+                        </svg>
+                      </div>
                     </div>
                   </div>
                   <div class="group-avatar"></div>
                 </div>
-                <!-- Latest Reply -->
-                <div class="latest-reply">
+                <!-- Latest Reply - REMOVED: vertical line and reply icon -->
+                <div class="latest-reply" style="border-left: none;">
                   <div class="reply-avatar">C</div>
                   <div class="reply-content">
                     <div class="reply-meta">
                       <span class="reply-author">Christina</span>
                       <span class="reply-time">1hr</span>
                     </div>
-                    <p class="text-black text-sm">
+                    <p class="text-black text-sm cursor-pointer hover:bg-gray-50 p-1 rounded">
                       The farmers market in Cohasset will feature a new raw bar on Saturday with fresh oysters from
                       local farms. They're also hosting a cooking demonstration!
                     </p>
-                  </div>
-                  <!-- Reply icon -->
-                  <div class="reply-icon-container">
-                    <svg class="reply-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                        stroke-width="2"
-                        d="M3 10h10a8 8 0 018 8v2M3 10l6 6m-6-6l6-6"
-                      />
-                    </svg>
+
+                    <!-- UPDATED: Like/Reply buttons on LEFT - increased size, vertical line, closer spacing -->
+                    <div class="flex items-center mt-2">
+                      <div class="reply-actions flex items-center text-base font-semibold text-gray-800">
+                        <span class="cursor-pointer hover:text-gray-600">Like</span>
+                        <span class="mx-1 text-gray-400">|</span>
+                        <span class="cursor-pointer hover:text-gray-600">Reply</span>
+                      </div>
+                    </div>
                   </div>
                 </div>
               </div>
 
-              <!-- Building Skale Card (unchanged) -->
+              <!-- Building Skale Card -->
               <div class="group-card" phx-click="navigate_to_group" phx-value-group="building-skale">
                 <div class="group-header">
                   <div class="group-info">
@@ -225,51 +235,52 @@ defmodule SkalePrototypeWeb.Components.Homepage do
                     <p class="group-description">
                       Join the development journey of Skale platform - share ideas, report bugs, and help shape our community.
                     </p>
-                    <p class="text-black text-sm">500 members · 12 new topics · 89 replies</p>
 
-                    <div class="group-read-more">
-                      <span class="group-read-more-text">Read more</span>
-                      <svg class="read-more-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                        <path
-                          stroke-linecap="round"
-                          stroke-linejoin="round"
-                          stroke-width="2"
-                          d="M19 9l-7 7-7-7"
-                        />
-                        <path
-                          stroke-linecap="round"
-                          stroke-linejoin="round"
-                          stroke-width="2"
-                          d="M19 5l-7 7-7-7"
-                        />
-                      </svg>
+                    <!-- Member count and Read more button on same line -->
+                    <div class="flex items-center justify-between mt-2">
+                      <p class="text-black text-sm">500 members · 12 new topics · 89 replies</p>
+                      <div class="group-read-more flex items-center gap-1 font-semibold text-sm text-gray-800 cursor-pointer">
+                        <span class="group-read-more-text">Read more</span>
+                        <svg class="read-more-icon w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                          <path
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            stroke-width="2"
+                            d="M19 9l-7 7-7-7"
+                          />
+                          <path
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            stroke-width="2"
+                            d="M19 5l-7 7-7-7"
+                          />
+                        </svg>
+                      </div>
                     </div>
                   </div>
                   <div class="group-avatar"></div>
                 </div>
-                <!-- Latest Reply -->
-                <div class="latest-reply">
+                <!-- Latest Reply - REMOVED: vertical line and reply icon -->
+                <div class="latest-reply" style="border-left: none;">
                   <div class="reply-avatar">A</div>
                   <div class="reply-content">
                     <div class="reply-meta">
                       <span class="reply-author">alex</span>
                       <span class="reply-time">2hr</span>
                     </div>
-                    <p class="text-black text-sm">
+                    <p class="text-black text-sm cursor-pointer hover:bg-gray-50 p-1 rounded">
                       Just pushed the new homepage design with improved group layouts and better mobile responsiveness.
                       Let me know what you think about the latest updates!
                     </p>
-                  </div>
-                  <!-- Reply icon -->
-                  <div class="reply-icon-container">
-                    <svg class="reply-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                        stroke-width="2"
-                        d="M3 10h10a8 8 0 018 8v2M3 10l6 6m-6-6l6-6"
-                      />
-                    </svg>
+
+                    <!-- UPDATED: Like/Reply buttons on LEFT - increased size, vertical line, closer spacing -->
+                    <div class="flex items-center mt-2">
+                      <div class="reply-actions flex items-center text-base font-semibold text-gray-800">
+                        <span class="cursor-pointer hover:text-gray-600">Like</span>
+                        <span class="mx-1 text-gray-400">|</span>
+                        <span class="cursor-pointer hover:text-gray-600">Reply</span>
+                      </div>
+                    </div>
                   </div>
                 </div>
               </div>

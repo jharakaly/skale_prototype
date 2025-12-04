@@ -8,7 +8,7 @@ defmodule SkalePrototypeWeb.Components.Footer do
         <div class="flex items-center gap-2">
           <span class="font-semibold">Skale</span>
           <span>·</span>
-          <span>© 2025 Skale. All rights reserved.</span>
+          <span>© 2025 Skale Co. All rights reserved.</span>
         </div>
 
         <div class="flex flex-wrap items-center gap-4">

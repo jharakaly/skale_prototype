@@ -779,4 +779,231 @@ defmodule SkalePrototypeWeb.MockData do
       }
     ]
   end
+
+  # ======================================================
+  # SECTION 4 — Community Culture subgroup (topics + replies)
+  # ======================================================
+
+  # Detailed main Community Culture topic + nested replies
+  def get_culture_topic do
+    %{
+      id: 1,
+      group_name: "Building Skale",
+      subgroup: "Community culture",
+      title: "What behaviors make Skale feel welcoming?",
+      excerpt:
+        "When you think about the best moments you've had in an online community, there is usually a very specific behavior behind it: someone took a little extra time to explain something, noticed you were new, or framed feedback in a way that felt generous instead of harsh.",
+      content: """
+      When you think about the best moments you've had in an online community, there is usually
+      a very specific behavior behind it: someone took a little extra time to explain something,
+      noticed you were new, or framed feedback in a way that felt generous instead of harsh.
+
+      This thread is where we name those behaviors for Skale.
+
+      **Some prompts to get us started:**
+      - What was a small thing someone did here (or in another community) that made you feel welcome?
+      - When a thread gets tense, what have you seen people do that actually *lowered* the temperature?
+      - How do you like people to respond when you share work-in-progress or a vulnerable story?
+
+      The more concrete we get, the easier it will be to turn “good vibes” into clear, repeatable
+      behaviors that we can design into onboarding, prompts, and even product features.
+      """,
+      reply_count: 14,
+      time_ago: "2 hours ago",
+      avatars: ["SC", "MJ", "JR"],
+      additional_count: 3,
+      replies: [
+        %{
+          id: 1,
+          author: "Sarah Chen",
+          initials: "SC",
+          avatar: "https://i.pravatar.cc/150?img=12",
+          time_ago: "1 hour ago",
+          likes: 12,
+          content: """
+          One behavior that instantly makes a space feel safer for me is when people **reflect back what they heard**
+          before they respond. Even something as simple as:
+
+          > “If I'm hearing you right, you're saying X. Did I get that?”
+
+          That tiny pause changes the energy. It tells me you’re not just waiting to talk — you’re actually
+          trying to understand. I’d love for this to be a norm on Skale, especially in feedback or critique threads.
+          """,
+          replies: [
+            %{
+              id: 11,
+              author: "Community Culture Team",
+              initials: "CC",
+              avatar: "https://i.pravatar.cc/150?img=20",
+              time_ago: "45 min ago",
+              likes: 7,
+              content: """
+              Love this. From a culture-design perspective, this is also something we can coach in system prompts
+              (e.g., “Try restating what you heard before you disagree.”). It’s a behavior we can *teach*,
+              not just hope people magically figure out.
+              """,
+              replies: []
+            }
+          ]
+        },
+        %{
+          id: 2,
+          author: "Maria Johnson",
+          initials: "MJ",
+          avatar: "https://i.pravatar.cc/150?img=15",
+          time_ago: "45 min ago",
+          likes: 10,
+          content: """
+          A small thing that matters a *lot*: **tagging new members by name** when they show up.
+
+          When someone posts for the first time and gets a “Hey @name, welcome — here’s a good place to start,”
+          it feels like they walked into a room where people were actually expecting them.
+
+          I’d love to see:
+          - A visible “first post” indicator so we know to give extra care.
+          - A loose norm that *at least one person* responds to every first post within 24 hours.
+          """,
+          replies: [
+            %{
+              id: 21,
+              author: "Jordan Reyes",
+              initials: "JR",
+              avatar: "https://i.pravatar.cc/150?img=9",
+              time_ago: "30 min ago",
+              likes: 5,
+              content: """
+              +1 to this. Silence on a first post can feel like rejection, even if everyone is just busy.
+              I think “no first posts left unanswered” should be one of our core culture commitments.
+              """,
+              replies: []
+            }
+          ]
+        },
+        %{
+          id: 3,
+          author: "Tom Kim",
+          initials: "TK",
+          avatar: "https://i.pravatar.cc/150?img=13",
+          time_ago: "30 min ago",
+          likes: 8,
+          content: """
+          I’d love to normalize a **“Pause + Reframe”** move for heated threads.
+
+          Something like:
+          1. A moderator (or any trusted member) can pause new replies for a short window.
+          2. They write a neutral summary of what’s been said so far.
+          3. They reopen the thread with a clearer prompt like: “Let’s focus on X for the next few replies.”
+
+          This makes conflict feel guided instead of chaotic, and it gives people a chance to re-engage
+          without feeling like they’re walking into a fight.
+          """,
+          replies: []
+        },
+        %{
+          id: 4,
+          author: "Aisha Bello",
+          initials: "AB",
+          avatar: "https://i.pravatar.cc/150?img=18",
+          time_ago: "10 min ago",
+          likes: 6,
+          content: """
+          For me, “welcoming” also shows up in **how we recognize contributions**.
+
+          When shout-outs and praise only go to a small visible group, it starts to feel cliquey.
+          I’d love to see:
+          - Rotating “community highlights” where members nominate each other.
+          - Occasional spotlight posts on quieter contributors whose work mostly happens behind the scenes.
+          - Language that credits *behaviors* (“asked great questions”, “gave kind feedback”), not just outcomes.
+          """,
+          replies: []
+        }
+      ]
+    }
+  end
+
+  # List of Community Culture topics (for topic cards / feeds)
+  def get_culture_topics do
+    [
+      %{
+        id: 1,
+        group_name: "Building Skale",
+        subgroup: "Community culture",
+        title: "What behaviors make Skale feel welcoming?",
+        excerpt:
+          "When you think about the best moments you've had in an online community, there is usually a very specific behavior behind it: someone took a little extra time to explain something, noticed you were new, or framed feedback in a way that felt generous instead of harsh.",
+        content: """
+        When you think about the best moments you've had in an online community, there is usually
+        a very specific behavior behind it: someone took a little extra time to explain something,
+        noticed you were new, or framed feedback in a way that felt generous instead of harsh.
+
+        This thread is where we name those behaviors for Skale.
+
+        **Some prompts to get us started:**
+        - What was a small thing someone did here (or in another community) that made you feel welcome?
+        - When a thread gets tense, what have you seen people do that actually *lowered* the temperature?
+        - How do you like people to respond when you share work-in-progress or a vulnerable story?
+
+        The more concrete we get, the easier it will be to turn “good vibes” into clear, repeatable
+        behaviors that we can design into onboarding, prompts, and even product features.
+        """,
+        reply_count: 14,
+        time_ago: "2 hours ago",
+        avatars: ["SC", "MJ"],
+        additional_count: 0
+      },
+      %{
+        id: 2,
+        group_name: "Building Skale",
+        subgroup: "Community culture",
+        title: "Handling conflict and disagreement respectfully",
+        excerpt:
+          "How do we keep tough conversations constructive and kind when stakes are high and opinions are strong?",
+        content: """
+        Conflict is inevitable in any creative community. This topic collects playbooks, phrases,
+        and norms that help us disagree without turning conversations into fights. Share scripts
+        you use to de-escalate, expectations for moderators, and examples of “healthy conflict”
+        from other spaces you’ve been part of.
+        """,
+        reply_count: 9,
+        time_ago: "1 day ago",
+        avatars: ["TK"],
+        additional_count: 0
+      },
+      %{
+        id: 3,
+        group_name: "Building Skale",
+        subgroup: "Community culture",
+        title: "Recognizing contributions without creating cliques",
+        excerpt:
+          "Design recognition systems that celebrate great work and kindness, while still making it easy for new voices to join.",
+        content: """
+        We want Skale to be a place where contributions are visible and appreciated, without making
+        newer or quieter members feel like they’re on the outside looking in. This topic gathers
+        ideas for shout-outs, badges, rituals, and lightweight systems that keep recognition flowing
+        in an inclusive way.
+        """,
+        reply_count: 6,
+        time_ago: "3 days ago",
+        avatars: ["AB"],
+        additional_count: 0
+      },
+      %{
+        id: 4,
+        group_name: "Building Skale",
+        subgroup: "Community culture",
+        title: "Supporting new members in their first week",
+        excerpt:
+          "What should every new member experience in their first days so they feel welcomed, oriented, and excited to contribute?",
+        content: """
+        First impressions matter. This topic is about designing the “first week on Skale” experience:
+        welcome rituals, starter threads, gentle nudges, and norms for how we respond when someone
+        posts for the first time. What would make *you* think: “Wow, this community really cares how I show up here”?
+        """,
+        reply_count: 11,
+        time_ago: "5 days ago",
+        avatars: ["JR"],
+        additional_count: 0
+      }
+    ]
+  end
 end

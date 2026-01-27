@@ -10,7 +10,7 @@ Homepage should look like this with the footer down below -
 <img width="1287" height="943" alt="image" src="https://github.com/user-attachments/assets/48376bc6-62a0-421b-8ec0-a90205cf55ca" />
 
 
-On the homepage we have like and reply underneath the comments. That's the latest comment for that group.
+On the homepage we have like and reply underneath the comments. That's the latest comment for that group. 
 That reply btn should open up to standard reply from the subgroup_topics2 page
 <img width="847" height="454" alt="image" src="https://github.com/user-attachments/assets/a61ecac7-ff00-448f-84ee-b9fa21dddf42" />
 <img width="896" height="532" alt="image" src="https://github.com/user-attachments/assets/76259bdb-b2ea-4603-b97c-77acd021f211" />

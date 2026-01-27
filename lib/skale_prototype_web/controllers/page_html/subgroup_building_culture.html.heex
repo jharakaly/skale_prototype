@@ -184,6 +184,10 @@
     .overview-container {
       margin-bottom: 1.5rem;
       flex-grow: 1;
+
+      /* keep the group Read more/less pinned on the right */
+      display: flex;
+      flex-direction: column;
     }
 
     .group-overview {
@@ -211,9 +215,12 @@
       color: #A3B18A;
       font-size: 0.9rem;
       cursor: pointer;
-      padding: 0.25rem 0;
+      paddingpadding: 0.25rem 0;
       margin-top: 0.5rem;
       font-weight: 500;
+
+      /* RIGHT side */
+      align-self: flex-end;
     }
 
     .read-more-btn:hover {
@@ -407,10 +414,21 @@
       margin: 0;
     }
 
-    .topic-detail-container * {
+    /* ✅ FIX: don’t nuke buttons/links */
+    .topic-detail-container :where(:not(button):not(a):not(input):not(textarea):not(select)) {
       border: none !important;
       box-shadow: none !important;
       background: transparent !important;
+    }
+
+    /* ✅ OPTIONAL: kill Close Topic so it can’t float and ruin layout */
+    .close-topic-btn { display: none !important; }
+
+    /* Bottom "Hide replies" placement inside the replies container */
+    .bottom-hide-replies-wrap {
+      display: flex;
+      justify-content: flex-end;
+      padding-top: 0.75rem;
     }
 
     /* Hide duplicate title inside replies block so only card title shows */
@@ -420,6 +438,7 @@
     }
   </style>
 </head>
+
 <body class="bg-gray-100 font-sans min-h-screen">
   <div class="container">
     <div class="main-content">
@@ -523,20 +542,12 @@
   </div>
 
   <script>
-    // Store the original topic card element for scroll restoration
-    let originalTopicCard = null;
-    let activeTopicId = null;
-    let originalReadMoreCard = null;
-    let activeReadMoreId = null;
-
-    // NEW: store the "reply summary row" (line + count + avatars + view replies)
-    const replySummaryRows = {};
-
+    // Read More functionality for group header (simple)
     document.addEventListener('DOMContentLoaded', function() {
       const overviewText = document.getElementById('overviewText');
       const readMoreBtn = document.getElementById('readMoreBtn');
       const groupHeader = document.getElementById('groupHeader');
-  
+
       let isExpanded = false;
       readMoreBtn.addEventListener('click', function() {
         if (isExpanded) {
@@ -554,7 +565,7 @@
       });
     });
 
-    // Read More functionality for topic cards (same as subgroup_topics2)
+    // Read More functionality for topic cards (unchanged)
     window.toggleReadMore = function(topicId) {
       const excerpt = document.getElementById(`excerpt-${topicId}`);
       const fullContent = document.getElementById(`content-full-${topicId}`);
@@ -569,62 +580,27 @@
       if (!excerpt || !fullContent || !readMoreBtn) return;
 
       if (excerpt.classList.contains('hidden')) {
-        // Collapse - show excerpt, show thumbnail/right column again
         excerpt.classList.remove('hidden');
         fullContent.classList.add('hidden');
         if (btnText) btnText.textContent = 'Read more';
         readMoreBtn.classList.remove('rotated');
         if (btnSvg) btnSvg.style.transform = 'rotate(0deg)';
 
-        if (thumbnail) {
-          thumbnail.classList.remove('hidden');
-        }
-        if (rightCol) {
-          rightCol.style.display = 'flex';
-        }
-        if (leftCol) {
-          leftCol.style.width = '80%';
-        }
-        if (topicCard) {
-          topicCard.style.backgroundColor = '';
-        }
-
-        // Scroll back to the original topic card position
-        setTimeout(() => {
-          if (originalReadMoreCard && activeReadMoreId === topicId) {
-            originalReadMoreCard.scrollIntoView({
-              behavior: 'smooth',
-              block: 'start',
-              inline: 'nearest'
-            });
-            originalReadMoreCard = null;
-            activeReadMoreId = null;
-          }
-        }, 100);
+        if (thumbnail) thumbnail.classList.remove('hidden');
+        if (rightCol) rightCol.style.display = 'flex';
+        if (leftCol) leftCol.style.width = '80%';
+        if (topicCard) topicCard.style.backgroundColor = '';
       } else {
-        // Expand - full content, hide excerpt/thumbnail/right column
         excerpt.classList.add('hidden');
         fullContent.classList.remove('hidden');
         if (btnText) btnText.textContent = 'Read less';
         readMoreBtn.classList.add('rotated');
         if (btnSvg) btnSvg.style.transform = 'rotate(180deg)';
 
-        if (thumbnail) {
-          thumbnail.classList.add('hidden');
-        }
-        if (rightCol) {
-          rightCol.style.display = 'none';
-        }
-        if (leftCol) {
-          leftCol.style.width = '100%';
-        }
-        if (topicCard) {
-          topicCard.style.backgroundColor = 'white';
-        }
-
-        // Store the original topic card for scroll restoration
-        originalReadMoreCard = document.getElementById(`topic-${topicId}`);
-        activeReadMoreId = topicId;
+        if (thumbnail) thumbnail.classList.add('hidden');
+        if (rightCol) rightCol.style.display = 'none';
+        if (leftCol) leftCol.style.width = '100%';
+        if (topicCard) topicCard.style.backgroundColor = 'white';
       }
     };
 
@@ -654,9 +630,7 @@
       if (form) form.classList.remove('hidden');
     };
     function hideAllReplyForms() {
-      document.querySelectorAll('[id^="reply-form-"]').forEach(form => {
-        form.classList.add('hidden');
-      });
+      document.querySelectorAll('[id^="reply-form-"]').forEach(form => form.classList.add('hidden'));
       activeReplyId = null;
     }
     window.cancelReply = function(replyId) {
@@ -673,103 +647,89 @@
       }
     };
 
-    // View Replies Button – tied to Read More behavior
+    // View Replies Button – show/hide topicDetail ONLY + add bottom Hide replies button
     document.addEventListener('click', function (e) {
       const viewRepliesBtn = e.target.closest('.view-replies-btn');
       const closeTopicBtn = e.target.closest('.close-topic-btn');
-      
+
       if (viewRepliesBtn) {
         const topicId = viewRepliesBtn.getAttribute('phx-value-topic-id');
         const topicDetail = document.getElementById(`topic-detail-${topicId}`);
         const topicCard = document.getElementById(`topic-${topicId}`);
         const excerpt = document.getElementById(`excerpt-${topicId}`);
-        const readMoreBtn = document.getElementById(`read-more-btn-${topicId}`);
 
-        if (topicDetail && topicCard) {
-          // Ensure the post itself is fully expanded first
-          if (excerpt && !excerpt.classList.contains('hidden')) {
-            window.toggleReadMore(topicId);
-          }
+        if (!topicDetail || !topicCard) return;
 
-          // Find and store the summary row (line + count + avatars + button)
-          if (!replySummaryRows[topicId]) {
-            replySummaryRows[topicId] = viewRepliesBtn.parentElement;
-          }
-          const replySummaryRow = replySummaryRows[topicId];
+        const isOpen = (topicDetail.style.display === 'block');
 
-          if (topicDetail.style.display === 'block') {
-            // COLLAPSE
-            collapseTopicDetail(topicId);
-          } else {
-            // EXPAND: move detail directly under the card and show it
-            topicCard.parentNode.insertBefore(topicDetail, topicCard.nextSibling);
-            topicDetail.style.display = 'block';
-            viewRepliesBtn.textContent = 'Hide replies';
-
-            // Hide the summary row (line + counter + avatars)
-            if (replySummaryRow) {
-              replySummaryRow.style.display = 'none';
-            }
-
-            // Move both buttons to the bottom of the replies listing
-            if (readMoreBtn) {
-              topicDetail.appendChild(readMoreBtn);
-            }
-            topicDetail.appendChild(viewRepliesBtn);
-
-            // Reset nested replies and forms inside the detail
-            topicDetail.querySelectorAll('[id^="nested-replies-"]').forEach(el => el.classList.add('hidden'));
-            topicDetail.querySelectorAll('.expand-btn').forEach(btn => {
-              const svg = btn.querySelector('svg');
-              const textSpan = btn.querySelector('.show-text');
-              const count = btn.getAttribute('data-count');
-              if (svg) svg.style.transform = 'rotate(0deg)';
-              if (textSpan) textSpan.textContent = `${count} More`;
-            });
-            hideAllReplyForms();
-          }
+        if (isOpen) {
+          collapseTopicDetail(topicId);
+          return;
         }
+
+        // Expand
+        if (excerpt && !excerpt.classList.contains('hidden')) {
+          window.toggleReadMore(topicId);
+        }
+
+        topicCard.parentNode.insertBefore(topicDetail, topicCard.nextSibling);
+        topicDetail.style.display = 'block';
+
+        // Update ALL matching buttons (top + bottom) to "Hide replies"
+        document
+          .querySelectorAll(`.view-replies-btn[phx-value-topic-id="${topicId}"]`)
+          .forEach(btn => btn.textContent = 'Hide replies');
+
+        // Ensure bottom Hide replies button exists
+        let bottomWrap = topicDetail.querySelector('.bottom-hide-replies-wrap');
+        if (!bottomWrap) {
+          bottomWrap = document.createElement('div');
+          bottomWrap.className = 'bottom-hide-replies-wrap';
+
+          const bottomBtn = document.createElement('button');
+          bottomBtn.className = 'view-replies-btn'; // reuse same handler + styling
+          bottomBtn.setAttribute('phx-value-topic-id', topicId);
+          bottomBtn.textContent = 'Hide replies';
+
+          bottomWrap.appendChild(bottomBtn);
+          topicDetail.appendChild(bottomWrap);
+        }
+
+        // Reset nested reply state
+        topicDetail.querySelectorAll('[id^="nested-replies-"]').forEach(el => el.classList.add('hidden'));
+        topicDetail.querySelectorAll('.expand-btn').forEach(btn => {
+          const svg = btn.querySelector('svg');
+          const textSpan = btn.querySelector('.show-text');
+          const count = btn.getAttribute('data-count');
+          if (svg) svg.style.transform = 'rotate(0deg)';
+          if (textSpan) textSpan.textContent = `${count} More`;
+        });
+        hideAllReplyForms();
       }
-      
-      // Handle close topic button click (inside TopicDetail)
+
       if (closeTopicBtn) {
         const topicId = closeTopicBtn.getAttribute('data-topic-id');
         collapseTopicDetail(topicId);
       }
     });
 
-    // Collapse topic detail and restore button label + move buttons back + show summary row
     function collapseTopicDetail(topicId) {
       const topicDetail = document.getElementById(`topic-detail-${topicId}`);
-      const viewRepliesBtn = document.querySelector(`.view-replies-btn[phx-value-topic-id="${topicId}"]`);
-      const topicCard = document.getElementById(`topic-${topicId}`);
-      const readMoreBtn = document.getElementById(`read-more-btn-${topicId}`);
-      const replySummaryRow = replySummaryRows[topicId];
-      
+
       if (topicDetail) {
         topicDetail.style.display = 'none';
+
+        // Remove the bottom button wrapper so it doesn't hang around in DOM
+        const bottomWrap = topicDetail.querySelector('.bottom-hide-replies-wrap');
+        if (bottomWrap) bottomWrap.remove();
       }
 
-      // Show the summary row again (line + counter + avatars)
-      if (replySummaryRow) {
-        replySummaryRow.style.display = '';
-      }
-
-      // Move buttons back to the topic card / summary area when replies are hidden
-      if (replySummaryRow && viewRepliesBtn) {
-        replySummaryRow.appendChild(viewRepliesBtn);
-      } else if (topicCard && viewRepliesBtn) {
-        topicCard.appendChild(viewRepliesBtn);
-      }
-
-      if (topicCard && readMoreBtn) {
-        topicCard.appendChild(readMoreBtn);
-      }
-
-      if (viewRepliesBtn) {
-        viewRepliesBtn.textContent = 'View replies';
-      }
+      // Update ALL matching buttons back to "View replies"
+      document
+        .querySelectorAll(`.view-replies-btn[phx-value-topic-id="${topicId}"]`)
+        .forEach(btn => btn.textContent = 'View replies');
     }
   </script>
 </body>
 </html>
+

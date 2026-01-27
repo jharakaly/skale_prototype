@@ -1,349 +1,381 @@
-  <!DOCTYPE html>
-  <html lang="en">
-  <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Skale Prototype - Beginner Vegan</title>
-    <script defer src="https://cdn.tailwindcss.com"></script>
-    
-  </head>
-  <body class="font-sans min-h-screen">
-    <div class="container">
-      <div class="main-content">
-        <div class="left-column">
-          <!-- Breadcrumb only in left column -->
-          <div class="breadcrumb">
-            <div class="breadcrumb-item">
-              <a href="/" class="breadcrumb-link">Home</a>
-            </div>
-            <span class="breadcrumb-separator">/</span>
-            <div class="breadcrumb-item">
-              <a href="/discussions" class="breadcrumb-link">Discussions</a>
-            </div>
-            <span class="breadcrumb-separator">/</span>
-            <div class="breadcrumb-item">
-              <a href="/groups/vegan-cookbook" class="breadcrumb-link">Vegan Cookbook Club</a>
-            </div>
-            <span class="breadcrumb-separator">/</span>
-            <div class="breadcrumb-item">
-              <span class="breadcrumb-active">Beginner Vegan</span>
-            </div>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Skale Prototype - Beginner Vegan</title>
+  <script defer src="https://cdn.tailwindcss.com"></script>
+
+  <!-- ✅ view/hide replies fixes + remove replies container outline -->
+  <style>
+    /* Only keep the transform transition so it matches the slide behavior
+       without overriding Tailwind styling */
+    .topic-card {
+      transition: transform 0.3s ease-out;
+    }
+
+    /* Make topic-detail (replies) visually merge with page, no card/outline */
+    .topic-detail-container {
+      border: none !important;
+      outline: none !important;
+      box-shadow: none !important;
+      background: transparent !important;
+      padding: 0;
+      margin: 0;
+    }
+
+    /* ✅ FIX: don’t nuke buttons/links */
+    .topic-detail-container :where(:not(button):not(a):not(input):not(textarea):not(select)) {
+      border: none !important;
+      box-shadow: none !important;
+      background: transparent !important;
+    }
+
+    /* ✅ OPTIONAL: kill Close Topic so it can’t float and ruin layout */
+    .close-topic-btn { display: none !important; }
+
+    /* Bottom "Hide replies" placement inside the replies container */
+    .bottom-hide-replies-wrap {
+      display: flex;
+      justify-content: flex-end;
+      padding-top: 0.75rem;
+    }
+
+    /* Hide duplicate title inside replies block so only card title shows */
+    .topic-detail-container h1:first-of-type,
+    .topic-detail-container h2:first-of-type {
+      display: none !important;
+    }
+  </style>
+</head>
+
+<body class="font-sans min-h-screen">
+  <div class="container">
+    <div class="main-content">
+      <div class="left-column">
+        <!-- Breadcrumb only in left column -->
+        <div class="breadcrumb">
+          <div class="breadcrumb-item">
+            <a href="/" class="breadcrumb-link">Home</a>
           </div>
-          <!-- Group Header Container -->
-          <div class="group-header-container" id="groupHeader">
-            <div class="group-content">
-              <h1 class="group-title">Beginner Vegan</h1>
-              <h2 class="group-subtitle">Your Starting Point for Plant-Based Living</h2>
-              <div class="overview-container">
-                <div class="group-overview collapsed" id="overviewText">
-                  Welcome to the Beginner Vegan subgroup! This is your starting point for transitioning to a plant-based lifestyle.
-                  Here you'll find support, recipes, tips, and answers to all your beginner questions. Whether you're just curious
-                  about veganism or fully committed to the lifestyle, this community is here to help you every step of the way.
-                  Share your journey, ask questions, and connect with others who are also exploring plant-based living.
-                </div>
-                <button class="read-more-btn" id="readMoreBtn">Read more...</button>
-              </div>
-              <div class="moderator-info">
-                <div class="moderator-avatar">MJ</div>
-                <div class="moderator-details">
-                  <div class="moderator-name">Michael Johnson</div>
-                  <div class="moderator-role">Subgroup Moderator</div>
-                </div>
-              </div>
-            </div>
-            <div class="group-image"></div>
+          <span class="breadcrumb-separator">/</span>
+          <div class="breadcrumb-item">
+            <a href="/discussions" class="breadcrumb-link">Discussions</a>
           </div>
-          <!-- Topics Container -->
-          <div class="topics-container">
-            <!-- Expanded views -->
-            <div id="topic-detail-1" style="display: none;" class="topic-detail-container">
-              <SkalePrototypeWeb.Components.TopicDetail.render topic={SkalePrototypeWeb.MockData.get_topic_replies()} topic_id={1} />
-            </div>
-            <%= for topic <- SkalePrototypeWeb.MockData.get_all_topics() |> Enum.drop(1) do %>
-              <div id={"topic-detail-#{topic.id}"} style="display: none;" class="topic-detail-container">
-                <SkalePrototypeWeb.Components.TopicDetail.render topic={topic} topic_id={topic.id} />
-              </div>
-            <% end %>
-            <!-- Collapsed topic cards -->
-            <%= for topic <- SkalePrototypeWeb.MockData.get_all_topics() do %>
-              <SkalePrototypeWeb.Components.TopicCards.topic_cards
-                id={topic.id}
-                title={topic.title}
-                excerpt={topic.excerpt}
-                content={topic.content}
-                reply_count={topic.reply_count}
-                time_ago={topic.time_ago}
-                avatars={topic.avatars}
-                additional_count={topic.additional_count}
-                has_media={Map.get(topic, :media, nil) != nil && Map.get(topic, :media, []) != []}
-                media_type={
-                  if Map.get(topic, :media, nil) != nil && Map.get(topic, :media, []) != [] do
-                    topic.media |> List.first() |> Map.get(:type)
-                  end
-                }
-                media={Map.get(topic, :media, [])}
-              />
-            <% end %>
+          <span class="breadcrumb-separator">/</span>
+          <div class="breadcrumb-item">
+            <a href="/groups/vegan-cookbook" class="breadcrumb-link">Vegan Cookbook Club</a>
+          </div>
+          <span class="breadcrumb-separator">/</span>
+          <div class="breadcrumb-item">
+            <span class="breadcrumb-active">Beginner Vegan</span>
           </div>
         </div>
-        <!-- Right Sidebar Component -->
-        <SkalePrototypeWeb.Components.RightSidebar.right_sidebar />
+
+        <!-- Group Header Container -->
+        <div class="group-header-container" id="groupHeader">
+          <div class="group-content">
+            <h1 class="group-title">Beginner Vegan</h1>
+            <h2 class="group-subtitle">Your Starting Point for Plant-Based Living</h2>
+            <div class="overview-container">
+              <div class="group-overview collapsed" id="overviewText">
+                Welcome to the Beginner Vegan subgroup! This is your starting point for transitioning to a plant-based lifestyle.
+                Here you'll find support, recipes, tips, and answers to all your beginner questions. Whether you're just curious
+                about veganism or fully committed to the lifestyle, this community is here to help you every step of the way.
+                Share your journey, ask questions, and connect with others who are also exploring plant-based living.
+              </div>
+              <button class="read-more-btn" id="readMoreBtn">Read more...</button>
+            </div>
+            <div class="moderator-info">
+              <div class="moderator-avatar">MJ</div>
+              <div class="moderator-details">
+                <div class="moderator-name">Michael Johnson</div>
+                <div class="moderator-role">Subgroup Moderator</div>
+              </div>
+            </div>
+          </div>
+          <div class="group-image"></div>
+        </div>
+
+        <!-- Topics Container -->
+        <div class="topics-container">
+          <!-- Expanded views (REPLIES ONLY: strip content/excerpt/media to prevent duplicate post rendering) -->
+          <div id="topic-detail-1" style="display: none;" class="topic-detail-container">
+            <SkalePrototypeWeb.Components.TopicDetail.render
+              topic={
+                SkalePrototypeWeb.MockData.get_topic_replies()
+                |> Map.put(:content, "")
+                |> Map.put(:excerpt, "")
+                |> Map.put(:media, [])
+              }
+              topic_id={1}
+            />
+          </div>
+
+          <%= for topic <- SkalePrototypeWeb.MockData.get_all_topics() |> Enum.drop(1) do %>
+            <div id={"topic-detail-#{topic.id}"} style="display: none;" class="topic-detail-container">
+              <SkalePrototypeWeb.Components.TopicDetail.render
+                topic={
+                  topic
+                  |> Map.put(:content, "")
+                  |> Map.put(:excerpt, "")
+                  |> Map.put(:media, [])
+                }
+                topic_id={topic.id}
+              />
+            </div>
+          <% end %>
+
+          <!-- Collapsed topic cards -->
+          <%= for topic <- SkalePrototypeWeb.MockData.get_all_topics() do %>
+            <SkalePrototypeWeb.Components.TopicCards.topic_cards
+              id={topic.id}
+              title={topic.title}
+              excerpt={topic.excerpt}
+              content={topic.content}
+              reply_count={topic.reply_count}
+              time_ago={topic.time_ago}
+              avatars={topic.avatars}
+              additional_count={topic.additional_count}
+              has_media={Map.get(topic, :media, nil) != nil && Map.get(topic, :media, []) != []}
+              media_type={
+                if Map.get(topic, :media, nil) != nil && Map.get(topic, :media, []) != [] do
+                  topic.media |> List.first() |> Map.get(:type)
+                end
+              }
+              media={Map.get(topic, :media, [])}
+            />
+          <% end %>
+        </div>
       </div>
+
+      <!-- Right Sidebar Component -->
+      <SkalePrototypeWeb.Components.RightSidebar.right_sidebar />
     </div>
-    <script>
-      // Store the original topic card element for scroll restoration
-      let originalTopicCard = null;
-      let activeTopicId = null;
-      let originalReadMoreCard = null;
-      let activeReadMoreId = null;
+  </div>
 
-      document.addEventListener('DOMContentLoaded', function() {
-        const overviewText = document.getElementById('overviewText');
-        const readMoreBtn = document.getElementById('readMoreBtn');
-        const groupHeader = document.getElementById('groupHeader');
-    
-        let isExpanded = false;
-        readMoreBtn.addEventListener('click', function() {
-          if (isExpanded) {
-            overviewText.classList.remove('expanded');
-            overviewText.classList.add('collapsed');
-            readMoreBtn.textContent = 'Read more...';
-            groupHeader.classList.remove('expanded');
-          } else {
-            overviewText.classList.remove('collapsed');
-            overviewText.classList.add('expanded');
-            readMoreBtn.textContent = 'Read less';
-            groupHeader.classList.add('expanded');
-          }
-          isExpanded = !isExpanded;
-        });
-      });
+  <script>
+    // Read More functionality for group header (simple)
+    document.addEventListener('DOMContentLoaded', function () {
+      const overviewText = document.getElementById('overviewText');
+      const readMoreBtn = document.getElementById('readMoreBtn');
+      const groupHeader = document.getElementById('groupHeader');
 
-    // Read More functionality for topic cards - UPDATED VERSION WITH SCROLL RESTORATION
-  window.toggleReadMore = function(topicId) {
-    const excerpt = document.getElementById(`excerpt-${topicId}`);
-    const fullContent = document.getElementById(`content-full-${topicId}`);
-    const readMoreBtn = document.getElementById(`read-more-btn-${topicId}`);
-    const thumbnail = document.getElementById(`thumbnail-${topicId}`);
-    const leftCol = document.getElementById(`left-col-${topicId}`);
-    const rightCol = document.getElementById(`right-col-${topicId}`);
-    const topicCard = document.getElementById(`topic-${topicId}`);
-    const btnText = readMoreBtn.querySelector('span');
-    const btnSvg = readMoreBtn.querySelector('svg');
-
-    if (excerpt.classList.contains('hidden')) {
-      // Collapse - show excerpt with line clamping, show thumbnail and right column
-      excerpt.classList.remove('hidden');
-      fullContent.classList.add('hidden');
-      btnText.textContent = 'Read more';
-      readMoreBtn.classList.remove('rotated');
-      btnSvg.style.transform = 'rotate(0deg)';
-      
-      // Show thumbnail and right column, reset left column width
-      if (thumbnail) {
-        thumbnail.classList.remove('hidden');
-      }
-      if (rightCol) {
-        rightCol.style.display = 'flex';
-      }
-      if (leftCol) {
-        leftCol.style.width = '80%';
-      }
-      // Remove white background
-      if (topicCard) {
-        topicCard.style.backgroundColor = '';
-      }
-
-      // Scroll back to the original topic card position
-      setTimeout(() => {
-        if (originalReadMoreCard && activeReadMoreId === topicId) {
-          originalReadMoreCard.scrollIntoView({ 
-            behavior: 'smooth', 
-            block: 'start',
-            inline: 'nearest'
-          });
-          originalReadMoreCard = null;
-          activeReadMoreId = null;
+      let isExpanded = false;
+      readMoreBtn.addEventListener('click', function () {
+        if (isExpanded) {
+          overviewText.classList.remove('expanded');
+          overviewText.classList.add('collapsed');
+          readMoreBtn.textContent = 'Read more...';
+          groupHeader.classList.remove('expanded');
+        } else {
+          overviewText.classList.remove('collapsed');
+          overviewText.classList.add('expanded');
+          readMoreBtn.textContent = 'Read less';
+          groupHeader.classList.add('expanded');
         }
-      }, 100);
+        isExpanded = !isExpanded;
+      });
+    });
 
-    } else {
-      // Expand - show full content without line clamping, hide excerpt and thumbnail
-      excerpt.classList.add('hidden');
-      fullContent.classList.remove('hidden');
-      btnText.textContent = 'Read less';
-      readMoreBtn.classList.add('rotated');
-      btnSvg.style.transform = 'rotate(180deg)';
-      
-      // Hide thumbnail and right column, expand left column to full width
-      if (thumbnail) {
-        thumbnail.classList.add('hidden');
-      }
-      if (rightCol) {
-        rightCol.style.display = 'none';
-      }
-      if (leftCol) {
-        leftCol.style.width = '100%';
-      }
-      // Add white background
-      if (topicCard) {
-        topicCard.style.backgroundColor = 'white';
-      }
+    // Read More functionality for topic cards
+    let originalReadMoreCard = null;
+    let activeReadMoreId = null;
 
-      // Store the original topic card for scroll restoration
-      originalReadMoreCard = document.getElementById(`topic-${topicId}`);
-      activeReadMoreId = topicId;
+    window.toggleReadMore = function (topicId) {
+      const excerpt = document.getElementById(`excerpt-${topicId}`);
+      const fullContent = document.getElementById(`content-full-${topicId}`);
+      const readMoreBtn = document.getElementById(`read-more-btn-${topicId}`);
+      const thumbnail = document.getElementById(`thumbnail-${topicId}`);
+      const leftCol = document.getElementById(`left-col-${topicId}`);
+      const rightCol = document.getElementById(`right-col-${topicId}`);
+      const topicCard = document.getElementById(`topic-${topicId}`);
+      const btnText = readMoreBtn ? readMoreBtn.querySelector('span') : null;
+      const btnSvg = readMoreBtn ? readMoreBtn.querySelector('svg') : null;
+
+      if (!excerpt || !fullContent || !readMoreBtn) return;
+
+      if (excerpt.classList.contains('hidden')) {
+        // Collapse
+        excerpt.classList.remove('hidden');
+        fullContent.classList.add('hidden');
+        if (btnText) btnText.textContent = 'Read more';
+        readMoreBtn.classList.remove('rotated');
+        if (btnSvg) btnSvg.style.transform = 'rotate(0deg)';
+
+        if (thumbnail) thumbnail.classList.remove('hidden');
+        if (rightCol) rightCol.style.display = 'flex';
+        if (leftCol) leftCol.style.width = '80%';
+        if (topicCard) topicCard.style.backgroundColor = '';
+
+        // Scroll restore
+        setTimeout(() => {
+          if (originalReadMoreCard && activeReadMoreId === topicId) {
+            originalReadMoreCard.scrollIntoView({
+              behavior: 'smooth',
+              block: 'start',
+              inline: 'nearest'
+            });
+            originalReadMoreCard = null;
+            activeReadMoreId = null;
+          }
+        }, 100);
+      } else {
+        // Expand
+        excerpt.classList.add('hidden');
+        fullContent.classList.remove('hidden');
+        if (btnText) btnText.textContent = 'Read less';
+        readMoreBtn.classList.add('rotated');
+        if (btnSvg) btnSvg.style.transform = 'rotate(180deg)';
+
+        if (thumbnail) thumbnail.classList.add('hidden');
+        if (rightCol) rightCol.style.display = 'none';
+        if (leftCol) leftCol.style.width = '100%';
+        if (topicCard) topicCard.style.backgroundColor = 'white';
+
+        originalReadMoreCard = document.getElementById(`topic-${topicId}`);
+        activeReadMoreId = topicId;
+      }
+    };
+
+    // Reply functionality
+    let activeReplyId = null;
+
+    window.toggleReplies = function (replyId) {
+      const container = document.getElementById(`nested-replies-${replyId}`);
+      const btn = document.querySelector(`button.expand-btn[data-reply-id="${replyId}"]`);
+      if (container && btn) {
+        container.classList.toggle('hidden');
+        const svg = btn.querySelector('svg');
+        const textSpan = btn.querySelector('.show-text');
+        const count = btn.getAttribute('data-count');
+        if (container.classList.contains('hidden')) {
+          if (svg) svg.style.transform = 'rotate(0deg)';
+          if (textSpan) textSpan.textContent = `${count} More`;
+        } else {
+          if (svg) svg.style.transform = 'rotate(180deg)';
+          if (textSpan) textSpan.textContent = 'Less';
+        }
+      }
+    };
+
+    window.showReplyForm = function (replyId) {
+      hideAllReplyForms();
+      activeReplyId = replyId;
+      const form = document.getElementById(`reply-form-${replyId}`);
+      if (form) form.classList.remove('hidden');
+    };
+
+    function hideAllReplyForms() {
+      document.querySelectorAll('[id^="reply-form-"]').forEach(form => form.classList.add('hidden'));
+      activeReplyId = null;
     }
-  };
 
-      // Reply functionality
-      let activeReplyId = null;
-      window.toggleReplies = function(replyId) {
-        const container = document.getElementById(`nested-replies-${replyId}`);
-        const btn = document.querySelector(`button.expand-btn[data-reply-id="${replyId}"]`);
-        if (container && btn) {
-          container.classList.toggle('hidden');
+    window.cancelReply = function (replyId) {
+      const form = document.getElementById(`reply-form-${replyId}`);
+      if (form) form.classList.add('hidden');
+      activeReplyId = null;
+    };
+
+    window.submitReply = function (replyId) {
+      const textarea = document.querySelector(`#reply-form-${replyId} textarea`);
+      if (textarea && textarea.value.trim()) {
+        alert(`Reply submitted: ${textarea.value}`);
+        textarea.value = '';
+        cancelReply(replyId);
+      }
+    };
+
+    // View Replies Button – show/hide topicDetail ONLY + add bottom Hide replies button
+    document.addEventListener('click', function (e) {
+      const viewRepliesBtn = e.target.closest('.view-replies-btn');
+      const closeTopicBtn = e.target.closest('.close-topic-btn');
+
+      if (viewRepliesBtn) {
+        const topicId = viewRepliesBtn.getAttribute('phx-value-topic-id');
+        const topicDetail = document.getElementById(`topic-detail-${topicId}`);
+        const topicCard = document.getElementById(`topic-${topicId}`);
+        const excerpt = document.getElementById(`excerpt-${topicId}`);
+
+        if (!topicDetail || !topicCard) return;
+
+        const isOpen = (topicDetail.style.display === 'block');
+
+        if (isOpen) {
+          collapseTopicDetail(topicId);
+          return;
+        }
+
+        // Ensure the post is expanded in the SAME card
+        if (excerpt && !excerpt.classList.contains('hidden')) {
+          window.toggleReadMore(topicId);
+        }
+
+        // ✅ hard-enforce thumbnail/right-col hidden (prevents double image on expand)
+        const thumbnail = document.getElementById(`thumbnail-${topicId}`);
+        const rightCol = document.getElementById(`right-col-${topicId}`);
+        const leftCol  = document.getElementById(`left-col-${topicId}`);
+        if (thumbnail) thumbnail.classList.add('hidden');
+        if (rightCol) rightCol.style.display = 'none';
+        if (leftCol) leftCol.style.width = '100%';
+
+        // Put the replies block directly under the topic card
+        topicCard.parentNode.insertBefore(topicDetail, topicCard.nextSibling);
+        topicDetail.style.display = 'block';
+
+        // Update ALL matching buttons (top + bottom) to "Hide replies"
+        document
+          .querySelectorAll(`.view-replies-btn[phx-value-topic-id="${topicId}"]`)
+          .forEach(btn => btn.textContent = 'Hide replies');
+
+        // Ensure bottom Hide replies button exists (clone top button to keep styling)
+        let bottomWrap = topicDetail.querySelector('.bottom-hide-replies-wrap');
+        if (!bottomWrap) {
+          bottomWrap = document.createElement('div');
+          bottomWrap.className = 'bottom-hide-replies-wrap';
+
+          const bottomBtn = viewRepliesBtn.cloneNode(true);
+          bottomBtn.textContent = 'Hide replies';
+          bottomBtn.setAttribute('phx-value-topic-id', topicId);
+
+          bottomWrap.appendChild(bottomBtn);
+          topicDetail.appendChild(bottomWrap);
+        }
+
+        // Reset nested reply state
+        topicDetail.querySelectorAll('[id^="nested-replies-"]').forEach(el => el.classList.add('hidden'));
+        topicDetail.querySelectorAll('.expand-btn').forEach(btn => {
           const svg = btn.querySelector('svg');
           const textSpan = btn.querySelector('.show-text');
           const count = btn.getAttribute('data-count');
-          if (container.classList.contains('hidden')) {
-            svg.style.transform = 'rotate(0deg)';
-            textSpan.textContent = `${count} More`;
-          } else {
-            svg.style.transform = 'rotate(180deg)';
-            textSpan.textContent = 'Less';
-          }
-        }
-      };
-      window.showReplyForm = function(replyId) {
-        hideAllReplyForms();
-        activeReplyId = replyId;
-        const form = document.getElementById(`reply-form-${replyId}`);
-        if (form) form.classList.remove('hidden');
-      };
-      function hideAllReplyForms() {
-        document.querySelectorAll('[id^="reply-form-"]').forEach(form => {
-          form.classList.add('hidden');
+          if (svg) svg.style.transform = 'rotate(0deg)';
+          if (textSpan) textSpan.textContent = `${count} More`;
         });
-        activeReplyId = null;
+        hideAllReplyForms();
       }
-      window.cancelReply = function(replyId) {
-        const form = document.getElementById(`reply-form-${replyId}`);
-        if (form) form.classList.add('hidden');
-        activeReplyId = null;
-      };
-      window.submitReply = function(replyId) {
-        const textarea = document.querySelector(`#reply-form-${replyId} textarea`);
-        if (textarea && textarea.value.trim()) {
-          alert(`Reply submitted: ${textarea.value}`);
-          textarea.value = '';
-          cancelReply(replyId);
-        }
-      };
 
-      // View Replies Button with ultra-condensed slide down functionality
-      document.addEventListener('click', function (e) {
-        const viewRepliesBtn = e.target.closest('.view-replies-btn');
-        const closeTopicBtn = e.target.closest('.close-topic-btn');
-        
-        if (viewRepliesBtn) {
-          const topicId = viewRepliesBtn.getAttribute('phx-value-topic-id');
-          const topicDetail = document.getElementById(`topic-detail-${topicId}`);
-          const allTopicCards = document.querySelectorAll('.topic-card');
-          
-          if (topicDetail) {
-            if (topicDetail.style.display === 'block') {
-              // COLLAPSE: Hide detail view, show all cards, reset positions
-              collapseTopicDetail(topicId);
-            } else {
-              // EXPAND: Show detail view, hide clicked card, slide down others
-              
-              // Store the original topic card for scroll restoration
-              originalTopicCard = document.getElementById(`topic-${topicId}`);
-              activeTopicId = topicId;
-              
-              // Hide all other detail views
-              document.querySelectorAll('[id^="topic-detail-"]').forEach(d => {
-                d.style.display = 'none';
-              });
-              
-              // Show the clicked topic's detail view
-              topicDetail.style.display = 'block';
-              
-              // Use a much smaller condensed height
-              const condensedHeight = 150; /* Reduced from 200px */
-              
-              // Hide the clicked topic card and slide down the others
-              allTopicCards.forEach(card => {
-                const cardId = card.id.replace('topic-', '');
-                if (cardId === topicId) {
-                  // Hide the clicked topic card (its content is now in detail view)
-                  card.style.display = 'none';
-                } else {
-                  // Show other cards and slide them down with condensed spacing
-                  card.style.display = 'block';
-                  card.style.transform = `translateY(${condensedHeight}px)`;
-                }
-              });
-              
-              // Update button text
-              viewRepliesBtn.textContent = 'Hide replies';
-              
-              // Reset nested replies and forms
-              topicDetail.querySelectorAll('[id^="nested-replies-"]').forEach(el => el.classList.add('hidden'));
-              topicDetail.querySelectorAll('.expand-btn').forEach(btn => {
-                const svg = btn.querySelector('svg');
-                const textSpan = btn.querySelector('.show-text');
-                const count = btn.getAttribute('data-count');
-                svg.style.transform = 'rotate(0deg)';
-                textSpan.textContent = `${count} More`;
-              });
-              hideAllReplyForms();
-            }
-          }
-        }
-        
-        // Handle close topic button click
-        if (closeTopicBtn) {
-          const topicId = closeTopicBtn.getAttribute('data-topic-id');
-          collapseTopicDetail(topicId);
-        }
-      });
-
-      // New function to collapse topic detail
-      function collapseTopicDetail(topicId) {
-        const topicDetail = document.getElementById(`topic-detail-${topicId}`);
-        const allTopicCards = document.querySelectorAll('.topic-card');
-        const viewRepliesBtn = document.querySelector(`.view-replies-btn[phx-value-topic-id="${topicId}"]`);
-        
-        if (topicDetail) {
-          topicDetail.style.display = 'none';
-          
-          // Show all topic cards and reset their positions
-          allTopicCards.forEach(card => {
-            card.style.display = 'block';
-            card.style.transform = 'translateY(0)';
-          });
-          
-          // Reset button text
-          if (viewRepliesBtn) {
-            viewRepliesBtn.textContent = 'View replies';
-          }
-
-          // Scroll back to the original topic card
-          setTimeout(() => {
-            if (originalTopicCard && activeTopicId === topicId) {
-              originalTopicCard.scrollIntoView({ 
-                behavior: 'smooth', 
-                block: 'start',
-                inline: 'nearest'
-              });
-              originalTopicCard = null;
-              activeTopicId = null;
-            }
-          }, 100); // Small delay to ensure DOM has updated
-        }
+      if (closeTopicBtn) {
+        const topicId = closeTopicBtn.getAttribute('data-topic-id');
+        collapseTopicDetail(topicId);
       }
-    </script>
-  </body>
-  </html>
+    });
+
+    function collapseTopicDetail(topicId) {
+      const topicDetail = document.getElementById(`topic-detail-${topicId}`);
+
+      if (topicDetail) {
+        topicDetail.style.display = 'none';
+
+        // Remove the bottom button wrapper so it doesn't hang around
+        const bottomWrap = topicDetail.querySelector('.bottom-hide-replies-wrap');
+        if (bottomWrap) bottomWrap.remove();
+      }
+
+      // Update ALL matching buttons back to "View replies"
+      document
+        .querySelectorAll(`.view-replies-btn[phx-value-topic-id="${topicId}"]`)
+        .forEach(btn => btn.textContent = 'View replies');
+    }
+  </script>
+</body>
+</html>

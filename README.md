@@ -9,6 +9,9 @@ Homepage should look like this with the footer down below -
   I updated the buttons a little bit and remove the vertical line on the side of the replies
 <img width="1287" height="943" alt="image" src="https://github.com/user-attachments/assets/48376bc6-62a0-421b-8ec0-a90205cf55ca" />
 
+We need to add a link to the discussions page in a more visable way
+This is the main Groups navigation and discovery page
+<img width="1221" height="992" alt="image" src="https://github.com/user-attachments/assets/f386a2d6-4b5f-4fec-a5f9-96d1fa1b5534" />
 
 On the homepage we have like and reply underneath the comments. That's the latest comment for that group. 
 That reply btn should open up to standard reply from the subgroup_topics2 page
